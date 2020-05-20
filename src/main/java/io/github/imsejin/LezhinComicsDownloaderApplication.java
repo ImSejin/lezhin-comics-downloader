@@ -40,6 +40,15 @@ import io.github.imsejin.model.Product;
 public class LezhinComicsDownloaderApplication {
 
     public static void main(String[] args) {
+        // 실행에 필요한 인자를 넣었는지 확인한다.
+        if (args == null || args.length == 0) {
+            System.err.println("Must input arguments {comicName} {accessToken}.");
+            System.exit(1);
+        } else if (args.length < 2) {
+            System.err.println("Must input argument {accessToken}.");
+            System.exit(1);
+        }
+
         final String comicName = args[0]; // "snail"
         final String accessToken = args[1]; // "5be30a25-a044-410c-88b0-19a1da968a64"
 
@@ -72,14 +81,15 @@ public class LezhinComicsDownloaderApplication {
         int size = episodes.size();
         for (int i = 0; i < size; i++) {
             Episode episode = episodes.get(i);
-            String title = episode.getDisplay().getTitle();
-            System.out.print("> episode #" + (i + 1) + " `" + title + "` : ");
-            String episodeDirName = StringUtil.lPad(String.valueOf(i + 1), 4, '0') + " - " + title;
 
-            Downloader.download(comicId, episode, comicName, accessToken, comicDir, episodeDirName);
+            // 미리보기할 수 있는 유료회차의 경우, 다운로드할 수 없다.
+            long now = System.currentTimeMillis();
+            if (episode.getFreedAt() > now) continue;
+
+            Downloader.download(comicId, episode, comicName, accessToken, comicDir, i + 1);
         }
 
-        // 애플리케이션을 종료한다.
+        // 애플리케이션을 정상 종료한다.
         System.exit(0);
     }
 

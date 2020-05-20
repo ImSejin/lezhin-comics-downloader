@@ -20,44 +20,57 @@ import io.github.imsejin.common.util.StringUtil;
 import io.github.imsejin.model.Episode;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
+import me.tongfei.progressbar.ProgressBar;
+import me.tongfei.progressbar.ProgressBarStyle;
 
 @UtilityClass
 public class Downloader {
 
-    public void download(long comicId, Episode episode, String comicName, String accessToken, File comicDir, String episodeDirName) {
+    private static final byte[] BUFFER = new byte[1024];
+
+    public void download(long comicId, Episode episode, String comicName, String accessToken, File comicDir, int num) {
         final long episodeId = episode.getId();
         final int numOfImages = getNumOfImagesInEpisode(comicName, episode.getName(), accessToken);
-        final byte[] buffer = new byte[1024];
 
         // 에피소드 이름으로 디렉터리를 생성한다
+        String episodeDirName = StringUtil.lPad(num, 4, '0') + " - " + episode.getDisplay().getTitle();
         File episodeDir = new File(comicDir, episodeDirName);
         if (!episodeDir.exists()) episodeDir.mkdirs();
 
-        // 마지막 이미지까지 다운로드한다
-        for (int i = 1; i <= numOfImages; i++) {
-            // 이미지 URI를 생성한다
-            URL url = makeImageUrl(comicId, episodeId, accessToken, i);
+        try (ProgressBar progressBar = new ProgressBar(comicName + " ep." + num, numOfImages, 500, System.err, ProgressBarStyle.ASCII, "", 1)) {
+            // `ProgressBar.step()`이 step 1부터 시작하기 때문에 step 0로 초기화한다
+            progressBar.stepTo(0);
 
-            try (InputStream in = url.openStream()) {
-                System.out.print("try to download -> ");
+            // 마지막 이미지까지 다운로드한다
+            for (int i = 1; i <= numOfImages; i++) {
+                // 이미지 URI를 생성한다
+                URL url = makeImageUrl(comicId, episodeId, accessToken, i);
 
                 // 이미지를 다운로드한다
                 File image = new File(episodeDir, StringUtil.lPad(String.valueOf(i), 3, '0') + IMG_FORMAT_EXTENSION);
-                try (OutputStream out = new BufferedOutputStream(new FileOutputStream(image))) {
-                    int len;
-                    while ((len = in.read(buffer)) > 0) {
-                        out.write(buffer, 0, len);
-                    }
-                    System.out.println(image.getName());
-                } catch (IOException ex) {}
+                int result = createImage(url, image);
 
-            } catch (IOException ex) {
-                break;
+                if (result == 0) break;
+
+                progressBar.stepBy(1);
             }
         }
+    }
 
-        System.out.println();
+    private int createImage(URL url, File image) {
+        try (InputStream in = url.openStream(); OutputStream out = new BufferedOutputStream(new FileOutputStream(image))) {
+            // 이미지를 다운로드한다
+            int len;
+            while ((len = in.read(BUFFER)) > 0) {
+                out.write(BUFFER, 0, len);
+            }
 
+            // Success
+            return 1;
+        } catch (IOException ex) {
+            // Fail
+            return 0;
+        }
     }
 
     @SneakyThrows(IOException.class)
@@ -76,10 +89,7 @@ public class Downloader {
         URL url = makeOneEpisodeUrl(comicName, episodeName, accessToken);
         JsonObject json = JsonUtil.readJsonFromUrl(url);
 
-        int numOfImages = json.get("cut").getAsInt();
-        System.out.println("found " + numOfImages + (numOfImages > 1 ? " images" : " image"));
-
-        return numOfImages;
+        return json.get("cut").getAsInt();
     }
 
     @SneakyThrows(MalformedURLException.class)
