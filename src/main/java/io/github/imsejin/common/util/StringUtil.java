@@ -402,6 +402,21 @@ public class StringUtil {
 	/**
 	 * L pad.
 	 *
+	 * @param num
+	 *            the num
+	 * @param len
+	 *            the len
+	 * @param pad
+	 *            the pad
+	 * @return the string
+	 */
+	public String lPad(int num, int len, char pad) {
+	    return lPad(String.valueOf(num), len, pad, false);
+	}
+
+	/**
+	 * L pad.
+	 *
 	 * @param str
 	 *            the str
 	 * @param len
@@ -439,6 +454,21 @@ public class StringUtil {
         sb.append(str);
 
         return sb.toString();
+    }
+
+    /**
+     * R pad.
+     *
+     * @param num
+     *            the num
+     * @param len
+     *            the len
+     * @param pad
+     *            the pad
+     * @return the string
+     */
+    public String rPad(int num, int len, char pad) {
+        return rPad(String.valueOf(num), len, pad, false);
     }
 
 	/**
