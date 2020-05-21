@@ -50,6 +50,7 @@ public class Downloader {
                 File image = new File(episodeDir, StringUtil.lPad(String.valueOf(i), 3, '0') + IMG_FORMAT_EXTENSION);
                 int result = createImage(url, image);
 
+                // 다운로드에 실패하면 해당 회차를 건너뛴다
                 if (result == 0) break;
 
                 progressBar.stepBy(1);

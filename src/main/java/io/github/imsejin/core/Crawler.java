@@ -18,6 +18,21 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class Crawler {
 
+    /**
+     * 일반적으로 접근했을 때와 크롤러 접근했을 때의 페이지가 완전 다르다.<br>
+     * 다행히 필요한 모든 정보가 script 태그 내 JSON 형태로 있어서 이를 이용한다.
+     * 
+     * <pre>
+     * &lt;script&gt;
+     *     __LZ_MESSAGE__ = {...};
+     *     __LZ_PRODUCT__ = { productType: 'comic', product: {...}, departure: '', all: {...}, prefree: {...}};
+     *     __LZ_DATA__ = {...};
+     *     __LZ_CONTEXT__ = "";
+     *     __LZ_ERROR_CODE__ = '${error}';
+     *     __LZ_ERROR_MESSAGE__ = { 'error.COMIC_EPISODE.NOT_FOUND': "찾으시는 에피소드가 없습니다." };
+     * &lt;/script&gt;
+     * </pre>
+     */
     @SneakyThrows(IOException.class)
     public String getJson(String comicName) {
         // 해당 웹툰의 정보가 담긴 JSON을 찾기 위해 <script/> 태그를 찾는다
