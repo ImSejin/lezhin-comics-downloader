@@ -81,7 +81,7 @@ public class Downloader {
     @SneakyThrows(MalformedURLException.class)
     private URL makeImageUrl(long comicId, long episodeId, String accessToken, int fileName) {
         String uriString = IMG_URI_PREFIX + comicId + "/episodes/" + episodeId + "/contents/scrolls/" + fileName + ".webp?access_token=" + accessToken
-                + IMG_URI_SUFFIX;
+                + IMG_URI_PARAM;
         return URI.create(uriString).toURL();
     }
 

@@ -23,7 +23,7 @@ public class Constants {
     /**
      * 이미지를 불러오는 URI의 접미사
      */
-    public final String IMG_URI_SUFFIX = "&purchased=false";
+    public final String IMG_URI_PARAM = "&purchased=false";
 
     /**
      * 이미지 포맷 확장자
