@@ -25,6 +25,8 @@
 package io.github.imsejin;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,6 +38,7 @@ import io.github.imsejin.core.Downloader;
 import io.github.imsejin.model.Artist;
 import io.github.imsejin.model.Episode;
 import io.github.imsejin.model.Product;
+import lombok.SneakyThrows;
 
 public class LezhinComicsDownloaderApplication {
 
@@ -58,9 +61,26 @@ public class LezhinComicsDownloaderApplication {
         // JSON을 파싱하여 객체로 변환한다.
         Product product = JsonUtil.toObject(jsonText, Product.class);
 
-        // 디렉터리명에 허용되지 않는 문자열을 치환한다
+        // 다운로드를 위해, 데이터를 가공하고 웹툰 폴더를 생성한다.
+        File comicDir = preprocess(product);
+
+        // 웹툰을 다운로드한다.
+        Downloader.downloadAll(product, accessToken, comicDir);
+
+        // 애플리케이션을 정상 종료한다.
+        System.exit(0);
+    }
+
+    @SneakyThrows(IOException.class)
+    private static File preprocess(Product product) {
+        List<Episode> episodes = product.getEpisodes();
+
+        // 해당 웹툰의 에피소드; 순서가 거꾸로 되어 있어 정렬한다.
+        Collections.reverse(episodes);
+
+        // 디렉터리명에 허용되지 않는 문자열을 치환한다.
         product.getDisplay().setTitle(StringUtil.toSafeFileName(product.getDisplay().getTitle()));
-        product.getEpisodes().stream().forEach(
+        episodes.forEach(
                 episode -> episode.getDisplay().setTitle(StringUtil.toSafeFileName(episode.getDisplay().getTitle())));
 
         // 웹툰 이름으로 디렉터리를 생성한다.
@@ -69,28 +89,11 @@ public class LezhinComicsDownloaderApplication {
                     .map(Artist::getName)
                     .map(StringUtil::toSafeFileName)
                     .collect(Collectors.joining(", "));
-        File comicDir = new File(Downloader.getCurrentPathName(), comicDirName);
+        String currentPathName = Paths.get(".").toRealPath().toString();
+        File comicDir = new File(currentPathName, comicDirName);
         if (!comicDir.exists()) comicDir.mkdirs();
 
-        // 해당 웹툰의 에피소드; 순서가 거꾸로 되어 있어 정렬한다.
-        List<Episode> episodes = product.getEpisodes();
-        Collections.reverse(episodes);
-
-        // 웹툰을 다운로드한다.
-        long comicId = product.getId();
-        int size = episodes.size();
-        for (int i = 0; i < size; i++) {
-            Episode episode = episodes.get(i);
-
-            // 미리보기할 수 있는 유료회차의 경우, 다운로드할 수 없다.
-            long now = System.currentTimeMillis();
-            if (episode.getFreedAt() > now) continue;
-
-            Downloader.download(comicId, episode, comicName, accessToken, comicDir, i + 1);
-        }
-
-        // 애플리케이션을 정상 종료한다.
-        System.exit(0);
+        return comicDir;
     }
 
 }

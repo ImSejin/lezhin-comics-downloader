@@ -11,6 +11,7 @@ public class Product {
 
     private Display display;
     private List<Artist> artists;
+    private String alias;
     private long id;
     private List<Episode> episodes;
 

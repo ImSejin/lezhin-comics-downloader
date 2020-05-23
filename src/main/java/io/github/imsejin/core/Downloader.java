@@ -9,14 +9,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
-import java.nio.file.Paths;
+import java.util.List;
 
 import com.google.gson.JsonObject;
 
 import io.github.imsejin.common.util.JsonUtil;
 import io.github.imsejin.common.util.StringUtil;
 import io.github.imsejin.model.Episode;
-import lombok.SneakyThrows;
+import io.github.imsejin.model.Product;
 import lombok.experimental.UtilityClass;
 import me.tongfei.progressbar.ProgressBar;
 import me.tongfei.progressbar.ProgressBarStyle;
@@ -26,7 +26,24 @@ public class Downloader {
 
     private static final byte[] BUFFER = new byte[1024];
 
-    public void download(long comicId, Episode episode, String comicName, String accessToken, File comicDir, int num) {
+    public void downloadAll(Product product, String accessToken, File comicDir) {
+        long comicId = product.getId();
+        String comicName = product.getAlias();
+
+        List<Episode> episodes = product.getEpisodes();
+        int size = episodes.size();
+        for (int i = 0; i < size; i++) {
+            Episode episode = episodes.get(i);
+
+            // 미리보기할 수 있는 유료회차의 경우, 다운로드할 수 없다.
+            long now = System.currentTimeMillis();
+            if (episode.getFreedAt() > now) continue;
+
+            download(episode, comicId, comicName, accessToken, comicDir, i + 1);
+        }
+    }
+
+    public void download(Episode episode, long comicId, String comicName, String accessToken, File comicDir, int num) {
         // 에피소드의 이미지가 없으면 종료한다
         final int numOfImages = getNumOfImagesInEpisode(comicName, episode.getName(), accessToken);
         if (numOfImages < 1) return;
@@ -76,11 +93,6 @@ public class Downloader {
             // Fail
             return 0;
         }
-    }
-
-    @SneakyThrows(IOException.class)
-    public String getCurrentPathName() {
-        return Paths.get(".").toRealPath().toString();
     }
 
     private int getNumOfImagesInEpisode(String comicName, String episodeName, String accessToken) {
