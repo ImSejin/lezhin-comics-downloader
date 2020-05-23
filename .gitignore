@@ -1,5 +1,6 @@
 target/
 bin/
+L_*/
 .gitconfig
 !.mvn/wrapper/maven-wrapper.jar
 
