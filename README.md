@@ -4,6 +4,8 @@
 
 This is downloader that helps login process and downloads the specified comic for all lezhin comics even adult.
 
+※ *The user is responsible for everything that happens using this program.*
+
 
 
 ### Preview
