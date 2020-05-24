@@ -1741,4 +1741,10 @@ public class StringUtil {
                 .replaceAll("\\|", "｜");
     }
 
+    public Boolean string2boolean(String str) {
+        if (anyMatches(str.toLowerCase(), "true", "y", "yes")) return true;
+        else if (anyMatches(str.toLowerCase(), "false", "n", "no")) return false;
+        else return null;
+    }
+
 }
