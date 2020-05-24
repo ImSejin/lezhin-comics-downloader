@@ -1,7 +1,7 @@
 /**
  * MIT License
  * 
- * Copyright (c) 2019-2020 Im Sejin
+ * Copyright (c) 2020 Im Sejin
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,6 +35,7 @@ import io.github.imsejin.common.util.JsonUtil;
 import io.github.imsejin.common.util.StringUtil;
 import io.github.imsejin.core.Crawler;
 import io.github.imsejin.core.Downloader;
+import io.github.imsejin.core.LoginHelper;
 import io.github.imsejin.model.Artist;
 import io.github.imsejin.model.Episode;
 import io.github.imsejin.model.Product;
@@ -43,20 +44,14 @@ import lombok.SneakyThrows;
 public class LezhinComicsDownloaderApplication {
 
     public static void main(String[] args) {
-        // 실행에 필요한 인자를 넣었는지 확인한다.
-        if (args == null || args.length == 0) {
-            System.err.println("Must input arguments {comicName} {accessToken}.");
-            System.exit(1);
-        } else if (args.length < 2) {
-            System.err.println("Must input argument {accessToken}.");
-            System.exit(1);
-        }
+        // 아이디와 비밀번호를 입력받아 로그인한다.
+        LoginHelper.login();
 
-        final String comicName = args[0]; // "snail"
-        final String accessToken = args[1]; // "5be30a25-a044-410c-88b0-19a1da968a64"
+        // 로그인하여 얻은 토큰을 가져온다.
+        String accessToken = LoginHelper.getAccessToken();
 
         // 해당 웹툰 페이지를 크롤링하여 회차별 정보를 JSON으로 얻어온다.
-        String jsonText = Crawler.getJson(comicName);
+        String jsonText = Crawler.getJson();
 
         // JSON을 파싱하여 객체로 변환한다.
         Product product = JsonUtil.toObject(jsonText, Product.class);
