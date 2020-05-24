@@ -6,7 +6,7 @@
 
 	<groupId>io.github.imsejin</groupId>
 	<artifactId>lezhin-comics-downloader</artifactId>
-	<version>0.0.1</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
 	<properties>
