@@ -1738,7 +1738,8 @@ public class StringUtil {
                 .replaceAll("\"", " ˝")
                 .replaceAll("<", "＜")
                 .replaceAll(">", "＞")
-                .replaceAll("\\|", "｜");
+                .replaceAll("\\|", "｜")
+                .replaceAll("\\.+$", "…");
     }
 
     public Boolean string2boolean(String str) {
