@@ -70,10 +70,10 @@ public class Crawler {
 
         // `__LZ_PRODUCT__` 객체가 있는 script 태그의 내용을 가져온다
         String script = StreamSupport.stream(Spliterators.spliteratorUnknownSize(elements.iterator(), Spliterator.ORDERED), false)
-            .map(element -> element.childNode(0).toString())
-            .filter(node -> node.contains("__LZ_PRODUCT__"))
-            .findFirst()
-            .get();
+                .map(element -> element.childNode(0).toString())
+                .filter(node -> node.contains("__LZ_PRODUCT__"))
+                .findFirst()
+                .get();
 
         // `__LZ_PRODUCT__.product` 부분을 파싱한다
         String productJson = Stream.of(script.split("\n"))
