@@ -32,18 +32,44 @@ public class Downloader {
 
         List<Episode> episodes = product.getEpisodes();
         int size = episodes.size();
+
         for (int i = 0; i < size; i++) {
             Episode episode = episodes.get(i);
-
-            // 미리보기할 수 있는 유료회차의 경우, 다운로드할 수 없다.
-            long now = System.currentTimeMillis();
-            if (episode.getFreedAt() > now) continue;
-
-            download(episode, comicId, comicName, accessToken, comicDir, i + 1);
+            downloadOne(episode, comicId, comicName, accessToken, comicDir, i + 1);
         }
     }
 
-    public void download(Episode episode, long comicId, String comicName, String accessToken, File comicDir, int num) {
+    public void downloadFrom(Product product, String accessToken, File comicDir, int from) {
+        downloadSome(product, accessToken, comicDir, from, Integer.MAX_VALUE);
+    }
+
+    public void downloadTo(Product product, String accessToken, File comicDir, int to) {
+        downloadSome(product, accessToken, comicDir, 1, to);
+    }
+
+    public void downloadSome(Product product, String accessToken, File comicDir, int from, int to) {
+        long comicId = product.getId();
+        String comicName = product.getAlias();
+
+        List<Episode> episodes = product.getEpisodes();
+
+        // 에피소드 번호를 인덱스에 맞게 변경한다.
+        from = from <= 0 ? 0 : from - 1;
+
+        // 해당 웹툰의 마지막 에피소드 번호를 초과하는 에피소드 번호를 지정하면, 마지막 에피소드까지 다운로드하는 것으로 변경한다.
+        to = to > episodes.size() ? episodes.size() : to;
+
+        for (int i = from; i < to; i++) {
+            Episode episode = episodes.get(i);
+            downloadOne(episode, comicId, comicName, accessToken, comicDir, i + 1);
+        }
+    }
+
+    public void downloadOne(Episode episode, long comicId, String comicName, String accessToken, File comicDir, int num) {
+        // 미리보기할 수 있는 유료회차의 경우, 다운로드할 수 없다.
+        long now = System.currentTimeMillis();
+        if (episode.getFreedAt() > now) return;
+
         // 에피소드의 이미지가 없으면 종료한다
         final int numOfImages = getNumOfImagesInEpisode(comicName, episode.getName(), accessToken);
         if (numOfImages < 1) return;

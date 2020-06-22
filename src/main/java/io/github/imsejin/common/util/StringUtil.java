@@ -1748,4 +1748,19 @@ public class StringUtil {
         else return null;
     }
 
+    public String match(String regex, String src) {
+        return match(regex, src, 0);
+    }
+
+    public String match(String regex, String src, int groupNo) {
+        Matcher matcher = Pattern.compile(regex, Pattern.MULTILINE).matcher(src);
+
+        String matched = null;
+        while (matcher.find()) {
+            matched = matcher.group(groupNo);
+        }
+
+        return matched;
+    }
+
 }
