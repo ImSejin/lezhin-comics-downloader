@@ -1,134 +1,109 @@
 package io.github.imsejin.core;
 
-import static io.github.imsejin.common.Constants.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 
-import java.io.IOException;
-import java.util.Scanner;
-import java.util.Spliterator;
-import java.util.Spliterators;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.StreamSupport;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import io.github.imsejin.common.util.StringUtil;
-import lombok.Getter;
-import lombok.SneakyThrows;
+import io.github.imsejin.common.constants.URIs;
+import io.github.imsejin.common.util.StringUtils;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class LoginHelper {
 
-    private final Scanner scanner = new Scanner(System.in);
-
-    @Getter
-    private String username;
-
-    @Getter
-    private String password;
-
-    @Getter
-    private String accessToken;
-
-    private final int LOGIN_LIMIT = 3;
-    private int loginCount = 0;
-
-    public void login() {
-        receive();
-
-        setAccessToken();
-
-        // 로그인에 실패하면, 재시도 여부를 묻는다.
-        boolean valid = validate();
-        if (!valid) System.exit(1);
-
-        // Crawler에서 Scanner를 다시 사용해야 하기에 닫지 않는다.
-        // 로그인하여 세션을 유지하는 법을 알아내면 닫자.
-//        if (scanner != null) scanner.close();
-    }
-
     /**
-     * 계정 정보를 입력받는다.<br>
-     * Receives the account information.
+     * 로그인하여 액세스 토큰을 얻는다.<br>
+     * Logins and gets an access token.
      */
-    private void receive() {
-        System.out.print("ID: ");
-        username = scanner.nextLine();
-        System.out.print("PW: ");
-        password = scanner.nextLine();
-    }
-
-    private boolean validate() {
-        loginCount++;
-
-        if (accessToken != null) {
-            System.out.println("\nSuccess to login.\n");
-            return true;
-        }
-
-        System.out.println("\nFailed to login. Check your account information.");
-        if (loginCount > LOGIN_LIMIT) {
-            System.out.println("Application exited.");
-            return false;
-        }
-
-        while (true) {
-            System.out.print("Do you want to try again? (true/y/yes): ");
-            Boolean retry = StringUtil.string2boolean(scanner.nextLine());
-            System.out.println();
-
-            if (retry != null && retry) {
-                login();
-                return accessToken != null;
-            } else {
-                return false;
-            }
-        }
-    }
-
-    /**
-     * 로그인하여 액세스 토큰을 찾아, 할당한다.<br>
-     * Finds access token after login, assigns it.
-     */
-    @SneakyThrows(IOException.class)
-    private void setAccessToken() {
+    public String login(String username, String password) {
         // 유효하지 않은 계정 정보의 경우
-        if (StringUtil.areAnyBlanks(username, password)) {
-            accessToken = null;
-            return;
+        if (StringUtils.anyBlanks(username, password)) {
+            System.err.println("\n    ID or password is not valid.");
+            return null;
         }
 
-        Document doc = Jsoup.connect(LOGIN_URI_PREFIX)
-                .data("username", username)
-                .data("password", password)
-                .post();
-        Elements elements = doc.select("body > script");
-
-        String script = StreamSupport.stream(Spliterators.spliteratorUnknownSize(elements.iterator(), Spliterator.ORDERED), false)
-            .map(Element::toString)
-            .filter(node -> node.contains("token: "))
-            .findFirst()
-            .orElse(null);
+        String accessToken = getAccessToken(username, password);
 
         // 존재하지 않는 계정의 경우
-        if (script == null) {
-            accessToken = null;
-            return;
+        if (StringUtils.isBlank(accessToken)) {
+            System.err.println("\n    The account does not exists.");
+            return null;
         }
 
-        Matcher matcher = Pattern.compile("token: '([\\w\\--z]*)'", Pattern.MULTILINE).matcher(script);
+        return accessToken;
+    }
 
-        // "token: '5be30a25-a044-410c-88b0-19a1da968a64'"
-        StringBuilder sb = new StringBuilder();
-        while (matcher.find()) {
-            sb.append(matcher.group());
+    /**
+     * 로그인하여 액세스 토큰을 찾아, 반환한다.<br>
+     * Finds access token after login, returns it.
+     * 
+     * <pre>{@code
+     * <script>
+     * __LZ_CONFIG__ = _.merge(window.__LZ_CONFIG__, {
+     *     apiUrl: 'api.lezhin.com',
+     *     cdnUrl: 'https://cdn.lezhin.com',
+     *     recoUrl: 'dondog.lezhin.com',
+     *     payUrl: 'https://pay.lezhin.com',
+     *     pantherUrl: 'https://panther.lezhin.com',
+     *     locale: 'ko-KR',
+     *     country: 'kr',
+     *     language: 'ko',
+     *     adultKind: 'kid',
+     *     allowAdult: true,
+     *     isEmbedded: false,
+     *     now: (new Date('2020-06-22T09:27:54+09:00')).getTime(),
+     *     authAdult: 'true',
+     *     rid: '58Hk',
+     *     token: '5be30a25-a044-410c-88b0-19a1da968a64',
+     *     genres: {"romance":"로맨스","fantasy":"판타지","horror":"호러","lightnovel":"라이트노벨","sports":"스포츠","gl":"백합","historical":"시대극","bl":"BL","gore":"스릴러","girl":"소녀만화","gag":"개그","food":"음식","otona":"오토나","drama":"드라마","mystery":"미스터리","sf":"SF","martial":"무협","school":"학원","mature_female":"레이디스코믹","tl":"TL","action":"액션","adult":"성인","day":"일상","gallery":"갤러리"}
+     * });
+     * 
+     * __LZ_ME__ = _.merge(window.__LZ_ME__, {
+     *     userId: '5412133348822268',
+     *     adult: true,
+     *     email: '',
+     *     paidTime: 0,
+     *     paidCount: 0,
+     *     coin: { android: 0, ios: 0, web: 0 },
+     *     point:{ android: 0, ios: 0, web: 0 }
+     * });
+     * ...
+     * </script>
+     * }</pre>
+     */
+    private String getAccessToken(String username, String password) {
+        ChromeDriver driver = ChromeBrowser.getDriver();
+
+        // 로그인 페이지를 요청한다.
+        driver.get(URIs.LOGIN.value());
+
+        // 계정정보를 작성한다.
+        WebElement loginForm = driver.findElementByXPath("//form[@id='login-form' and contains(@action, '/ko/login') and @method='post']");
+        WebElement usernameInput = loginForm.findElement(By.xpath(".//input[@id='login-email']"));
+        usernameInput.clear();
+        usernameInput.sendKeys(username);
+        WebElement passwordInput = loginForm.findElement(By.xpath(".//input[@id='login-password']"));
+        passwordInput.clear();
+        passwordInput.sendKeys(password);
+
+        // 로그인한다.
+        WebElement submitButton = loginForm.findElement(By.xpath(".//button[@type='submit']"));
+        submitButton.click();
+
+        // 로그인 딜레이를 대기하기 위해 메인페이지로 이동한다.
+        driver.get(URIs.HOME.value());
+
+        // 액세스 토큰 정보가 있는 script 태그를 찾는다.
+        WebElement script;
+        try {
+            script = driver.findElementByXPath("//script[not(@src) and contains(text(), '__LZ_ME__')]");
+        } catch (NoSuchElementException ex) {
+            System.err.println("The account does not exists.");
+            return null;
         }
 
-        accessToken = sb.toString().replaceAll("'", "").replace("token: ", "");
+        return StringUtils.match("token: '([\\w-]+)'", script.getAttribute("innerText"), 1);
     }
 
 }

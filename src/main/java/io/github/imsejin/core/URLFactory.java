@@ -1,17 +1,14 @@
 package io.github.imsejin.core;
 
-import static io.github.imsejin.common.Constants.EPISODE_INFO_URI_PREFIX;
-import static io.github.imsejin.common.Constants.IMG_URI_PARAM;
-import static io.github.imsejin.common.Constants.IMG_URI_PREFIX;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import io.github.imsejin.common.constants.URIs;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class URLBuilder {
+public class URLFactory {
 
     private final StringBuilder $ = new StringBuilder();
 
@@ -27,7 +24,7 @@ public class URLBuilder {
     public synchronized URL imageURL(long comicId, long episodeId, int fileName, String accessToken) {
         init();
 
-        $.append(IMG_URI_PREFIX)
+        $.append(URIs.IMG.value())
         .append(comicId)
         .append("/episodes/")
         .append(episodeId)
@@ -35,7 +32,7 @@ public class URLBuilder {
         .append(fileName)
         .append(".webp?access_token=")
         .append(accessToken)
-        .append(IMG_URI_PARAM);
+        .append("&purchased=false"); // 구매한 유료 에피소드라면 true로 변경한다.
 
         return new URL($.toString());
     }
@@ -44,7 +41,7 @@ public class URLBuilder {
     public synchronized URL oneEpisodeURL(String comicName, String episodeName, String accessToken) {
         init();
 
-        $.append(EPISODE_INFO_URI_PREFIX)
+        $.append(URIs.EPISODE_INFO.value())
         .append(comicName)
         .append("/")
         .append(episodeName)
@@ -58,7 +55,7 @@ public class URLBuilder {
     public synchronized URL allEpisodeURL(String comicName, String accessToken) {
         init();
 
-        $.append(EPISODE_INFO_URI_PREFIX)
+        $.append(URIs.EPISODE_INFO.value())
         .append(comicName)
         .append("?access_token=")
         .append(accessToken);
