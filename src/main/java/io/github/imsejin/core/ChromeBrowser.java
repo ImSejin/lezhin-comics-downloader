@@ -3,13 +3,13 @@ package io.github.imsejin.core;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-import io.github.imsejin.common.util.PathnameUtil;
+import io.github.imsejin.common.util.PathnameUtils;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class ChromeBrowser {
 
-    private final String CHROME_DRIVER_PATHNAME = PathnameUtil.chromeDriverPathname();
+    private final String CHROME_DRIVER_PATHNAME = PathnameUtils.chromeDriverPathname();
 
     static {
         // WebDriver의 경로를 설정한다.

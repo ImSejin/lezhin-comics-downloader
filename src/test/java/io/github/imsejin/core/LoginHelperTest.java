@@ -13,7 +13,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import io.github.imsejin.common.util.StringUtil;
+import io.github.imsejin.common.util.StringUtils;
 
 public class LoginHelperTest {
 
@@ -55,7 +55,7 @@ public class LoginHelperTest {
             return;
         }
 
-        String accessToken = StringUtil.match("token: '([\\w-]+)'", script.getAttribute("innerText"), 1);
+        String accessToken = StringUtils.match("token: '([\\w-]+)'", script.getAttribute("innerText"), 1);
         System.out.println("accessToken: " + accessToken);
 
         // then

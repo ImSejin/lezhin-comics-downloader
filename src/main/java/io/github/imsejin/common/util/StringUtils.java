@@ -24,7 +24,7 @@ import lombok.experimental.UtilityClass;
  * @author SEJIN
  */
 @UtilityClass
-public class StringUtil {
+public class StringUtils {
 
 	/** The Constant WHITE_SPACE. */ 
 	private final char WHITE_SPACE = ' ';
@@ -812,8 +812,8 @@ public class StringUtil {
 	 * convert first letter to a big letter or a small letter.<br>
 	 * 
 	 * <pre>
-	 * StringUtil.trim('Password') = 'password'
-	 * StringUtil.trim('password') = 'Password'
+	 * StringUtils.trim('Password') = 'password'
+	 * StringUtils.trim('password') = 'Password'
 	 * </pre>
 	 * 
 	 * @param str
@@ -836,7 +836,7 @@ public class StringUtil {
 	 * original String.
 	 * 
 	 * <pre>
-	 * StringUtil.trim('pass*word', '*') = 'password'
+	 * StringUtils.trim('pass*word', '*') = 'password'
 	 * </pre>
 	 * 
 	 * @param origString
@@ -858,7 +858,7 @@ public class StringUtil {
 	 * Break a string into specific tokens and return a String of last location.
 	 * 
 	 * <pre>
-	 * StringUtil.getLastString('password*password*a*b*c', '*') = 'c'
+	 * StringUtils.getLastString('password*password*a*b*c', '*') = 'c'
 	 * </pre>
 	 * 
 	 * @param origStr
@@ -882,8 +882,8 @@ public class StringUtil {
 	 * is.
 	 * 
 	 * <pre>
-	 * StringUtil.getStringArray('passwordabcpassword', 'abc') 		= String[]{'password','password'}
-	 * StringUtil.getStringArray('pasword*password', 'abc') 		= String[]{'pasword*password'}
+	 * StringUtils.getStringArray('passwordabcpassword', 'abc') 		= String[]{'password','password'}
+	 * StringUtils.getStringArray('pasword*password', 'abc') 		= String[]{'pasword*password'}
 	 * </pre>
 	 * 
 	 * @param str
@@ -909,9 +909,9 @@ public class StringUtil {
 	 * If not, return true.
 	 * 
 	 * <pre>
-	 * StringUtil.isNotEmpty('') 		= false
-	 * StringUtil.isNotEmpty(null) 		= false
-	 * StringUtil.isNotEmpty('abc') 	= true
+	 * StringUtils.isNotEmpty('') 		= false
+	 * StringUtils.isNotEmpty(null) 		= false
+	 * StringUtils.isNotEmpty('abc') 	= true
 	 * </pre>
 	 * 
 	 * @param str
@@ -927,9 +927,9 @@ public class StringUtil {
 	 * If not, return false.
 	 * 
 	 * <pre>
-	 * StringUtil.isEmpty('') 		= true
-	 * StringUtil.isEmpty(null) 	= true
-	 * StringUtil.isEmpty('abc') 	= false
+	 * StringUtils.isEmpty('') 		= true
+	 * StringUtils.isEmpty(null) 	= true
+	 * StringUtils.isEmpty('abc') 	= false
 	 * </pre>
 	 * 
 	 * @param str
@@ -944,7 +944,7 @@ public class StringUtil {
 	 * replace replaced string to specific string from original string. <br>
 	 * 
 	 * <pre>
-	 * StringUtil.replace('work$id', '$', '.') 	= 'work.id'
+	 * StringUtils.replace('work$id', '$', '.') 	= 'work.id'
 	 * </pre>
 	 * 
 	 * @param str
@@ -970,7 +970,7 @@ public class StringUtil {
 	 * -> 27)
 	 * 
 	 * <pre>
-	 * StringUtil.string2integer('14') 	= 14
+	 * StringUtils.string2integer('14') 	= 14
 	 * </pre>
 	 *
 	 * @param str
@@ -982,7 +982,7 @@ public class StringUtil {
 	 *         return ret; } /** It converts integer type to String ( 27 -> '27')
 	 * 
 	 *         <pre>
-	 * StringUtil.integer2string(14) 	= '14'
+	 * StringUtils.integer2string(14) 	= '14'
 	 *         </pre>
 	 * 
 	 *         String string representation of a number public String
@@ -991,8 +991,8 @@ public class StringUtil {
 	 *         expression pattern matching.
 	 * 
 	 *         <pre>
-	 * StringUtil.isPatternMatching('abc-def', '*-*') 	= true
-	 * StringUtil.isPatternMatching('abc', '*-*') 	= false
+	 * StringUtils.isPatternMatching('abc-def', '*-*') 	= true
+	 * StringUtils.isPatternMatching('abc', '*-*') 	= false
 	 *         </pre>
 	 * 
 	 *         boolean which matches the pattern string or not.
@@ -1016,9 +1016,9 @@ public class StringUtil {
 	 * It returns true if string contains a sequence of the same character.
 	 * 
 	 * <pre>
-	 * StringUtil.containsMaxSequence('password', '2') 	= true
-	 * StringUtil.containsMaxSequence('my000', '3') 	= true
-	 * StringUtil.containsMaxSequence('abbbbc', '5')	= false
+	 * StringUtils.containsMaxSequence('password', '2') 	= true
+	 * StringUtils.containsMaxSequence('my000', '3') 	= true
+	 * StringUtils.containsMaxSequence('abbbbc', '5')	= false
 	 * </pre>
 	 * 
 	 * @param str
@@ -1059,13 +1059,13 @@ public class StringUtil {
 	 * </p>
 	 * 
 	 * <pre>
-	 * StringUtil.containsInvalidChars(null, *)       			= false
-	 * StringUtil.containsInvalidChars(*, null)      			= false
-	 * StringUtil.containsInvalidChars(&quot;&quot;, *)         = false
-	 * StringUtil.containsInvalidChars(&quot;ab&quot;, '')      = false
-	 * StringUtil.containsInvalidChars(&quot;abab&quot;, 'xyz') = false
-	 * StringUtil.containsInvalidChars(&quot;ab1&quot;, 'xyz')  = false
-	 * StringUtil.containsInvalidChars(&quot;xbz&quot;, 'xyz')  = true
+	 * StringUtils.containsInvalidChars(null, *)       			= false
+	 * StringUtils.containsInvalidChars(*, null)      			= false
+	 * StringUtils.containsInvalidChars(&quot;&quot;, *)         = false
+	 * StringUtils.containsInvalidChars(&quot;ab&quot;, '')      = false
+	 * StringUtils.containsInvalidChars(&quot;abab&quot;, 'xyz') = false
+	 * StringUtils.containsInvalidChars(&quot;ab1&quot;, 'xyz')  = false
+	 * StringUtils.containsInvalidChars(&quot;xbz&quot;, 'xyz')  = true
 	 * </pre>
 	 * 
 	 * @param str
@@ -1103,13 +1103,13 @@ public class StringUtil {
 	 * </p>
 	 * 
 	 * <pre>
-	 * StringUtil.containsInvalidChars(null, *)       			= false
-	 * StringUtil.containsInvalidChars(*, null)      			= false
-	 * StringUtil.containsInvalidChars(&quot;&quot;, *)         = false
-	 * StringUtil.containsInvalidChars(&quot;ab&quot;, '')      = false
-	 * StringUtil.containsInvalidChars(&quot;abab&quot;, 'xyz') = false
-	 * StringUtil.containsInvalidChars(&quot;ab1&quot;, 'xyz')  = false
-	 * StringUtil.containsInvalidChars(&quot;xbz&quot;, 'xyz')  = true
+	 * StringUtils.containsInvalidChars(null, *)       			= false
+	 * StringUtils.containsInvalidChars(*, null)      			= false
+	 * StringUtils.containsInvalidChars(&quot;&quot;, *)         = false
+	 * StringUtils.containsInvalidChars(&quot;ab&quot;, '')      = false
+	 * StringUtils.containsInvalidChars(&quot;abab&quot;, 'xyz') = false
+	 * StringUtils.containsInvalidChars(&quot;ab1&quot;, 'xyz')  = false
+	 * StringUtils.containsInvalidChars(&quot;xbz&quot;, 'xyz')  = true
 	 * </pre>
 	 * 
 	 * @param str
@@ -1135,13 +1135,13 @@ public class StringUtil {
 	 * </p>
 	 * 
 	 * <pre>
-	 * StringUtil.isAlphaNumeric(null)   			 = false
-	 * StringUtil.isAlphaNumeric(&quot;&quot;)     = false
-	 * StringUtil.isAlphaNumeric(&quot;  &quot;)   = false
-	 * StringUtil.isAlphaNumeric(&quot;abc&quot;)  = true
-	 * StringUtil.isAlphaNumeric(&quot;ab c&quot;) = false
-	 * StringUtil.isAlphaNumeric(&quot;ab2c&quot;) = true
-	 * StringUtil.isAlphaNumeric(&quot;ab-c&quot;) = false
+	 * StringUtils.isAlphaNumeric(null)   			 = false
+	 * StringUtils.isAlphaNumeric(&quot;&quot;)     = false
+	 * StringUtils.isAlphaNumeric(&quot;  &quot;)   = false
+	 * StringUtils.isAlphaNumeric(&quot;abc&quot;)  = true
+	 * StringUtils.isAlphaNumeric(&quot;ab c&quot;) = false
+	 * StringUtils.isAlphaNumeric(&quot;ab2c&quot;) = true
+	 * StringUtils.isAlphaNumeric(&quot;ab-c&quot;) = false
 	 * </pre>
 	 *
 	 * @param str
@@ -1161,12 +1161,12 @@ public class StringUtil {
 	 *         </p>
 	 * 
 	 *         <pre>
-	 * StringUtil.isAlpha(null)   			= false
-	 * StringUtil.isAlpha(&quot;&quot;)     = false
-	 * StringUtil.isAlpha(&quot;  &quot;)   = false
-	 * StringUtil.isAlpha(&quot;abc&quot;)  = true
-	 * StringUtil.isAlpha(&quot;ab2c&quot;) = false
-	 * StringUtil.isAlpha(&quot;ab-c&quot;) = false
+	 * StringUtils.isAlpha(null)   			= false
+	 * StringUtils.isAlpha(&quot;&quot;)     = false
+	 * StringUtils.isAlpha(&quot;  &quot;)   = false
+	 * StringUtils.isAlpha(&quot;abc&quot;)  = true
+	 * StringUtils.isAlpha(&quot;ab2c&quot;) = false
+	 * StringUtils.isAlpha(&quot;ab-c&quot;) = false
 	 *         </pre>
 	 * 
 	 *         <code>true</code> if only contains letters, and is non-null public
@@ -1184,14 +1184,14 @@ public class StringUtil {
 	 *         </p>
 	 * 
 	 *         <pre>
-	 * StringUtil.isNumeric(null)   		   = false
-	 * StringUtil.isNumeric(&quot;&quot;)     = false
-	 * StringUtil.isNumeric(&quot;  &quot;)   = false
-	 * StringUtil.isNumeric(&quot;123&quot;)  = true
-	 * StringUtil.isNumeric(&quot;12 3&quot;) = false
-	 * StringUtil.isNumeric(&quot;ab2c&quot;) = false
-	 * StringUtil.isNumeric(&quot;12-3&quot;) = false
-	 * StringUtil.isNumeric(&quot;12.3&quot;) = false
+	 * StringUtils.isNumeric(null)   		   = false
+	 * StringUtils.isNumeric(&quot;&quot;)     = false
+	 * StringUtils.isNumeric(&quot;  &quot;)   = false
+	 * StringUtils.isNumeric(&quot;123&quot;)  = true
+	 * StringUtils.isNumeric(&quot;12 3&quot;) = false
+	 * StringUtils.isNumeric(&quot;ab2c&quot;) = false
+	 * StringUtils.isNumeric(&quot;12-3&quot;) = false
+	 * StringUtils.isNumeric(&quot;12.3&quot;) = false
 	 *         </pre>
 	 * 
 	 *         <code>true</code> if only contains digits, and is non-null
@@ -1225,9 +1225,9 @@ public class StringUtil {
 	 *         </p>
 	 * 
 	 *         <pre>
-	 * StringUtil.reverse(null)  		   = null
-	 * StringUtil.reverse(&quot;&quot;)    = &quot;&quot;
-	 * StringUtil.reverse(&quot;bat&quot;) = &quot;tab&quot;
+	 * StringUtils.reverse(null)  		   = null
+	 * StringUtils.reverse(&quot;&quot;)    = &quot;&quot;
+	 * StringUtils.reverse(&quot;bat&quot;) = &quot;tab&quot;
 	 *         </pre>
 	 */
 
@@ -1466,9 +1466,9 @@ public class StringUtil {
 	 * </p>
 	 * 
 	 * <pre>
-	 * StringUtil.removeMinusChar(null)       = null
-	 * StringUtil.removeMinusChar("")         = ""
-	 * StringUtil.removeMinusChar("a-sdfg-qweqe") = "asdfgqweqe"
+	 * StringUtils.removeMinusChar(null)       = null
+	 * StringUtils.removeMinusChar("")         = ""
+	 * StringUtils.removeMinusChar("a-sdfg-qweqe") = "asdfgqweqe"
 	 * </pre>
 	 * 
 	 * @param str
@@ -1485,10 +1485,10 @@ public class StringUtil {
 	 * </p>
 	 * 
 	 * <pre>
-	 * StringUtil.remove(null, *)       = null
-	 * StringUtil.remove("", *)         = ""
-	 * StringUtil.remove("queued", 'u') = "qeed"
-	 * StringUtil.remove("queued", 'z') = "queued"
+	 * StringUtils.remove(null, *)       = null
+	 * StringUtils.remove("", *)         = ""
+	 * StringUtils.remove("queued", 'u') = "qeed"
+	 * StringUtils.remove("queued", 'z') = "queued"
 	 * </pre>
 	 * 
 	 * @param str
@@ -1515,8 +1515,8 @@ public class StringUtil {
      * 가장 마지막에 일치하는 문구를 원하는 문구로 대체한다.
      * 
      * <pre>
-     * StringUtil.replaceLast("ABC%DEF%GHI", "%", "-"): "ABC%DEF-GHI"
-     * StringUtil.replaceLast("ABC%DEF%GHI", "%", "\$"): "ABC%DEF$GHI"
+     * StringUtils.replaceLast("ABC%DEF%GHI", "%", "-"): "ABC%DEF-GHI"
+     * StringUtils.replaceLast("ABC%DEF%GHI", "%", "\$"): "ABC%DEF$GHI"
      * </pre>
      */
     public String replaceLast(String text, String regex, String replacement) {
@@ -1527,10 +1527,10 @@ public class StringUtil {
      * 공백 문자열인지 확인한다.
      * 
      * <pre>
-     * StringUtil.isBlank(null): true
-     * StringUtil.isBlank(""): true
-     * StringUtil.isBlank(" "): true
-     * StringUtil.isBlank(" ABC"): false
+     * StringUtils.isBlank(null): true
+     * StringUtils.isBlank(""): true
+     * StringUtils.isBlank(" "): true
+     * StringUtils.isBlank(" ABC"): false
      * </pre>
      */
     public boolean isBlank(String str) {
@@ -1543,14 +1543,14 @@ public class StringUtil {
      * 공백 문자열이 하나라도 있는지 확인한다.
      * 
      * <pre>
-     * StringUtil.areAnyBlanks(null, " "): true
-     * StringUtil.areAnyBlanks(null, "ABC"): true
-     * StringUtil.areAnyBlanks("ABC", ""): true
-     * StringUtil.areAnyBlanks(" ", "ABC"): true
-     * StringUtil.areAnyBlanks(" ABC", "ABC"): false
+     * StringUtils.anyBlanks(null, " "): true
+     * StringUtils.anyBlanks(null, "ABC"): true
+     * StringUtils.anyBlanks("ABC", ""): true
+     * StringUtils.anyBlanks(" ", "ABC"): true
+     * StringUtils.anyBlanks(" ABC", "ABC"): false
      * </pre>
      */
-    public boolean areAnyBlanks(String... strs) {
+    public boolean anyBlanks(String... strs) {
         // `new String[] {}`이 파라미터로 넘어 왔을 때
         if (strs == null || strs.length == 0) return true;
 
@@ -1565,28 +1565,28 @@ public class StringUtil {
      * 모두 공백 문자열인지 확인한다.
      * 
      * <pre>
-     * StringUtil.areAllBlanks(null, " "): true
-     * StringUtil.areAllBlanks(null, "ABC"): false
-     * StringUtil.areAllBlanks("ABC", ""): false
-     * StringUtil.areAllBlanks(" ", "ABC"): false
-     * StringUtil.areAllBlanks(" ABC", "ABC"): false
+     * StringUtils.allBlanks(null, " "): true
+     * StringUtils.allBlanks(null, "ABC"): false
+     * StringUtils.allBlanks("ABC", ""): false
+     * StringUtils.allBlanks(" ", "ABC"): false
+     * StringUtils.allBlanks(" ABC", "ABC"): false
      * </pre>
      */
-    public boolean areAllBlanks(String... strs) {
+    public boolean allBlanks(String... strs) {
         // `new String[] {}`이 파라미터로 넘어 왔을 때
         if (strs == null || strs.length == 0) return true;
 
-        return Stream.of(strs).allMatch(StringUtil::isBlank);
+        return Stream.of(strs).allMatch(StringUtils::isBlank);
     }
 
     /**
      * 공백 문자열이 아닌지 확인한다.
      * 
      * <pre>
-     * StringUtil.isNotBlank(null): false
-     * StringUtil.isNotBlank(""): false
-     * StringUtil.isNotBlank(" "): false
-     * StringUtil.isNotBlank(" ABC"): true
+     * StringUtils.isNotBlank(null): false
+     * StringUtils.isNotBlank(""): false
+     * StringUtils.isNotBlank(" "): false
+     * StringUtils.isNotBlank(" ABC"): true
      * </pre>
      */
     public boolean isNotBlank(String str) {
@@ -1597,37 +1597,37 @@ public class StringUtil {
      * 공백 문자열이 하나도 없는지 확인한다.
      * 
      * <pre>
-     * StringUtil.areNotAnyBlanks(null, " "): false
-     * StringUtil.areNotAnyBlanks(null, "ABC"): false
-     * StringUtil.areNotAnyBlanks("ABC", ""): false
-     * StringUtil.areNotAnyBlanks(" ", "ABC"): false
-     * StringUtil.areNotAnyBlanks(" ABC", "ABC"): true
+     * StringUtils.noBlanks(null, " "): false
+     * StringUtils.noBlanks(null, "ABC"): false
+     * StringUtils.noBlanks("ABC", ""): false
+     * StringUtils.noBlanks(" ", "ABC"): false
+     * StringUtils.noBlanks(" ABC", "ABC"): true
      * </pre>
      */
-    public boolean areNotAnyBlanks(String... strs) {
-        return !areAnyBlanks(strs);
+    public boolean noBlanks(String... strs) {
+        return !anyBlanks(strs);
     }
 
     /**
      * 공백이 아닌 문자열이 하나라도 있는지 확인한다.
      * 
      * <pre>
-     * StringUtil.areNotAllBlanks(null, " "): false
-     * StringUtil.areNotAllBlanks(null, "ABC"): true
-     * StringUtil.areNotAllBlanks("ABC", ""): true
-     * StringUtil.areNotAllBlanks(" ", "ABC"): true
-     * StringUtil.areNotAllBlanks(" ABC", "ABC"): true
+     * StringUtils.notAllBlanks(null, " "): false
+     * StringUtils.notAllBlanks(null, "ABC"): true
+     * StringUtils.notAllBlanks("ABC", ""): true
+     * StringUtils.notAllBlanks(" ", "ABC"): true
+     * StringUtils.notAllBlanks(" ABC", "ABC"): true
      * </pre>
      */
-    public boolean areNotAllBlanks(String... strs) {
-        return !areAllBlanks(strs);
+    public boolean notAllBlanks(String... strs) {
+        return !allBlanks(strs);
     }
     
     /**
      * 두 문자열에서 시작을 기준으로 중복되는 부분을 반환한다.
      * 
      * <pre>
-     * StringUtil.getDuplicity("You are so smart.", "You are so beautiful."): "You are so "
+     * StringUtils.getDuplicity("You are so smart.", "You are so beautiful."): "You are so "
      * </pre>
      */
     public String getDuplicity(String s1, String s2) {
@@ -1652,7 +1652,7 @@ public class StringUtil {
      * `부모 문자열` 뒤에 `자식 문자열`을 붙여 반환한다. 
      * 
      * <pre>
-     * StringUtil.appendWithoutDuplicity("http://www.naver.com", "http://www.naver.com/search"): "http://www.naver.com/search"
+     * StringUtils.appendWithoutDuplicity("http://www.naver.com", "http://www.naver.com/search"): "http://www.naver.com/search"
      * </pre>
      */
     public String appendWithoutDuplicity(String parent, String child) {
@@ -1664,15 +1664,15 @@ public class StringUtil {
      * `기준 문자열`과 일치하는 문자열이 하나라도 있는지 확인한다.
      * 
      * <pre>
-     * StringUtil.anyMatches(null, null): false
-     * StringUtil.anyMatches("", null): false
-     * StringUtil.anyMatches(null, ""): false
-     * StringUtil.anyMatches("", null, ""): true
-     * StringUtil.anyMatches("ABC", "abc"): false
-     * StringUtil.anyMatches("ABC", "abc", "ABC"): true
+     * StringUtils.anyEquals(null, null): false
+     * StringUtils.anyEquals("", null): false
+     * StringUtils.anyEquals(null, ""): false
+     * StringUtils.anyEquals("", null, ""): true
+     * StringUtils.anyEquals("ABC", "abc"): false
+     * StringUtils.anyEquals("ABC", "abc", "ABC"): true
      * </pre>
      */
-    public boolean anyMatches(String s1, String... strs) {
+    public boolean anyEquals(String s1, String... strs) {
         // `new String[] {}`이 파라미터로 넘어 왔을 때
         if (s1 == null || strs == null || strs.length == 0) return false;
 
@@ -1687,9 +1687,9 @@ public class StringUtil {
      * 3자리 숫자마다 ,(comma)로 구분한 문자열을 반환한다.
      * 
      * <pre>
-     * StringUtil.formatComma(""): "0"
-     * StringUtil.formatComma("-100"): "-100"
-     * StringUtil.formatComma("100000"): "100,000"
+     * StringUtils.formatComma(""): "0"
+     * StringUtils.formatComma("-100"): "-100"
+     * StringUtils.formatComma("100000"): "100,000"
      * </pre>
      */
     public String formatComma(String amount) {
@@ -1704,9 +1704,9 @@ public class StringUtil {
      * 3자리 숫자마다 ,(comma)로 구분한 문자열을 반환한다.
      * 
      * <pre>
-     * StringUtil.formatComma(0): "0"
-     * StringUtil.formatComma(-100): "-100"
-     * StringUtil.formatComma(100000): "100,000"
+     * StringUtils.formatComma(0): "0"
+     * StringUtils.formatComma(-100): "-100"
+     * StringUtils.formatComma(100000): "100,000"
      * </pre>
      */
     public String formatComma(int amount) {
@@ -1721,9 +1721,9 @@ public class StringUtil {
      * `해당 문자열`을 원하는 만큼 반복하여 복제한다.
      * 
      * <pre>
-     * StringUtil.repeat(null, 2): "nullnull"
-     * StringUtil.repeat("", 5): ""
-     * StringUtil.repeat("abc", 3): "abcabcabc"
+     * StringUtils.repeat(null, 2): "nullnull"
+     * StringUtils.repeat("", 5): ""
+     * StringUtils.repeat("abc", 3): "abcabcabc"
      * </pre>
      */
     public String repeat(String str, int cnt) {
@@ -1743,8 +1743,8 @@ public class StringUtil {
     }
 
     public Boolean string2boolean(String str) {
-        if (anyMatches(str.toLowerCase(), "true", "y", "yes")) return true;
-        else if (anyMatches(str.toLowerCase(), "false", "n", "no")) return false;
+        if (anyEquals(str.toLowerCase(), "true", "y", "yes")) return true;
+        else if (anyEquals(str.toLowerCase(), "false", "n", "no")) return false;
         else return null;
     }
 

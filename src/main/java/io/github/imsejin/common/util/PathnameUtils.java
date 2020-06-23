@@ -8,7 +8,7 @@ import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class PathnameUtil {
+public class PathnameUtils {
 
     @SneakyThrows(IOException.class)
     public String currentPathname() {

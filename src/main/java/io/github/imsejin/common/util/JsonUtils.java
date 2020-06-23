@@ -32,7 +32,7 @@ import lombok.experimental.UtilityClass;
  * @author SEJIN
  */
 @UtilityClass
-public class JsonUtil {
+public class JsonUtils {
 
     /**
      * URL에서 반환하는 JSON 형식의 문자열을 읽어 JsonObject로 변환한다.<br>
@@ -42,7 +42,7 @@ public class JsonUtil {
      * String uriText = "http://cdn.lezhin.com/episodes/snail/1.json?access_token=5be30a25-a044-410c-88b0-19a1da968a64";
      * URL url = URI.create(uriText).toURL();
      * 
-     * JsonObject json = JsonUtil.readJsonFromUrl(url);
+     * JsonObject json = JsonUtils.readJsonFromUrl(url);
      * </pre>
      */
     @SneakyThrows({ IOException.class, JsonSyntaxException.class })
@@ -70,7 +70,7 @@ public class JsonUtil {
      * <pre>
      * String jsonText = "{\"id\":1011,\"list\":[{\"id\":10,\"name\":\"foo\"},{\"id\":11,\"name\":\"bar\"}]}";
      * 
-     * T t = JsonUtil.toObject(jsonText, T.class);
+     * T t = JsonUtils.toObject(jsonText, T.class);
      * </pre>
      */
     @SneakyThrows(JsonSyntaxException.class)
@@ -87,7 +87,7 @@ public class JsonUtil {
      * JsonObject jsonObject = JsonParser.parseString(jsonText).getAsJsonObject();
      * JsonArray jsonArray = jsonObject.get("list").getAsJsonArray();
      * 
-     * List<T> list = JsonUtil.toList(jsonArray, T.class);
+     * List<T> list = JsonUtils.toList(jsonArray, T.class);
      * </pre>
      */
     @SneakyThrows(JsonSyntaxException.class)

@@ -8,7 +8,7 @@ import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class URLBuilder {
+public class URLFactory {
 
     private final StringBuilder $ = new StringBuilder();
 

@@ -11,8 +11,8 @@ import java.util.List;
 
 import com.google.gson.JsonObject;
 
-import io.github.imsejin.common.util.JsonUtil;
-import io.github.imsejin.common.util.StringUtil;
+import io.github.imsejin.common.util.JsonUtils;
+import io.github.imsejin.common.util.StringUtils;
 import io.github.imsejin.model.Episode;
 import io.github.imsejin.model.Product;
 import lombok.experimental.UtilityClass;
@@ -75,7 +75,7 @@ public class Downloader {
         if (numOfImages < 1) return;
 
         // 에피소드 이름으로 디렉터리를 생성한다.
-        String episodeDirName = StringUtil.lPad(num, 4, '0') + " - " + episode.getDisplay().getTitle();
+        String episodeDirName = StringUtils.lPad(num, 4, '0') + " - " + episode.getDisplay().getTitle();
         File episodeDir = new File(comicDir, episodeDirName);
         if (!episodeDir.exists()) episodeDir.mkdirs();
 
@@ -86,10 +86,10 @@ public class Downloader {
             // 마지막 이미지까지 다운로드한다.
             for (int i = 1; i <= numOfImages; i++) {
                 // 이미지 URI를 생성한다
-                URL url = URLBuilder.imageURL(comicId, episode.getId(), i, accessToken);
+                URL url = URLFactory.imageURL(comicId, episode.getId(), i, accessToken);
 
                 // 이미지를 다운로드한다.
-                File image = new File(episodeDir, StringUtil.lPad(String.valueOf(i), 3, '0') + IMG_FORMAT_EXTENSION);
+                File image = new File(episodeDir, StringUtils.lPad(String.valueOf(i), 3, '0') + IMG_FORMAT_EXTENSION);
                 int result = createImage(url, image);
 
                 // 다운로드에 실패하면 해당 회차를 건너뛴다.
@@ -122,8 +122,8 @@ public class Downloader {
     }
 
     private int getNumOfImagesInEpisode(String comicName, String episodeName, String accessToken) {
-        URL url = URLBuilder.oneEpisodeURL(comicName, episodeName, accessToken);
-        JsonObject json = JsonUtil.readJsonFromUrl(url);
+        URL url = URLFactory.oneEpisodeURL(comicName, episodeName, accessToken);
+        JsonObject json = JsonUtils.readJsonFromUrl(url);
 
         return json.get("cut").getAsInt();
     }

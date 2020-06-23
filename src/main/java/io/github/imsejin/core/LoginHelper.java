@@ -6,7 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import io.github.imsejin.common.constants.URIs;
-import io.github.imsejin.common.util.StringUtil;
+import io.github.imsejin.common.util.StringUtils;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -18,7 +18,7 @@ public class LoginHelper {
      */
     public String login(String username, String password) {
         // 유효하지 않은 계정 정보의 경우
-        if (StringUtil.areAnyBlanks(username, password)) {
+        if (StringUtils.anyBlanks(username, password)) {
             System.err.println("\n    ID or password is not valid.");
             return null;
         }
@@ -26,7 +26,7 @@ public class LoginHelper {
         String accessToken = getAccessToken(username, password);
 
         // 존재하지 않는 계정의 경우
-        if (StringUtil.isBlank(accessToken)) {
+        if (StringUtils.isBlank(accessToken)) {
             System.err.println("\n    The account does not exists.");
             return null;
         }
@@ -103,7 +103,7 @@ public class LoginHelper {
             return null;
         }
 
-        return StringUtil.match("token: '([\\w-]+)'", script.getAttribute("innerText"), 1);
+        return StringUtils.match("token: '([\\w-]+)'", script.getAttribute("innerText"), 1);
     }
 
 }

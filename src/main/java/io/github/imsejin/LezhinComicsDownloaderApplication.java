@@ -30,9 +30,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.github.imsejin.common.constants.EpisodeRange;
-import io.github.imsejin.common.util.JsonUtil;
-import io.github.imsejin.common.util.PathnameUtil;
-import io.github.imsejin.common.util.StringUtil;
+import io.github.imsejin.common.util.JsonUtils;
+import io.github.imsejin.common.util.PathnameUtils;
+import io.github.imsejin.common.util.StringUtils;
 import io.github.imsejin.core.ChromeBrowser;
 import io.github.imsejin.core.Crawler;
 import io.github.imsejin.core.Downloader;
@@ -79,7 +79,7 @@ public class LezhinComicsDownloaderApplication {
         String jsonText = Crawler.getJson(username, password, comicName);
 
         // JSON을 파싱하여 객체로 변환한다.
-        Product product = JsonUtil.toObject(jsonText, Product.class);
+        Product product = JsonUtils.toObject(jsonText, Product.class);
 
         // 다운로드를 위해, 데이터를 가공하고 웹툰 폴더를 생성한다.
         preprocess(product);
@@ -100,9 +100,9 @@ public class LezhinComicsDownloaderApplication {
         Collections.reverse(episodes);
 
         // 디렉터리명에 허용되지 않는 문자열을 치환한다.
-        product.getDisplay().setTitle(StringUtil.toSafeFileName(product.getDisplay().getTitle()));
+        product.getDisplay().setTitle(StringUtils.toSafeFileName(product.getDisplay().getTitle()));
         episodes.forEach(
-                episode -> episode.getDisplay().setTitle(StringUtil.toSafeFileName(episode.getDisplay().getTitle())));
+                episode -> episode.getDisplay().setTitle(StringUtils.toSafeFileName(episode.getDisplay().getTitle())));
     }
 
     private static File makeDirectory(Product product) {
@@ -110,34 +110,34 @@ public class LezhinComicsDownloaderApplication {
         String comicDirName = "L_" + product.getDisplay().getTitle() + " - "
                 + product.getArtists().stream()
                     .map(Artist::getName)
-                    .map(StringUtil::toSafeFileName)
+                    .map(StringUtils::toSafeFileName)
                     .collect(Collectors.joining(", "));
 
-        File comicDir = new File(PathnameUtil.currentPathname(), comicDirName);
+        File comicDir = new File(PathnameUtils.currentPathname(), comicDirName);
         if (!comicDir.exists()) comicDir.mkdirs();
 
         return comicDir;
     }
 
     private static void download(String episodeRange, Product product, String accessToken, File comicDir) {
-        if (StringUtil.isBlank(episodeRange) || episodeRange.matches("\\" + ALL)) {
+        if (StringUtils.isBlank(episodeRange) || episodeRange.matches("\\" + ALL)) {
             // 모든 에피소드를 다운로드한다.
             Downloader.downloadAll(product, accessToken, comicDir);
 
         } else if (episodeRange.matches("[0-9]+" + SEPARATOR)) {
             // 지정한 에피소드부터 끝까지 다운로드한다.
-            int from = Integer.parseInt(StringUtil.match("([0-9]+)" + SEPARATOR, episodeRange, 1));
+            int from = Integer.parseInt(StringUtils.match("([0-9]+)" + SEPARATOR, episodeRange, 1));
             Downloader.downloadFrom(product, accessToken, comicDir, from);
 
         } else if (episodeRange.matches(SEPARATOR + "[0-9]+")) {
             // 처음부터 지정한 에피소드까지 다운로드한다.
-            int to = Integer.parseInt(StringUtil.match(SEPARATOR + "([0-9]+)", episodeRange, 1));
+            int to = Integer.parseInt(StringUtils.match(SEPARATOR + "([0-9]+)", episodeRange, 1));
             Downloader.downloadTo(product, accessToken, comicDir, to);
 
         } else if (episodeRange.matches("[0-9]+~[0-9]+")) {
             // 지정한 에피소드들만 다운로드한다.
-            int from = Integer.parseInt(StringUtil.match("([0-9]+)" + SEPARATOR + "[0-9]+", episodeRange, 1));
-            int to = Integer.parseInt(StringUtil.match("[0-9]+" + SEPARATOR + "([0-9]+)", episodeRange, 1));
+            int from = Integer.parseInt(StringUtils.match("([0-9]+)" + SEPARATOR + "[0-9]+", episodeRange, 1));
+            int to = Integer.parseInt(StringUtils.match("[0-9]+" + SEPARATOR + "([0-9]+)", episodeRange, 1));
             Downloader.downloadSome(product, accessToken, comicDir, from, to);
         }
     }
