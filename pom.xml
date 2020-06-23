@@ -37,6 +37,13 @@
 			<artifactId>progressbar</artifactId>
 			<version>0.8.1</version>
 		</dependency>
+
+        <!-- Selenium -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>3.141.59</version>
+        </dependency>
 	</dependencies>
 
 	<build>
