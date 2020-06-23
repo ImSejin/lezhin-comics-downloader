@@ -1730,18 +1730,6 @@ public class StringUtils {
         return String.join("", Collections.nCopies(cnt, str));
     }
 
-    public String toSafeFileName(String fileName) {
-        return fileName.replaceAll("\\\\", "＼")
-                .replaceAll("/", "／")
-                .replaceAll(":", "：")
-                .replaceAll("\\?", "？")
-                .replaceAll("\"", " ˝")
-                .replaceAll("<", "＜")
-                .replaceAll(">", "＞")
-                .replaceAll("\\|", "｜")
-                .replaceAll("\\.+$", "…");
-    }
-
     public Boolean string2boolean(String str) {
         if (anyEquals(str.toLowerCase(), "true", "y", "yes")) return true;
         else if (anyEquals(str.toLowerCase(), "false", "n", "no")) return false;

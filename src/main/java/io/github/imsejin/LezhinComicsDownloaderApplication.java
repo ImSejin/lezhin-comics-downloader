@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.github.imsejin.common.constants.EpisodeRange;
+import io.github.imsejin.common.util.FilenameUtils;
 import io.github.imsejin.common.util.JsonUtils;
 import io.github.imsejin.common.util.PathnameUtils;
 import io.github.imsejin.common.util.StringUtils;
@@ -100,9 +101,9 @@ public class LezhinComicsDownloaderApplication {
         Collections.reverse(episodes);
 
         // 디렉터리명에 허용되지 않는 문자열을 치환한다.
-        product.getDisplay().setTitle(StringUtils.toSafeFileName(product.getDisplay().getTitle()));
+        product.getDisplay().setTitle(FilenameUtils.toSafeName(product.getDisplay().getTitle()));
         episodes.forEach(
-                episode -> episode.getDisplay().setTitle(StringUtils.toSafeFileName(episode.getDisplay().getTitle())));
+                episode -> episode.getDisplay().setTitle(FilenameUtils.toSafeName(episode.getDisplay().getTitle())));
     }
 
     private static File makeDirectory(Product product) {
@@ -110,7 +111,7 @@ public class LezhinComicsDownloaderApplication {
         String comicDirName = "L_" + product.getDisplay().getTitle() + " - "
                 + product.getArtists().stream()
                     .map(Artist::getName)
-                    .map(StringUtils::toSafeFileName)
+                    .map(FilenameUtils::toSafeName)
                     .collect(Collectors.joining(", "));
 
         File comicDir = new File(PathnameUtils.currentPathname(), comicDirName);
