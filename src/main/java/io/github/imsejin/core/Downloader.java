@@ -70,29 +70,29 @@ public class Downloader {
         long now = System.currentTimeMillis();
         if (episode.getFreedAt() > now) return;
 
-        // 에피소드의 이미지가 없으면 종료한다
+        // 에피소드의 이미지가 없으면 종료한다.
         final int numOfImages = getNumOfImagesInEpisode(comicName, episode.getName(), accessToken);
         if (numOfImages < 1) return;
 
-        // 에피소드 이름으로 디렉터리를 생성한다
+        // 에피소드 이름으로 디렉터리를 생성한다.
         String episodeDirName = StringUtil.lPad(num, 4, '0') + " - " + episode.getDisplay().getTitle();
         File episodeDir = new File(comicDir, episodeDirName);
         if (!episodeDir.exists()) episodeDir.mkdirs();
 
         try (ProgressBar progressBar = new ProgressBar(comicName + " ep." + num, numOfImages, 500, System.err, ProgressBarStyle.ASCII, "", 1)) {
-            // `ProgressBar.step()`이 step 1부터 시작하기 때문에 step 0로 초기화한다
+            // `ProgressBar.step()`이 step 1부터 시작하기 때문에 step 0로 초기화한다.
             progressBar.stepTo(0);
 
-            // 마지막 이미지까지 다운로드한다
+            // 마지막 이미지까지 다운로드한다.
             for (int i = 1; i <= numOfImages; i++) {
                 // 이미지 URI를 생성한다
                 URL url = URLBuilder.imageURL(comicId, episode.getId(), i, accessToken);
 
-                // 이미지를 다운로드한다
+                // 이미지를 다운로드한다.
                 File image = new File(episodeDir, StringUtil.lPad(String.valueOf(i), 3, '0') + IMG_FORMAT_EXTENSION);
                 int result = createImage(url, image);
 
-                // 다운로드에 실패하면 해당 회차를 건너뛴다
+                // 다운로드에 실패하면 해당 회차를 건너뛴다.
                 if (result == 0) break;
 
                 progressBar.stepBy(1);
