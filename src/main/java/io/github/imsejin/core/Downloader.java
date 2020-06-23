@@ -1,7 +1,5 @@
 package io.github.imsejin.core;
 
-import static io.github.imsejin.common.Constants.IMG_FORMAT_EXTENSION;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -24,7 +22,9 @@ import me.tongfei.progressbar.ProgressBarStyle;
 @UtilityClass
 public class Downloader {
 
-    private static final byte[] BUFFER = new byte[1024];
+    private final String IMG_FORMAT_EXTENSION = ".webp"; // or ".jpg"
+
+    private final byte[] BUFFER = new byte[1024];
 
     public void downloadAll(Product product, String accessToken, File comicDir) {
         long comicId = product.getId();

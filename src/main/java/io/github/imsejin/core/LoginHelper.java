@@ -1,26 +1,21 @@
 package io.github.imsejin.core;
 
-import static io.github.imsejin.common.Constants.LOGIN_URI;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 
-import java.io.IOException;
-import java.util.Spliterator;
-import java.util.Spliterators;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.StreamSupport;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
+import io.github.imsejin.common.constants.URIs;
 import io.github.imsejin.common.util.StringUtil;
-import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class LoginHelper {
 
+    /**
+     * 로그인하여 액세스 토큰을 얻는다.<br>
+     * Logins and gets an access token.
+     */
     public String login(String username, String password) {
         // 유효하지 않은 계정 정보의 경우
         if (StringUtil.areAnyBlanks(username, password)) {
@@ -40,8 +35,8 @@ public class LoginHelper {
     }
 
     /**
-     * 로그인하여 액세스 토큰을 찾아, 할당한다.<br>
-     * Finds access token after login, assigns it.
+     * 로그인하여 액세스 토큰을 찾아, 반환한다.<br>
+     * Finds access token after login, returns it.
      * 
      * <pre>{@code
      * <script>
@@ -77,37 +72,38 @@ public class LoginHelper {
      * </script>
      * }</pre>
      */
-    @SneakyThrows(IOException.class)
     private String getAccessToken(String username, String password) {
-        Document doc = Jsoup.connect(LOGIN_URI)
-                .data("username", username)
-                .data("password", password)
-                .post();
-        Elements elements = doc.select("body > script");
+        ChromeDriver driver = ChromeBrowser.getDriver();
 
-        String script = StreamSupport.stream(Spliterators.spliteratorUnknownSize(elements.iterator(), Spliterator.ORDERED), false)
-                .map(Element::toString)
-                .filter(node -> node.contains("token: "))
-                .findFirst()
-                .orElse(null);
+        // 로그인 페이지를 요청한다.
+        driver.get(URIs.LOGIN.value());
 
-        // 존재하지 않는 계정의 경우
-        if (script == null) return null;
+        // 계정정보를 작성한다.
+        WebElement loginForm = driver.findElementByXPath("//form[@id='login-form' and contains(@action, '/ko/login') and @method='post']");
+        WebElement usernameInput = loginForm.findElement(By.xpath(".//input[@id='login-email']"));
+        usernameInput.clear();
+        usernameInput.sendKeys(username);
+        WebElement passwordInput = loginForm.findElement(By.xpath(".//input[@id='login-password']"));
+        passwordInput.clear();
+        passwordInput.sendKeys(password);
 
-        // "token: '5be30a25-a044-410c-88b0-19a1da968a64'"
-        String accessToken = StringUtil.match("token: '([\\w-]*)'", script, 1);
-        System.out.println(accessToken);
-        
-        return accessToken;
-//        Matcher matcher = Pattern.compile("token: '([\\w-]*)'", Pattern.MULTILINE).matcher(script);
-//
-//        StringBuilder sb = new StringBuilder();
-//        while (matcher.find()) {
-//            sb.append(matcher.group(1));
-//        }
-//
-//        return sb.toString();
-//        return sb.toString().replaceAll("'", "").replace("token: ", "");
+        // 로그인한다.
+        WebElement submitButton = loginForm.findElement(By.xpath(".//button[@type='submit']"));
+        submitButton.click();
+
+        // 로그인 딜레이를 대기하기 위해 메인페이지로 이동한다.
+        driver.get(URIs.HOME.value());
+
+        // 액세스 토큰 정보가 있는 script 태그를 찾는다.
+        WebElement script;
+        try {
+            script = driver.findElementByXPath("//script[not(@src) and contains(text(), '__LZ_ME__')]");
+        } catch (NoSuchElementException ex) {
+            System.err.println("The account does not exists.");
+            return null;
+        }
+
+        return StringUtil.match("token: '([\\w-]+)'", script.getAttribute("innerText"), 1);
     }
 
 }

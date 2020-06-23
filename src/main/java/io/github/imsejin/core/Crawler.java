@@ -1,19 +1,8 @@
 package io.github.imsejin.core;
 
-import static io.github.imsejin.common.Constants.ADULT_EPISODE_ID_URI_PARAM;
-import static io.github.imsejin.common.Constants.LOGIN_URI;
+import org.openqa.selenium.chrome.ChromeDriver;
 
-import java.io.IOException;
-import java.util.Spliterator;
-import java.util.Spliterators;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
-
-import lombok.SneakyThrows;
+import io.github.imsejin.common.constants.URIs;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -24,7 +13,7 @@ public class Crawler {
      * Finds webtoon information, converts to the JSON format string and return it.<br><br>
      * 
      * 일반적으로 접근했을 때와 크롤러로 접근했을 때의 페이지가 다르다.<br>
-     * 다행히 필요한 모든 정보가 script 태그 내 JSON 형태로 있어서 이를 이용한다.
+     * 필요한 모든 정보가 script 태그 내 JSON 형태로 있어서 이를 이용한다.
      * 
      * <pre>{@code
      * <script>
@@ -37,37 +26,16 @@ public class Crawler {
      * </script>
      * }</pre>
      */
-    @SneakyThrows(IOException.class)
     public String getJson(String username, String password, String comicName) {
-        // 해당 웹툰의 정보가 담긴 JSON을 찾기 위해 <script/> 태그를 찾는다
-//        Document doc = Jsoup.connect(EPISODE_ID_URI_PREFIX + comicName).get();
-        Document doc = Jsoup.connect(LOGIN_URI + ADULT_EPISODE_ID_URI_PARAM + comicName)
-                .data("username", username)
-                .data("password", password)
-                .post();
-        Elements elements = doc.select("body > script");
+        ChromeDriver driver = ChromeBrowser.getDriver();
 
-        // `__LZ_PRODUCT__` 객체가 있는 script 태그의 내용을 가져온다
-        String script = StreamSupport.stream(Spliterators.spliteratorUnknownSize(elements.iterator(), Spliterator.ORDERED), false)
-                .map(element -> element.childNode(0).toString())
-                .filter(node -> node.contains("__LZ_PRODUCT__"))
-                .findFirst()
-                .get();
+        driver.get(URIs.COMIC.value() + comicName);
 
-        // `__LZ_PRODUCT__.product` 부분을 파싱한다
-        String productJson = Stream.of(script.split("\n"))
-                .filter(line -> line.contains("product: {"))
-                .map(String::trim)
-                .findAny()
-                .get();
+        // 웹툰의 정보가 window 객체의 필드로 정의되어 있어, 이를 가져오기 위해 로컬스토리지에 저장한다.
+        driver.executeScript("localStorage.setItem('product', JSON.stringify(window.__LZ_PRODUCT__.product));");
 
-        // 앞 부분 "product: " 제거
-        productJson = productJson.substring("product: ".length());
-
-        // 마지막 "," 제거
-        productJson = productJson.substring(0, productJson.length() - 1);
-
-        return productJson;
+        // 웹툰의 정보를 로컬스토리지에서 가져와 JSON 형식의 문자열을 반환한다.
+        return driver.getLocalStorage().getItem("product");
     }
 
 }
