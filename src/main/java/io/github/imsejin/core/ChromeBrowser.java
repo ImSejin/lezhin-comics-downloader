@@ -9,10 +9,11 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class ChromeBrowser {
 
+    private final String CHROME_DRIVER_PATHNAME = PathnameUtil.chromeDriverPathname();
+
     static {
         // WebDriver의 경로를 설정한다.
-        final String chromeDriverPathname = PathnameUtil.chromeDriverPathname();
-        System.setProperty("webdriver.chrome.driver", chromeDriverPathname);
+        System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_PATHNAME);
     }
 
     public static ChromeDriver getDriver() {

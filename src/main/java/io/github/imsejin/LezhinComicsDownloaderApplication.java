@@ -25,14 +25,13 @@
 package io.github.imsejin;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import io.github.imsejin.common.constants.EpisodeRange;
 import io.github.imsejin.common.util.JsonUtil;
+import io.github.imsejin.common.util.PathnameUtil;
 import io.github.imsejin.common.util.StringUtil;
 import io.github.imsejin.core.ChromeBrowser;
 import io.github.imsejin.core.Crawler;
@@ -41,7 +40,6 @@ import io.github.imsejin.core.LoginHelper;
 import io.github.imsejin.model.Artist;
 import io.github.imsejin.model.Episode;
 import io.github.imsejin.model.Product;
-import lombok.SneakyThrows;
 
 public class LezhinComicsDownloaderApplication {
 
@@ -87,27 +85,8 @@ public class LezhinComicsDownloaderApplication {
         preprocess(product);
         File comicDir = makeDirectory(product);
 
-        if (StringUtil.isBlank(episodeRange) || episodeRange.matches("\\" + ALL)) {
-            // 모든 에피소드를 다운로드한다.
-            Downloader.downloadAll(product, accessToken, comicDir);
-        } else {
-            if (episodeRange.matches("[0-9]+" + SEPARATOR)) {
-                // 지정한 에피소드부터 끝까지 다운로드한다.
-                int from = Integer.parseInt(StringUtil.match("([0-9]+)" + SEPARATOR, episodeRange, 1));
-                Downloader.downloadFrom(product, accessToken, comicDir, from);
-
-            } else if (episodeRange.matches(SEPARATOR + "[0-9]+")) {
-                // 처음부터 지정한 에피소드까지 다운로드한다.
-                int to = Integer.parseInt(StringUtil.match(SEPARATOR + "([0-9]+)", episodeRange, 1));
-                Downloader.downloadTo(product, accessToken, comicDir, to);
-
-            } else if (episodeRange.matches("[0-9]+~[0-9]+")) {
-                // 지정한 에피소드들만 다운로드한다.
-                int from = Integer.parseInt(StringUtil.match("([0-9]+)" + SEPARATOR + "[0-9]+", episodeRange, 1));
-                int to = Integer.parseInt(StringUtil.match("[0-9]+" + SEPARATOR + "([0-9]+)", episodeRange, 1));
-                Downloader.downloadSome(product, accessToken, comicDir, from, to);
-            }
-        }
+        // 이미지를 다운로드한다.
+        download(episodeRange, product, accessToken, comicDir);
 
         // 애플리케이션을 정상 종료한다.
         ChromeBrowser.getDriver().quit();
@@ -126,7 +105,6 @@ public class LezhinComicsDownloaderApplication {
                 episode -> episode.getDisplay().setTitle(StringUtil.toSafeFileName(episode.getDisplay().getTitle())));
     }
 
-    @SneakyThrows(IOException.class)
     private static File makeDirectory(Product product) {
         // 웹툰 이름으로 디렉터리를 생성한다.
         String comicDirName = "L_" + product.getDisplay().getTitle() + " - "
@@ -135,12 +113,33 @@ public class LezhinComicsDownloaderApplication {
                     .map(StringUtil::toSafeFileName)
                     .collect(Collectors.joining(", "));
 
-        String currentPathName = Paths.get(".").toRealPath().toString();
-        File comicDir = new File(currentPathName, comicDirName);
-
+        File comicDir = new File(PathnameUtil.currentPathname(), comicDirName);
         if (!comicDir.exists()) comicDir.mkdirs();
 
         return comicDir;
+    }
+
+    private static void download(String episodeRange, Product product, String accessToken, File comicDir) {
+        if (StringUtil.isBlank(episodeRange) || episodeRange.matches("\\" + ALL)) {
+            // 모든 에피소드를 다운로드한다.
+            Downloader.downloadAll(product, accessToken, comicDir);
+
+        } else if (episodeRange.matches("[0-9]+" + SEPARATOR)) {
+            // 지정한 에피소드부터 끝까지 다운로드한다.
+            int from = Integer.parseInt(StringUtil.match("([0-9]+)" + SEPARATOR, episodeRange, 1));
+            Downloader.downloadFrom(product, accessToken, comicDir, from);
+
+        } else if (episodeRange.matches(SEPARATOR + "[0-9]+")) {
+            // 처음부터 지정한 에피소드까지 다운로드한다.
+            int to = Integer.parseInt(StringUtil.match(SEPARATOR + "([0-9]+)", episodeRange, 1));
+            Downloader.downloadTo(product, accessToken, comicDir, to);
+
+        } else if (episodeRange.matches("[0-9]+~[0-9]+")) {
+            // 지정한 에피소드들만 다운로드한다.
+            int from = Integer.parseInt(StringUtil.match("([0-9]+)" + SEPARATOR + "[0-9]+", episodeRange, 1));
+            int to = Integer.parseInt(StringUtil.match("[0-9]+" + SEPARATOR + "([0-9]+)", episodeRange, 1));
+            Downloader.downloadSome(product, accessToken, comicDir, from, to);
+        }
     }
 
 }

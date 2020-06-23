@@ -1,8 +1,7 @@
 package io.github.imsejin.core;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
-import org.junit.AfterClass;
 import org.junit.Test;
 import org.openqa.selenium.chrome.ChromeDriver;
 
@@ -23,10 +22,12 @@ public class ChromeBrowserTest {
         assertTrue(product.startsWith("{\"display\":{\"title\":\""));
     }
 
+    /*
     @AfterClass
     public static void quitDriver() {
         // ChromeDriver를 닫고 해당 프로세스를 종료한다.
         ChromeBrowser.getDriver().quit();
     }
+    */
 
 }
