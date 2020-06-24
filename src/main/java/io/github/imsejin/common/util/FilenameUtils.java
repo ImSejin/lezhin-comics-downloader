@@ -4,6 +4,13 @@ import java.io.File;
 
 import lombok.experimental.UtilityClass;
 
+/**
+ * 파일명 유틸리티<br>
+ * Filename utilities
+ * 
+ * 
+ * @author SEJIN
+ */
 @UtilityClass
 public class FilenameUtils {
 
@@ -29,7 +36,8 @@ public class FilenameUtils {
     }
 
     /**
-     * 확장자를 제외한 파일명을 반환한다.
+     * 확장자를 제외한 파일명을 반환한다.<br>
+     * Returns the filename excluding the extension.
      * 
      * <pre>
      * File file = new File("D:/Program Files/Java/jdk1.8.0_202/README.html");
@@ -50,7 +58,8 @@ public class FilenameUtils {
     }
 
     /**
-     * 파일의 확장자를 반환한다.
+     * 파일의 확장자를 반환한다.<br>
+     * Returns the file's extension.
      * 
      * <pre>
      * File file = new File("D:/Program Files/Java/jdk1.8.0_202/README.html");
@@ -66,14 +75,36 @@ public class FilenameUtils {
                 ? ""
                 : filename.substring(index + 1);
     }
-
+    
+    /**
+     * 파일명에 사용할 수 없는 문자를 특수문자로 치환한다.<br>
+     * Replace a character that cannot be used in a file name with a special character.
+     * 
+     * <pre>
+     * "\\" -> "＼"
+     * "/"  -> "／"
+     * ":"  -> "："
+     * "*"  -> "＊"
+     * "?"  -> "？"
+     * "\"" -> "˝"
+     * "<"  -> "＜"
+     * ">"  -> "＞"
+     * "|"  -> "｜"
+     * 
+     * String filename = "** <happy/\\new year> **:\"john\" -> |\"jeremy\"|";
+     * FilenameUtils.toSafeName(filename): "＊＊ ＜happy／＼new year＞ ＊＊：˝john˝ -＞ ｜˝jeremy˝｜"
+     * 
+     * FilenameUtils.toSafeName("where he is gone.."): "where he is gone…"
+     * FilenameUtils.toSafeName("I feel happy when coding."): "I feel happy when coding．"
+     * </pre>
+     */
     public String toSafeName(String filename) {
         return filename.replaceAll("\\\\", "＼")
                 .replaceAll("/", "／")
                 .replaceAll(":", "：")
                 .replaceAll("\\*", "＊")
                 .replaceAll("\\?", "？")
-                .replaceAll("\"", " ˝")
+                .replaceAll("\"", "˝")
                 .replaceAll("<", "＜")
                 .replaceAll(">", "＞")
                 .replaceAll("\\|", "｜")
