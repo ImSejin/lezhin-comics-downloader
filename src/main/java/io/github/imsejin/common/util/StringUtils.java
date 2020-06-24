@@ -1516,7 +1516,7 @@ public class StringUtils {
      * 
      * <pre>
      * StringUtils.replaceLast("ABC%DEF%GHI", "%", "-"): "ABC%DEF-GHI"
-     * StringUtils.replaceLast("ABC%DEF%GHI", "%", "\$"): "ABC%DEF$GHI"
+     * StringUtils.replaceLast("ABC%DEF%GHI", "%", "\\$"): "ABC%DEF$GHI"
      * </pre>
      */
     public String replaceLast(String text, String regex, String replacement) {
