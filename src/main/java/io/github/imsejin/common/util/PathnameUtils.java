@@ -1,6 +1,6 @@
 package io.github.imsejin.common.util;
 
-import static io.github.imsejin.common.util.DateUtils.getToday;
+import static io.github.imsejin.common.util.DateUtils.today;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,9 +9,9 @@ import java.nio.file.Paths;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import io.github.imsejin.common.util.DateUtils.DateType;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
+import io.github.imsejin.common.constants.DateType;
 
 @UtilityClass
 public class PathnameUtils {
@@ -105,7 +105,7 @@ public class PathnameUtils {
      * </pre>
      */
     public String appendYearMonth(String pathname) {
-        return concat(false, pathname, getToday(DateType.YEAR), getToday(DateType.MONTH));
+        return concat(false, pathname, today(DateType.YEAR), today(DateType.MONTH));
     }
 
     /**
@@ -119,7 +119,7 @@ public class PathnameUtils {
      * </pre>
      */
     public String appendYearMonthDay(String pathname) {
-        return concat(false, pathname, getToday(DateType.YEAR), getToday(DateType.MONTH), getToday(DateType.DAY));
+        return concat(false, pathname, today(DateType.YEAR), today(DateType.MONTH), today(DateType.DAY));
     }
 
 }
