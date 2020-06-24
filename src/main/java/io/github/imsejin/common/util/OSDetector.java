@@ -1,5 +1,11 @@
 package io.github.imsejin.common.util;
 
+/**
+ * 운영체제 감지기<br>
+ * Operating system detector
+ * 
+ * @author SEJIN
+ */
 public final class OSDetector {
 
     private OSDetector() {}

@@ -11,6 +11,13 @@ import java.util.stream.Stream;
 
 import io.github.imsejin.common.constants.DateType;
 
+/**
+ * 경로명 유틸리티<br>
+ * Pathname utilities
+ * 
+ * 
+ * @author SEJIN
+ */
 public final class PathnameUtils {
 
     private PathnameUtils() {}
@@ -102,7 +109,7 @@ public final class PathnameUtils {
      * Adds the current year/month (yyyy/MM) pathname to the end of the pathname.
      * 
      * <pre>
-     * DateUtils.getToday(): "20191231"
+     * DateUtils.today(): "20191231"
      * 
      * PathnameUtils.appendYearMonth("C:\\Program Files"): "C:\\Program Files\\2019\\12"
      * </pre>
@@ -116,7 +123,7 @@ public final class PathnameUtils {
      * Adds the current year/month/day (yyyy/MM/dd) pathname to the end of the pathname.
      * 
      * <pre>
-     * DateUtils.getToday(): "20191231"
+     * DateUtils.today(): "20191231"
      * 
      * PathnameUtils.appendYearMonthDay("C:\\Program Files"): "C:\\Program Files\\2019\\12\\31"
      * </pre>
