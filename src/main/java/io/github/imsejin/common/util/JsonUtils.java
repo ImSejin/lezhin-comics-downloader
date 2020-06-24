@@ -17,9 +17,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
-import lombok.SneakyThrows;
-import lombok.experimental.UtilityClass;
-
 /**
  * JSON 유틸리티<br>
  * JSON utilities
@@ -31,8 +28,9 @@ import lombok.experimental.UtilityClass;
  * 
  * @author SEJIN
  */
-@UtilityClass
-public class JsonUtils {
+public final class JsonUtils {
+
+    private JsonUtils() {}
 
     /**
      * URL에서 반환하는 JSON 형식의 문자열을 읽어 JsonObject로 변환한다.<br>
@@ -45,8 +43,7 @@ public class JsonUtils {
      * JsonObject json = JsonUtils.readJsonFromUrl(url);
      * </pre>
      */
-    @SneakyThrows({ IOException.class, JsonSyntaxException.class })
-    public JsonObject readJsonFromUrl(URL url) {
+    public static JsonObject readJsonFromUrl(URL url) throws IOException, JsonSyntaxException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
             String jsonText = readAllJson(reader);
             JsonObject json = JsonParser.parseString(jsonText).getAsJsonObject();
@@ -59,7 +56,7 @@ public class JsonUtils {
      * Reader가 읽은 모든 문자들을 문자열로 변환한다.<br>
      * Converts all characters read by Reader to string.
      */
-    private String readAllJson(BufferedReader reader) {
+    private static String readAllJson(BufferedReader reader) {
         return reader.lines().collect(Collectors.joining(System.lineSeparator()));
     }
 
@@ -73,8 +70,7 @@ public class JsonUtils {
      * T t = JsonUtils.toObject(jsonText, T.class);
      * </pre>
      */
-    @SneakyThrows(JsonSyntaxException.class)
-    public <T> T toObject(String jsonText, Class<T> clazz) {
+    public static <T> T toObject(String jsonText, Class<T> clazz) throws JsonSyntaxException {
         return new Gson().fromJson(jsonText, clazz);
     }
 
@@ -90,8 +86,7 @@ public class JsonUtils {
      * List<T> list = JsonUtils.toList(jsonArray, T.class);
      * </pre>
      */
-    @SneakyThrows(JsonSyntaxException.class)
-    public <T> List<T> toList(JsonArray jsonArray, Class<T> clazz) {
+    public static <T> List<T> toList(JsonArray jsonArray, Class<T> clazz) throws JsonSyntaxException {
         Gson gson = new Gson();
 
         List<T> list = StreamSupport.stream(Spliterators.spliteratorUnknownSize(jsonArray.iterator(), Spliterator.ORDERED), false)

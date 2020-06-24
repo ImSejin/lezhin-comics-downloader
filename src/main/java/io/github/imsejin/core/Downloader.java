@@ -10,11 +10,13 @@ import java.net.URL;
 import java.util.List;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 
 import io.github.imsejin.common.util.JsonUtils;
 import io.github.imsejin.common.util.StringUtils;
 import io.github.imsejin.model.Episode;
 import io.github.imsejin.model.Product;
+import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import me.tongfei.progressbar.ProgressBar;
 import me.tongfei.progressbar.ProgressBarStyle;
@@ -121,6 +123,7 @@ public class Downloader {
         }
     }
 
+    @SneakyThrows({ IOException.class, JsonSyntaxException.class })
     private int getNumOfImagesInEpisode(String comicName, String episodeName, String accessToken) {
         URL url = URLFactory.oneEpisodeURL(comicName, episodeName, accessToken);
         JsonObject json = JsonUtils.readJsonFromUrl(url);
