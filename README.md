@@ -16,20 +16,30 @@ This is downloader that helps login process and downloads the specified comic fo
 
 ### Usage
 
-This is an executable JAR package. To run it, use the following command
+This is an executable JAR package. To run it, use the following command.
 
 ```cmd
-java -jar lezhin-comics-downloader.jar
+java -jar lezhin-comics-downloader.jar {id} {password} {comic name} [{episode range}]
 ```
+
+- *id*, *password*: your lezhin comics account, not account of third party platform.
+- *comic name*: the webtoon name you want to download.
+- *episode range*
+  - **skipped** : all of episodes
+  - ***** : all of episodes
+  - **8~** : from ep.8 to the end of the episode
+  - **~25 **: from the beginning of the episode to ep.25
+  - **1~10** : from ep.1 to ep.10
 
 
 
 ### Dependencies
 
-* Lombok
-* JSoup
-* Gson
-* Progress Bar
+- Lombok
+- Selenium
+- Gson
+- Progress Bar
+- Junit
 
 
 
