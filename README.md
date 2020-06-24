@@ -25,11 +25,11 @@ java -jar lezhin-comics-downloader.jar {id} {password} {comic name} [{episode ra
 - *id*, *password*: your lezhin comics account, not account of third party platform.
 - *comic name*: the webtoon name you want to download.
 - *episode range*
-  - **skipped** : all of episodes
-  - ***** : all of episodes
-  - **8~** : from ep.8 to the end of the episode
-  - **~25 **: from the beginning of the episode to ep.25
-  - **1~10** : from ep.1 to ep.10
+  - __skipped__ : all of episodes
+  - __*__ : all of episodes
+  - __8~__ : from ep.8 to the end of the episode
+  - __~25__ : from the beginning of the episode to ep.25
+  - __1~10__ : from ep.1 to ep.10
 
 
 
