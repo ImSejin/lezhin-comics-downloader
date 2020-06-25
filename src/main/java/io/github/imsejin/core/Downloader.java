@@ -29,20 +29,11 @@ public class Downloader {
     private final byte[] BUFFER = new byte[1024];
 
     public void downloadAll(Product product, String accessToken, File comicDir) {
-        long comicId = product.getId();
-        String comicName = product.getAlias();
-
-        List<Episode> episodes = product.getEpisodes();
-        int size = episodes.size();
-
-        for (int i = 0; i < size; i++) {
-            Episode episode = episodes.get(i);
-            downloadOne(episode, comicId, comicName, accessToken, comicDir, i + 1);
-        }
+        downloadSome(product, accessToken, comicDir, 1, product.getEpisodes().size());
     }
 
     public void downloadFrom(Product product, String accessToken, File comicDir, int from) {
-        downloadSome(product, accessToken, comicDir, from, Integer.MAX_VALUE);
+        downloadSome(product, accessToken, comicDir, from, product.getEpisodes().size());
     }
 
     public void downloadTo(Product product, String accessToken, File comicDir, int to) {
