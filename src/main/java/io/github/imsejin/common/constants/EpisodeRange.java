@@ -3,12 +3,6 @@ package io.github.imsejin.common.constants;
 public enum EpisodeRange implements GettableEnum {
 
     /**
-     * 모든 에피소드<br>
-     * All of episodes
-     */
-    ALL("*"),
-
-    /**
      * 에피소드 번호의 구분자<br>
      * Separator of episode number
      */
