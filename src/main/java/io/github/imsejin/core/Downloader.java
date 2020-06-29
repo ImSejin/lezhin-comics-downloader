@@ -44,7 +44,7 @@ public final class Downloader {
         from = from <= 0 ? 0 : from - 1;
 
         // 해당 웹툰의 마지막 에피소드 번호를 초과하는 에피소드 번호를 지정하면, 마지막 에피소드까지 다운로드하는 것으로 변경한다.
-        to = to > episodes.size() ? episodes.size() : to;
+        to = Math.min(to, episodes.size());
 
         for (int i = from; i < to; i++) {
             Episode episode = episodes.get(i);
