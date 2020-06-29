@@ -1,4 +1,4 @@
-/**
+/*
  * MIT License
  * 
  * Copyright (c) 2020 Im Sejin
@@ -24,11 +24,6 @@
 
 package io.github.imsejin;
 
-import java.io.File;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import io.github.imsejin.common.constants.EpisodeRange;
 import io.github.imsejin.common.util.FilenameUtils;
 import io.github.imsejin.common.util.JsonUtils;
@@ -42,7 +37,14 @@ import io.github.imsejin.model.Artist;
 import io.github.imsejin.model.Episode;
 import io.github.imsejin.model.Product;
 
-public class LezhinComicsDownloaderApplication {
+import java.io.File;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public final class LezhinComicsDownloaderApplication {
+
+    private LezhinComicsDownloaderApplication() {}
 
     private static final String SEPARATOR = EpisodeRange.SEPARATOR.value();
 

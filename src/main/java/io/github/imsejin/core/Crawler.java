@@ -1,12 +1,11 @@
 package io.github.imsejin.core;
 
+import io.github.imsejin.common.constants.URIs;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import io.github.imsejin.common.constants.URIs;
-import lombok.experimental.UtilityClass;
+public final class Crawler {
 
-@UtilityClass
-public class Crawler {
+    private Crawler() {}
 
     /**
      * 웹툰 정보를 찾아, JSON 형태의 문자열로 반환한다.<br>
@@ -26,7 +25,7 @@ public class Crawler {
      * </script>
      * }</pre>
      */
-    public String getJson(String username, String password, String comicName) {
+    public static String getJson(String username, String password, String comicName) {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
         driver.get(URIs.COMIC.value() + comicName);

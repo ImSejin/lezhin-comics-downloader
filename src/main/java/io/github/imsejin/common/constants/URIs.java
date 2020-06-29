@@ -34,7 +34,7 @@ public enum URIs implements GettableEnum {
      */
     IMG(CDN.value() + "v2/comics/");
 
-    private String value;
+    private final String value;
 
     URIs(String uri) {
         this.value = uri;

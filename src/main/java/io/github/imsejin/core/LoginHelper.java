@@ -1,22 +1,21 @@
 package io.github.imsejin.core;
 
+import io.github.imsejin.common.constants.URIs;
+import io.github.imsejin.common.util.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import io.github.imsejin.common.constants.URIs;
-import io.github.imsejin.common.util.StringUtils;
-import lombok.experimental.UtilityClass;
+public final class LoginHelper {
 
-@UtilityClass
-public class LoginHelper {
+    private LoginHelper() {}
 
     /**
      * 로그인하여 액세스 토큰을 얻는다.<br>
      * Logins and gets an access token.
      */
-    public String login(String username, String password) {
+    public static String login(String username, String password) {
         // 유효하지 않은 계정 정보의 경우
         if (StringUtils.anyBlanks(username, password)) {
             System.err.println("\n    ID or password is not valid.");
@@ -72,7 +71,7 @@ public class LoginHelper {
      * </script>
      * }</pre>
      */
-    private String getAccessToken(String username, String password) {
+    private static String getAccessToken(String username, String password) {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
         // 로그인 페이지를 요청한다.

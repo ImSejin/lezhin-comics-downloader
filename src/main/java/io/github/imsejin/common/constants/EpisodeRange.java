@@ -8,7 +8,7 @@ public enum EpisodeRange implements GettableEnum {
      */
     SEPARATOR("~");
 
-    private String value;
+    private final String value;
 
     EpisodeRange(String value) {
         this.value = value;

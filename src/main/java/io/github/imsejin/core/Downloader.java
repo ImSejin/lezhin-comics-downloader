@@ -1,46 +1,40 @@
 package io.github.imsejin.core;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.util.List;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-
 import io.github.imsejin.common.util.JsonUtils;
 import io.github.imsejin.common.util.StringUtils;
 import io.github.imsejin.model.Episode;
 import io.github.imsejin.model.Product;
 import lombok.SneakyThrows;
-import lombok.experimental.UtilityClass;
 import me.tongfei.progressbar.ProgressBar;
 import me.tongfei.progressbar.ProgressBarStyle;
 
-@UtilityClass
-public class Downloader {
+import java.io.*;
+import java.net.URL;
+import java.util.List;
 
-    private final String IMG_FORMAT_EXTENSION = ".webp"; // or ".jpg"
+public final class Downloader {
 
-    private final byte[] BUFFER = new byte[1024];
+    private Downloader() {}
 
-    public void downloadAll(Product product, String accessToken, File comicDir) {
+    private static final String IMG_FORMAT_EXTENSION = ".webp"; // or ".jpg"
+
+    private static final byte[] BUFFER = new byte[1024];
+
+    public static void downloadAll(Product product, String accessToken, File comicDir) {
         downloadSome(product, accessToken, comicDir, 1, product.getEpisodes().size());
     }
 
-    public void downloadFrom(Product product, String accessToken, File comicDir, int from) {
+    public static void downloadFrom(Product product, String accessToken, File comicDir, int from) {
         downloadSome(product, accessToken, comicDir, from, product.getEpisodes().size());
     }
 
-    public void downloadTo(Product product, String accessToken, File comicDir, int to) {
+    public static void downloadTo(Product product, String accessToken, File comicDir, int to) {
         downloadSome(product, accessToken, comicDir, 1, to);
     }
 
-    public void downloadSome(Product product, String accessToken, File comicDir, int from, int to) {
+    public static void downloadSome(Product product, String accessToken, File comicDir, int from, int to) {
         long comicId = product.getId();
         String comicName = product.getAlias();
 
@@ -58,7 +52,7 @@ public class Downloader {
         }
     }
 
-    public void downloadOne(Episode episode, long comicId, String comicName, String accessToken, File comicDir, int num) {
+    public static void downloadOne(Episode episode, long comicId, String comicName, String accessToken, File comicDir, int num) {
         // 미리보기할 수 있는 유료회차의 경우, 다운로드할 수 없다.
         long now = System.currentTimeMillis();
         if (episode.getFreedAt() > now) return;
@@ -97,7 +91,7 @@ public class Downloader {
      * 이미지 URL로 이미지 파일을 생성한다. 성공하면 1을, 실패하면 0을 반환한다.<br>
      * Creates a image file with the image URL. Returns 1 if success, 0 else.
      */
-    private int createImage(URL url, File image) {
+    private static int createImage(URL url, File image) {
         try (InputStream in = url.openStream(); OutputStream out = new BufferedOutputStream(new FileOutputStream(image))) {
             // 이미지 파일을 만든다.
             // Creates a image file.
@@ -115,7 +109,7 @@ public class Downloader {
     }
 
     @SneakyThrows({ IOException.class, JsonSyntaxException.class })
-    private int getNumOfImagesInEpisode(String comicName, String episodeName, String accessToken) {
+    private static int getNumOfImagesInEpisode(String comicName, String episodeName, String accessToken) {
         URL url = URLFactory.oneEpisodeURL(comicName, episodeName, accessToken);
         JsonObject json = JsonUtils.readJsonFromUrl(url);
 
