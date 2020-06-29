@@ -268,7 +268,7 @@ public final class DateUtils {
                 temp2.add(temp1.get(i));
             } else {
                 // 존재하는 날짜인지 확인한다
-                if (validate(temp1.get(i)) == false) throw new RuntimeException("Invalid date: " + temp1.get(i));
+                if (!validate(temp1.get(i))) throw new RuntimeException("Invalid date: " + temp1.get(i));
 
                 // 단일일자를 분리한다
                 simpleDates.add(temp1.get(i));
@@ -280,8 +280,8 @@ public final class DateUtils {
             String[] temp3 = temp2.get(i).split("~");
 
             // 존재하는 날짜인지 확인한다
-            if (validate(temp3[0]) == false) throw new RuntimeException("Invalid date: " + temp3[0]);
-            if (validate(temp3[1]) == false) throw new RuntimeException("Invalid date: " + temp3[1]);
+            if (!validate(temp3[0])) throw new RuntimeException("Invalid date: " + temp3[0]);
+            if (!validate(temp3[1])) throw new RuntimeException("Invalid date: " + temp3[1]);
 
             // 시작일이 종료일보다 크거나 같은지 확인한다
             if (Integer.parseInt(temp3[0]) >= Integer.parseInt(temp3[1])) throw new RuntimeException(

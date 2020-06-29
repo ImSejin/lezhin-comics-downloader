@@ -1,6 +1,6 @@
 package io.github.imsejin.common.util;
 
-import static io.github.imsejin.common.util.DateUtils.today;
+import io.github.imsejin.common.constants.DateType;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import io.github.imsejin.common.constants.DateType;
+import static io.github.imsejin.common.util.DateUtils.today;
 
 /**
  * 경로명 유틸리티<br>
@@ -80,7 +80,7 @@ public final class PathnameUtils {
      */
     public static String correct(boolean absolute, String pathname) {
         String trimmed = Stream.of(pathname.split(WINDOWS_SEPARATOR)) // split with Windows separators.
-                .map(p -> Stream.of(p.split(UNIX_SEPARATOR)).collect(Collectors.joining())) // split with Unix separators.
+                .map(p -> String.join("", p.split(UNIX_SEPARATOR))) // split with Unix separators.
                 .filter(StringUtils::isNotBlank)
                 .map(String::trim)
                 .collect(Collectors.joining(File.separator));
@@ -100,8 +100,7 @@ public final class PathnameUtils {
      * </pre>
      */
     public static String concat(boolean absolute, String... pathnames) {
-        return correct(absolute,
-                Stream.of(pathnames).collect(Collectors.joining(File.separator)));
+        return correct(absolute, String.join(File.separator, pathnames));
     }
 
     /**
