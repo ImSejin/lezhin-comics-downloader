@@ -6,7 +6,7 @@
 
 	<groupId>io.github.imsejin</groupId>
 	<artifactId>lezhin-comics-downloader</artifactId>
-	<version>2.0.8</version>
+	<version>2.0.20</version>
 	<packaging>jar</packaging>
 
 	<properties>
@@ -104,15 +104,6 @@
 							<mainClass>io.github.imsejin.LezhinComicsDownloaderApplication</mainClass>
 						</manifest>
 					</archive>
-					<executions>
-						<execution>
-							<id>make-assembly</id>
-							<phase>package</phase>
-							<goals>
-								<goal>single</goal>
-							</goals>
-						</execution>
-					</executions>
 				</configuration>
 			</plugin>
 		</plugins>

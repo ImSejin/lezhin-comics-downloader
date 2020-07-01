@@ -1,6 +1,6 @@
 package io.github.imsejin.common.util;
 
-import static java.time.format.DateTimeFormatter.ofPattern;
+import io.github.imsejin.common.constants.DateType;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -8,13 +8,9 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import io.github.imsejin.common.constants.DateType;
+import static java.time.format.DateTimeFormatter.ofPattern;
 
 /**
  * 날짜 유틸리티<br>
@@ -40,7 +36,7 @@ public final class DateUtils {
      * </pre>
      */
     public static boolean isLeapYear(int year) {
-        return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0 ? true : false;
+        return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
     }
 
     /**
@@ -272,7 +268,7 @@ public final class DateUtils {
                 temp2.add(temp1.get(i));
             } else {
                 // 존재하는 날짜인지 확인한다
-                if (validate(temp1.get(i)) == false) throw new RuntimeException("Invalid date: " + temp1.get(i));
+                if (!validate(temp1.get(i))) throw new RuntimeException("Invalid date: " + temp1.get(i));
 
                 // 단일일자를 분리한다
                 simpleDates.add(temp1.get(i));
@@ -284,8 +280,8 @@ public final class DateUtils {
             String[] temp3 = temp2.get(i).split("~");
 
             // 존재하는 날짜인지 확인한다
-            if (validate(temp3[0]) == false) throw new RuntimeException("Invalid date: " + temp3[0]);
-            if (validate(temp3[1]) == false) throw new RuntimeException("Invalid date: " + temp3[1]);
+            if (!validate(temp3[0])) throw new RuntimeException("Invalid date: " + temp3[0]);
+            if (!validate(temp3[1])) throw new RuntimeException("Invalid date: " + temp3[1]);
 
             // 시작일이 종료일보다 크거나 같은지 확인한다
             if (Integer.parseInt(temp3[0]) >= Integer.parseInt(temp3[1])) throw new RuntimeException(

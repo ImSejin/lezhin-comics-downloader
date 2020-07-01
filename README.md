@@ -2,7 +2,7 @@
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/imsejin/lezhin-comics-downloader) ![jdk](https://img.shields.io/badge/jdk-8-orange) ![GitHub](https://img.shields.io/github/license/imsejin/lezhin-comics-downloader)
 
-This is downloader that helps login process and downloads the specified comic for all lezhin comics even adult.
+This is downloader that helps you to login and downloads the specified comic for all lezhin-comics even adults.
 
 ※ *The user is responsible for everything that happens using this program.*
 
@@ -12,23 +12,75 @@ This is downloader that helps login process and downloads the specified comic fo
 
 ![preview.gif](https://user-images.githubusercontent.com/46176032/82747023-5ef38f00-9dd0-11ea-9f42-18f744fb50a9.gif)
 
+※ *This preview is old version. The downloader doesn't work like this in latest version.*
+
 
 
 ### Usage
 
-This is an executable JAR package. To run it, use the following command.
+1. Checks if chrome browser was installed in your device or downloads it [here](https://www.google.com/chrome).
+
+2. Checks your <u>chrome browser version</u> with this URI [chrome://version](chrome://version).
+
+   (The first line is the version. e.g. 83.0.4103.116)
+
+3. Downloads the chrome driver that matches <u>the version</u> and your device OS [here](https://chromedriver.chromium.org/downloads) and decompresses it.
+
+4. Checks if JRE(or JDK) version is greater than or equal to 8 or installs it.
+
+5. Downloads the latest released lezhin-comics-downloader [here](https://github.com/ImSejin/lezhin-comics-downloader/releases).
+
+6. Places two files in the same path.
+
+7. Uses the following command to run the downloader.
+
+
 
 ```cmd
-java -jar lezhin-comics-downloader.jar {id} {password} {comic name} [{episode range}]
+java -jar {JAR filename} {id} {password} {comic name} [{episode range}]
 ```
 
-- *id*, *password*: your lezhin comics account, not account of third party platform.
-- *comic name*: the webtoon name you want to download.
-- *episode range*
-  - __skipped__ : all of episodes
-  - __8~__ : from ep.8 to the end of the episode
-  - __~25__ : from the beginning of the episode to ep.25
-  - __1~10__ : from ep.1 to ep.10
+- *<u>id</u>, <u>password</u> (required)*: your lezhin comics account, not account of third party platform.
+- *<u>comic name</u> (required)*: the webtoon name you want to download.
+- *<u>episode range</u> (optional)*
+  - __skipped__ : all episodes
+  - __n~__ : from ep.N to the end of the episode
+  - __~n__ : from the beginning of the episode to ep.N
+  - __m~n__ : from ep.M to ep.N
+
+
+
+### Command examples
+
+```cmd
+java -jar lezhin-comics-downloader.jar test@gmail.com test123 appetite
+```
+
+Downloads all episodes of the comic named appetite.
+
+
+
+```cmd
+java -jar lezhin-comics-downloader.jar test@gmail.com test123 appetite 8~
+```
+
+Downloads the episodes of the comic named appetite from ep.8 to the end.
+
+
+
+```cmd
+java -jar lezhin-comics-downloader.jar test@gmail.com test123 appetite ~25
+```
+
+Downloads the episodes of the comic named appetite from the beginning to ep.25.
+
+
+
+```cmd
+java -jar lezhin-comics-downloader.jar test@gmail.com test123 appetite 1~10
+```
+
+Downloads the episodes of the comic named appetite from ep.1 to ep.10.
 
 
 
@@ -38,9 +90,5 @@ java -jar lezhin-comics-downloader.jar {id} {password} {comic name} [{episode ra
 - Selenium
 - Gson
 - Progress Bar
-- Junit
-
-
-
 
 

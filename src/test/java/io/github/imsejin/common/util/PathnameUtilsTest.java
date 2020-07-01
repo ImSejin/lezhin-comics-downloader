@@ -1,25 +1,40 @@
 package io.github.imsejin.common.util;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Collection;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
+@RunWith(Parameterized.class)
 public class PathnameUtilsTest {
+
+    @Parameterized.Parameters
+    public static Collection<Object> params() {
+        return Arrays.asList(new Object[][] {
+                {"C:\\Program Files\\Java", "C:Program FilesJava"}
+        });
+    }
+
+    private final String pathname;
+    private final String expectedPathname;
+    public PathnameUtilsTest(String pathname, String expectedPathname) {
+        this.pathname = pathname;
+        this.expectedPathname = expectedPathname;
+    }
 
     @Test
     public void testRemoveFileSeparators() {
-        // given
-        String pathname = "C:\\Program Files\\Java";
-
         // when
         final String separatorForRegex = File.separator.equals("\\") ? "\\\\" : File.separator;
         String actual = pathname.replaceAll(separatorForRegex, "");
 
         // then
-        System.out.println("testReplaceFileSeparators#actual: " + actual);
-        assertEquals("C:Program FilesJava", actual);
+        assertEquals(expectedPathname, actual);
     }
 
     @Test

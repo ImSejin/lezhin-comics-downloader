@@ -211,7 +211,7 @@ public final class StringUtils {
 	 */
 	public static int search(String source, String target) {
 		int result = 0;
-		String strCheck = new String(source);
+		String strCheck = source;
 		for (int i = 0; i < source.length();) {
 			int loc = strCheck.indexOf(target);
 			if (loc == -1) {
@@ -418,7 +418,7 @@ public final class StringUtils {
 			if (isEllipsis) {
 
 				StringBuffer temp = new StringBuffer(length);
-				temp.append(str.substring(0, length - 3));
+				temp.append(str, 0, length - 3);
 				temp.append("...");
 
 				return temp.toString();
@@ -467,7 +467,7 @@ public final class StringUtils {
 			if (isEllipsis) {
 
 				StringBuffer temp = new StringBuffer(length);
-				temp.append(str.substring(0, length - 3));
+				temp.append(str, 0, length - 3);
 				temp.append("...");
 				return temp.toString();
 			} else {
@@ -504,7 +504,7 @@ public final class StringUtils {
 		if (str.length() <= length) {
 
 			StringBuffer temp = new StringBuffer(length);
-			int leftMargin = (int) (length - str.length()) / 2;
+			int leftMargin = (length - str.length()) / 2;
 
 			int rightMargin;
 			if ((leftMargin * 2) == (length - str.length())) {
@@ -528,7 +528,7 @@ public final class StringUtils {
 			if (isEllipsis) {
 
 				StringBuffer temp = new StringBuffer(length);
-				temp.append(str.substring(0, length - 3));
+				temp.append(str, 0, length - 3);
 				temp.append("...");
 				return temp.toString();
 			} else {

@@ -1,27 +1,27 @@
 package io.github.imsejin.core;
 
+import io.github.imsejin.common.constants.URIs;
+import lombok.SneakyThrows;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import io.github.imsejin.common.constants.URIs;
-import lombok.SneakyThrows;
-import lombok.experimental.UtilityClass;
+public final class URLFactory {
 
-@UtilityClass
-public class URLFactory {
+    private URLFactory() {}
 
-    private final StringBuilder $ = new StringBuilder();
+    private static final StringBuilder $ = new StringBuilder();
 
     /**
      * StringBuilder의 버퍼를 지운다.<br>
      * Clears the buffer of StringBuilder.
      */
-    private void init() {
+    private static void init() {
         $.setLength(0);
     }
 
     @SneakyThrows(MalformedURLException.class)
-    public synchronized URL imageURL(long comicId, long episodeId, int fileName, String accessToken) {
+    public static synchronized URL imageURL(long comicId, long episodeId, int fileName, String accessToken) {
         init();
 
         $.append(URIs.IMG.value())
@@ -38,7 +38,7 @@ public class URLFactory {
     }
 
     @SneakyThrows(MalformedURLException.class)
-    public synchronized URL oneEpisodeURL(String comicName, String episodeName, String accessToken) {
+    public static synchronized URL oneEpisodeURL(String comicName, String episodeName, String accessToken) {
         init();
 
         $.append(URIs.EPISODE_INFO.value())
@@ -52,7 +52,7 @@ public class URLFactory {
     }
 
     @SneakyThrows(MalformedURLException.class)
-    public synchronized URL allEpisodeURL(String comicName, String accessToken) {
+    public static synchronized URL allEpisodeURL(String comicName, String accessToken) {
         init();
 
         $.append(URIs.EPISODE_INFO.value())
