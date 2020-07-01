@@ -27,13 +27,6 @@ public class FilenameUtilsTest {
     @Parameterized.Parameter(1)
     public String expectedFilename;
 
-//    private String filename;
-//    private String expectedFilename;
-//    public FilenameUtilsTest(String filename, String expectedFilename) {
-//        this.filename = filename;
-//        this.expectedFilename = expectedFilename;
-//    }
-
     @Test
     public void testToSafeName() {
         // when
