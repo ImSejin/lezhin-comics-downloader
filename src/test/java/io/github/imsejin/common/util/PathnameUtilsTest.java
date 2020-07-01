@@ -1,12 +1,23 @@
 package io.github.imsejin.common.util;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Collection;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
+@RunWith(Parameterized.class)
 public class PathnameUtilsTest {
+
+    public static Collection<Object> params() {
+        return Arrays.asList(new Object[][] {
+                {"C:\\Program Files\\Java", "\"C:Program FilesJava\""}
+        });
+    }
 
     @Test
     public void testRemoveFileSeparators() {
