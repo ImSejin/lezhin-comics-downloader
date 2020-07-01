@@ -20,11 +20,11 @@ This is downloader that helps you to login and downloads the specified comic for
 
 1. Checks if chrome browser was installed in your device or downloads it [here](https://www.google.com/chrome).
 
-2. Checks your <u>chrome browser version</u> with this URI [chrome://version](chrome://version).
+2. Checks your <ins>chrome browser version</ins> with this URI [chrome://version](chrome://version).
 
    (The first line is the version. e.g. 83.0.4103.116)
 
-3. Downloads the chrome driver that matches <u>the version</u> and your device OS [here](https://chromedriver.chromium.org/downloads) and decompresses it.
+3. Downloads the chrome driver that matches <ins>the version</ins> and your device OS [here](https://chromedriver.chromium.org/downloads) and decompresses it.
 
 4. Checks if JRE(or JDK) version is greater than or equal to 8 or installs it.
 
@@ -40,9 +40,9 @@ This is downloader that helps you to login and downloads the specified comic for
 java -jar {JAR filename} {id} {password} {comic name} [{episode range}]
 ```
 
-- *<u>id</u>, <u>password</u> (required)*: your lezhin comics account, not account of third party platform.
-- *<u>comic name</u> (required)*: the webtoon name you want to download.
-- *<u>episode range</u> (optional)*
+- *<ins>id</ins>, <ins>password</ins> (required)*: your lezhin comics account, not account of third party platform.
+- *<ins>comic name</ins> (required)*: the webtoon name you want to download.
+- *<ins>episode range</ins> (optional)*
   - __skipped__ : all episodes
   - __n~__ : from ep.N to the end of the episode
   - __~n__ : from the beginning of the episode to ep.N
