@@ -104,15 +104,6 @@
 							<mainClass>io.github.imsejin.LezhinComicsDownloaderApplication</mainClass>
 						</manifest>
 					</archive>
-					<executions>
-						<execution>
-							<id>make-assembly</id>
-							<phase>package</phase>
-							<goals>
-								<goal>single</goal>
-							</goals>
-						</execution>
-					</executions>
 				</configuration>
 			</plugin>
 		</plugins>
