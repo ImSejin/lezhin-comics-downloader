@@ -20,12 +20,6 @@ public final class LoginHelper {
      * Logins and gets an access token.
      */
     public static String login(Arguments arguments) {
-        // 유효하지 않은 계정 정보의 경우
-        if (StringUtils.anyBlanks(arguments.getUsername(), arguments.getPassword())) {
-            System.err.println("\n    ID or password is not valid.");
-            return null;
-        }
-
         String accessToken = getAccessToken(arguments);
 
         // 존재하지 않는 계정의 경우

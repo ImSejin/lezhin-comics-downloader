@@ -25,12 +25,14 @@
 package io.github.imsejin;
 
 import io.github.imsejin.common.constants.EpisodeRange;
-import io.github.imsejin.common.constants.Languages;
 import io.github.imsejin.common.util.FilenameUtils;
 import io.github.imsejin.common.util.JsonUtils;
 import io.github.imsejin.common.util.PathnameUtils;
 import io.github.imsejin.common.util.StringUtils;
-import io.github.imsejin.core.*;
+import io.github.imsejin.core.ChromeBrowser;
+import io.github.imsejin.core.Crawler;
+import io.github.imsejin.core.Downloader;
+import io.github.imsejin.core.LoginHelper;
 import io.github.imsejin.model.Arguments;
 import io.github.imsejin.model.Artist;
 import io.github.imsejin.model.Episode;
@@ -61,16 +63,6 @@ public final class LezhinComicsDownloaderApplication {
                 .comicName(args[3])
                 .episodeRange(args.length > 4 ? args[4] : null)
                 .build();
-
-        if (!Languages.contains(arguments.getLanguage())) {
-            printHelper(false, true, false);
-            System.exit(1);
-        }
-
-        if (arguments.getEpisodeRange() != null && !arguments.getEpisodeRange().contains(SEPARATOR)) {
-            printHelper(false, false, true);
-            System.exit(1);
-        }
 
         // 아이디와 비밀번호를 입력받아 로그인하고, 토큰을 가져온다.
         arguments.setAccessToken(LoginHelper.login(arguments));
