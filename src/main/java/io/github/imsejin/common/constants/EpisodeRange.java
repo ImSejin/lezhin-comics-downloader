@@ -1,6 +1,8 @@
 package io.github.imsejin.common.constants;
 
-public enum EpisodeRange implements GettableEnum {
+import java.util.stream.Stream;
+
+public enum EpisodeRange implements Dictionary {
 
     /**
      * 에피소드 번호의 구분자<br>
@@ -22,6 +24,10 @@ public enum EpisodeRange implements GettableEnum {
     @Override
     public String value() {
         return this.value;
+    }
+
+    public static boolean contains(String value) {
+        return Stream.of(EpisodeRange.values()).anyMatch(range -> range.value.equals(value));
     }
 
 }

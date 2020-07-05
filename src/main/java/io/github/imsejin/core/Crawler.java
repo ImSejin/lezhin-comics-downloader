@@ -1,7 +1,13 @@
 package io.github.imsejin.core;
 
 import io.github.imsejin.common.constants.URIs;
+import lombok.SneakyThrows;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+
+import java.util.List;
 
 public final class Crawler {
 
@@ -25,16 +31,38 @@ public final class Crawler {
      * </script>
      * }</pre>
      */
-    public static String getJson(String username, String password, String comicName) {
+    public static String getJson(String language, String comicName) {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
-        driver.get(URIs.COMIC.value() + comicName);
+        driver.get(URIs.HOME.value() + language + URIs.COMIC.value() + comicName);
 
         // 웹툰의 정보가 window 객체의 필드로 정의되어 있어, 이를 가져오기 위해 로컬스토리지에 저장한다.
         driver.executeScript("localStorage.setItem('product', JSON.stringify(window.__LZ_PRODUCT__.product));");
 
         // 웹툰의 정보를 로컬스토리지에서 가져와 JSON 형식의 문자열을 반환한다.
         return driver.getLocalStorage().getItem("product");
+    }
+
+    @SneakyThrows(InterruptedException.class)
+    public static int getNumOfImagesInEpisode(String language, String comicName, String episodeName) {
+        ChromeDriver driver = ChromeBrowser.getDriver();
+
+        driver.get(URLFactory.oneEpisodeViewer(language, comicName, episodeName).toString());
+
+        // DOM 렌더링을 기다린다
+        Thread.sleep(2000);
+
+        List<WebElement> images;
+        try {
+            WebElement scrollList = driver.findElementById("scroll-list");
+            images = scrollList.findElements(By.xpath(".//div[@class='cut' and not(contains(@class, 'cutLicense')) and @data-cut-index and @data-cut-type='cut']"));
+        } catch (NoSuchElementException ex) {
+            // Fail
+            return 0;
+        }
+
+        // Success
+        return images.size();
     }
 
 }

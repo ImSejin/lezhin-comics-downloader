@@ -1,6 +1,8 @@
 package io.github.imsejin.common.constants;
 
-public enum DateType implements GettableEnum {
+import java.util.stream.Stream;
+
+public enum DateType implements Dictionary {
 
     YEAR("yyyy"), MONTH("MM"), DAY("dd"), HOUR("HH"), MINUTE("mm"), SECOND("ss"), MILLISECOND("SSS"),
 
@@ -51,6 +53,10 @@ public enum DateType implements GettableEnum {
     @Override
     public String value() {
         return this.pattern;
+    }
+
+    public static boolean contains(String value) {
+        return Stream.of(DateType.values()).anyMatch(type -> type.pattern.equals(value));
     }
 
 }

@@ -2,6 +2,7 @@ package io.github.imsejin.core;
 
 import io.github.imsejin.common.constants.URIs;
 import io.github.imsejin.common.util.StringUtils;
+import lombok.SneakyThrows;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -15,14 +16,14 @@ public final class LoginHelper {
      * 로그인하여 액세스 토큰을 얻는다.<br>
      * Logins and gets an access token.
      */
-    public static String login(String username, String password) {
+    public static String login(String language, String username, String password) {
         // 유효하지 않은 계정 정보의 경우
         if (StringUtils.anyBlanks(username, password)) {
             System.err.println("\n    ID or password is not valid.");
             return null;
         }
 
-        String accessToken = getAccessToken(username, password);
+        String accessToken = getAccessToken(language, username, password);
 
         // 존재하지 않는 계정의 경우
         if (StringUtils.isBlank(accessToken)) {
@@ -30,6 +31,7 @@ public final class LoginHelper {
             return null;
         }
 
+        System.out.println("\n    Success to login. -> " + URIs.HOME.value() + language + URIs.LOGIN.value() + "\n");
         return accessToken;
     }
 
@@ -71,14 +73,15 @@ public final class LoginHelper {
      * </script>
      * }</pre>
      */
-    private static String getAccessToken(String username, String password) {
+    @SneakyThrows(InterruptedException.class)
+    private static String getAccessToken(String language, String username, String password) {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
         // 로그인 페이지를 요청한다.
-        driver.get(URIs.LOGIN.value());
+        driver.get(URIs.HOME.value() + language + URIs.LOGIN.value());
 
         // 계정정보를 작성한다.
-        WebElement loginForm = driver.findElementByXPath("//form[@id='login-form' and contains(@action, '/ko/login') and @method='post']");
+        WebElement loginForm = driver.findElementByXPath("//form[@id='login-form' and contains(@action, '/login') and @method='post']");
         WebElement usernameInput = loginForm.findElement(By.xpath(".//input[@id='login-email']"));
         usernameInput.clear();
         usernameInput.sendKeys(username);
@@ -90,15 +93,14 @@ public final class LoginHelper {
         WebElement submitButton = loginForm.findElement(By.xpath(".//button[@type='submit']"));
         submitButton.click();
 
-        // 로그인 딜레이를 대기하기 위해 메인페이지로 이동한다.
-        driver.get(URIs.HOME.value());
+        // 로그인 딜레이를 대기한다.
+        Thread.sleep(2000);
 
         // 액세스 토큰 정보가 있는 script 태그를 찾는다.
         WebElement script;
         try {
             script = driver.findElementByXPath("//script[not(@src) and contains(text(), '__LZ_ME__')]");
         } catch (NoSuchElementException ex) {
-            System.err.println("The account does not exists.");
             return null;
         }
 
