@@ -6,7 +6,7 @@ This is downloader that helps you to login and downloads the specified comic for
 
 ※ *The user is responsible for everything that happens using this program.*
 
-
+<br>
 
 ### Preview
 
@@ -14,7 +14,7 @@ This is downloader that helps you to login and downloads the specified comic for
 
 ※ *This preview is old version. The downloader doesn't work like this in latest version.*
 
-
+<br>
 
 ### Usage
 
@@ -48,7 +48,7 @@ java -jar {JAR filename} {id} {password} {comic name} [{episode range}]
   - __~n__ : from the beginning of the episode to ep.N
   - __m~n__ : from ep.M to ep.N
 
-
+<br>
 
 ### Command examples
 
@@ -58,7 +58,7 @@ java -jar lezhin-comics-downloader.jar test@gmail.com test123 appetite
 
 Downloads all episodes of the comic named appetite.
 
-
+<br>
 
 ```cmd
 java -jar lezhin-comics-downloader.jar test@gmail.com test123 appetite 8~
@@ -66,7 +66,7 @@ java -jar lezhin-comics-downloader.jar test@gmail.com test123 appetite 8~
 
 Downloads the episodes of the comic named appetite from ep.8 to the end.
 
-
+<br>
 
 ```cmd
 java -jar lezhin-comics-downloader.jar test@gmail.com test123 appetite ~25
@@ -74,7 +74,7 @@ java -jar lezhin-comics-downloader.jar test@gmail.com test123 appetite ~25
 
 Downloads the episodes of the comic named appetite from the beginning to ep.25.
 
-
+<br>
 
 ```cmd
 java -jar lezhin-comics-downloader.jar test@gmail.com test123 appetite 1~10
@@ -82,7 +82,7 @@ java -jar lezhin-comics-downloader.jar test@gmail.com test123 appetite 1~10
 
 Downloads the episodes of the comic named appetite from ep.1 to ep.10.
 
-
+<br>
 
 ### Dependencies
 
