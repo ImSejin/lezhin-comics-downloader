@@ -1,6 +1,6 @@
 package io.github.imsejin.common.constants;
 
-public interface GettableEnum {
+public interface Dictionary {
 
     String key();
 
