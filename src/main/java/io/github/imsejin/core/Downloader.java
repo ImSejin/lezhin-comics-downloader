@@ -5,8 +5,8 @@ import com.google.gson.JsonSyntaxException;
 import io.github.imsejin.common.constants.Languages;
 import io.github.imsejin.common.util.JsonUtils;
 import io.github.imsejin.common.util.StringUtils;
+import io.github.imsejin.model.Arguments;
 import io.github.imsejin.model.Episode;
-import io.github.imsejin.model.Product;
 import lombok.SneakyThrows;
 import me.tongfei.progressbar.ProgressBar;
 import me.tongfei.progressbar.ProgressBarStyle;
@@ -23,23 +23,25 @@ public final class Downloader {
 
     private static final byte[] BUFFER = new byte[1024];
 
-    public static void downloadAll(Product product, String language, String accessToken, File comicDir) {
-        downloadSome(product, language, accessToken, comicDir, 1, product.getEpisodes().size());
+    public static void downloadAll(Arguments arguments) {
+        int to = arguments.getProduct().getEpisodes().size();
+        downloadSome(arguments, 1, to);
     }
 
-    public static void downloadFrom(Product product, String language, String accessToken, File comicDir, int from) {
-        downloadSome(product, language, accessToken, comicDir, from, product.getEpisodes().size());
+    public static void downloadFrom(Arguments arguments, int from) {
+        int to = arguments.getProduct().getEpisodes().size();
+        downloadSome(arguments, from, to);
     }
 
-    public static void downloadTo(Product product, String language, String accessToken, File comicDir, int to) {
-        downloadSome(product, language, accessToken, comicDir, 1, to);
+    public static void downloadTo(Arguments arguments, int to) {
+        downloadSome(arguments, 1, to);
     }
 
-    public static void downloadSome(Product product, String language, String accessToken, File comicDir, int from, int to) {
-        long comicId = product.getId();
-        String comicName = product.getAlias();
+    public static void downloadSome(Arguments arguments, int from, int to) {
+        long comicId = arguments.getProduct().getId();
+        String comicName = arguments.getProduct().getAlias();
 
-        List<Episode> episodes = product.getEpisodes();
+        List<Episode> episodes = arguments.getProduct().getEpisodes();
 
         // 에피소드 번호를 인덱스에 맞게 변경한다.
         from = from <= 0 ? 0 : from - 1;
@@ -49,36 +51,38 @@ public final class Downloader {
 
         for (int i = from; i < to; i++) {
             Episode episode = episodes.get(i);
-            downloadOne(episode, comicId, comicName, language, accessToken, comicDir, i + 1);
+            downloadOne(arguments, episode, i + 1);
         }
     }
 
-    public static void downloadOne(Episode episode, long comicId, String comicName, String language, String accessToken, File comicDir, int num) {
+    public static void downloadOne(Arguments arguments, Episode episode, int num) {
         // 미리보기할 수 있는 유료회차의 경우, 다운로드할 수 없다.
         long now = System.currentTimeMillis();
         if (episode.getFreedAt() > now) return;
 
         // 한국이 아닌 다른 국가의 플랫폼은 에피소드 API를 찾을 수 없어, 직접 크롤링한다.
-        final int numOfImages = language.equals(Languages.KOREAN.value())
-                ? getNumOfImagesInEpisode(comicName, episode.getName(), accessToken)
-                : Crawler.getNumOfImagesInEpisode(language, comicName, episode.getName());
+        final int numOfImages = arguments.getLanguage().equals(Languages.KOREAN.value())
+                ? getNumOfImagesInEpisode(arguments, episode)
+                : Crawler.getNumOfImagesInEpisode(arguments, episode);
 
         // 에피소드의 이미지가 없으면 종료한다.
         if (numOfImages < 1) return;
 
         // 에피소드 이름으로 디렉터리를 생성한다.
         String episodeDirName = StringUtils.lPad(num, 4, '0') + " - " + episode.getDisplay().getTitle();
-        File episodeDir = new File(comicDir, episodeDirName);
+        File episodeDir = new File(arguments.getComicPathname(), episodeDirName);
         if (!episodeDir.exists()) episodeDir.mkdirs();
 
-        try (ProgressBar progressBar = new ProgressBar(comicName + " ep." + num, numOfImages, 500, System.err, ProgressBarStyle.ASCII, "", 1)) {
+        try (ProgressBar progressBar = new ProgressBar(
+                arguments.getProduct().getAlias() + " ep." + num, numOfImages,
+                500, System.err, ProgressBarStyle.ASCII, "", 1)) {
             // `ProgressBar.step()`이 step 1부터 시작하기 때문에 step 0로 초기화한다.
             progressBar.stepTo(0);
 
             // 마지막 이미지까지 다운로드한다.
             for (int i = 1; i <= numOfImages; i++) {
                 // 이미지 URI를 생성한다
-                URL url = URLFactory.image(comicId, episode.getId(), i, accessToken);
+                URL url = URLFactory.image(arguments.getProduct().getId(), episode.getId(), i, arguments.getAccessToken());
 
                 // 이미지를 다운로드한다.
                 File image = new File(episodeDir, StringUtils.lPad(String.valueOf(i), 3, '0') + IMG_FORMAT_EXTENSION);
@@ -114,8 +118,8 @@ public final class Downloader {
     }
 
     @SneakyThrows({ IOException.class, JsonSyntaxException.class })
-    private static int getNumOfImagesInEpisode(String comicName, String episodeName, String accessToken) {
-        URL url = URLFactory.oneEpisodeAPI(comicName, episodeName, accessToken);
+    private static int getNumOfImagesInEpisode(Arguments arguments, Episode episode) {
+        URL url = URLFactory.oneEpisodeAPI(arguments.getProduct().getAlias(), episode.getName(), arguments.getAccessToken());
         JsonObject json = JsonUtils.readJsonFromUrl(url);
 
         return json.get("cut").getAsInt();

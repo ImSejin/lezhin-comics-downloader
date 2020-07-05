@@ -1,6 +1,8 @@
 package io.github.imsejin.core;
 
 import io.github.imsejin.common.constants.URIs;
+import io.github.imsejin.model.Arguments;
+import io.github.imsejin.model.Episode;
 import lombok.SneakyThrows;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -8,6 +10,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public final class Crawler {
 
@@ -31,10 +34,10 @@ public final class Crawler {
      * </script>
      * }</pre>
      */
-    public static String getJson(String language, String comicName) {
+    public static String getJson(Arguments arguments) {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
-        driver.get(URIs.HOME.value() + language + URIs.COMIC.value() + comicName);
+        driver.get(URIs.HOME.value() + arguments.getLanguage() + URIs.COMIC.value() + arguments.getComicName());
 
         // 웹툰의 정보가 window 객체의 필드로 정의되어 있어, 이를 가져오기 위해 로컬스토리지에 저장한다.
         driver.executeScript("localStorage.setItem('product', JSON.stringify(window.__LZ_PRODUCT__.product));");
@@ -44,13 +47,13 @@ public final class Crawler {
     }
 
     @SneakyThrows(InterruptedException.class)
-    public static int getNumOfImagesInEpisode(String language, String comicName, String episodeName) {
+    public static int getNumOfImagesInEpisode(Arguments arguments, Episode episode) {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
-        driver.get(URLFactory.oneEpisodeViewer(language, comicName, episodeName).toString());
+        driver.get(URLFactory.oneEpisodeViewer(arguments.getLanguage(), arguments.getComicName(), episode.getName()).toString());
 
         // DOM 렌더링을 기다린다
-        Thread.sleep(2000);
+        TimeUnit.SECONDS.sleep(2);
 
         List<WebElement> images;
         try {
