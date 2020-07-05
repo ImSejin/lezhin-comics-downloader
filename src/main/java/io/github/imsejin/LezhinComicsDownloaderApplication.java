@@ -55,10 +55,8 @@ public final class LezhinComicsDownloaderApplication {
         }
 
         final Arguments arguments = Arguments.builder()
-                .username("chur114@naver.com")
-//                .username(args[0])
-                .password("ha12!@ck34#$")
-//                .password(args[1])
+                .username(args[0])
+                .password(args[1])
                 .language(args[2])
                 .comicName(args[3])
                 .episodeRange(args.length > 4 ? args[4] : null)
