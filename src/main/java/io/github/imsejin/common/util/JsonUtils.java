@@ -1,5 +1,7 @@
 package io.github.imsejin.common.util;
 
+import com.google.gson.*;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,12 +12,6 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
 
 /**
  * JSON 유틸리티<br>
@@ -44,12 +40,11 @@ public final class JsonUtils {
      * </pre>
      */
     public static JsonObject readJsonFromUrl(URL url) throws IOException, JsonSyntaxException {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
-            String jsonText = readAllJson(reader);
-            JsonObject json = JsonParser.parseString(jsonText).getAsJsonObject();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
+        String jsonText = readAllJson(reader);
+        reader.close();
 
-            return json;
-        }
+        return JsonParser.parseString(jsonText).getAsJsonObject();
     }
 
     /**
@@ -89,11 +84,9 @@ public final class JsonUtils {
     public static <T> List<T> toList(JsonArray jsonArray, Class<T> clazz) throws JsonSyntaxException {
         Gson gson = new Gson();
 
-        List<T> list = StreamSupport.stream(Spliterators.spliteratorUnknownSize(jsonArray.iterator(), Spliterator.ORDERED), false)
+        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(jsonArray.iterator(), Spliterator.ORDERED), false)
                 .map(jsonElement -> gson.fromJson(jsonElement, clazz))
                 .collect(Collectors.toList());
-
-        return list;
     }
 
 }
