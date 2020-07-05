@@ -2,11 +2,14 @@ package io.github.imsejin.core;
 
 import io.github.imsejin.common.constants.URIs;
 import io.github.imsejin.common.util.StringUtils;
+import io.github.imsejin.model.Arguments;
 import lombok.SneakyThrows;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+
+import java.util.concurrent.TimeUnit;
 
 public final class LoginHelper {
 
@@ -16,14 +19,14 @@ public final class LoginHelper {
      * 로그인하여 액세스 토큰을 얻는다.<br>
      * Logins and gets an access token.
      */
-    public static String login(String language, String username, String password) {
+    public static String login(Arguments arguments) {
         // 유효하지 않은 계정 정보의 경우
-        if (StringUtils.anyBlanks(username, password)) {
+        if (StringUtils.anyBlanks(arguments.getUsername(), arguments.getPassword())) {
             System.err.println("\n    ID or password is not valid.");
             return null;
         }
 
-        String accessToken = getAccessToken(language, username, password);
+        String accessToken = getAccessToken(arguments);
 
         // 존재하지 않는 계정의 경우
         if (StringUtils.isBlank(accessToken)) {
@@ -31,7 +34,7 @@ public final class LoginHelper {
             return null;
         }
 
-        System.out.println("\n    Success to login. -> " + URIs.HOME.value() + language + URIs.LOGIN.value() + "\n");
+        System.out.println("\n    Success to login. -> " + URIs.HOME.value() + arguments.getLanguage() + URIs.LOGIN.value() + "\n");
         return accessToken;
     }
 
@@ -74,27 +77,27 @@ public final class LoginHelper {
      * }</pre>
      */
     @SneakyThrows(InterruptedException.class)
-    private static String getAccessToken(String language, String username, String password) {
+    private static String getAccessToken(Arguments arguments) {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
         // 로그인 페이지를 요청한다.
-        driver.get(URIs.HOME.value() + language + URIs.LOGIN.value());
+        driver.get(URIs.HOME.value() + arguments.getLanguage() + URIs.LOGIN.value());
 
         // 계정정보를 작성한다.
         WebElement loginForm = driver.findElementByXPath("//form[@id='login-form' and contains(@action, '/login') and @method='post']");
         WebElement usernameInput = loginForm.findElement(By.xpath(".//input[@id='login-email']"));
         usernameInput.clear();
-        usernameInput.sendKeys(username);
+        usernameInput.sendKeys(arguments.getUsername());
         WebElement passwordInput = loginForm.findElement(By.xpath(".//input[@id='login-password']"));
         passwordInput.clear();
-        passwordInput.sendKeys(password);
+        passwordInput.sendKeys(arguments.getPassword());
 
         // 로그인한다.
         WebElement submitButton = loginForm.findElement(By.xpath(".//button[@type='submit']"));
         submitButton.click();
 
         // 로그인 딜레이를 대기한다.
-        Thread.sleep(2000);
+        TimeUnit.SECONDS.sleep(2);
 
         // 액세스 토큰 정보가 있는 script 태그를 찾는다.
         WebElement script;

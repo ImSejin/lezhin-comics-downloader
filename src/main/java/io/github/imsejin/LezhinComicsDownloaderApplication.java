@@ -30,10 +30,8 @@ import io.github.imsejin.common.util.FilenameUtils;
 import io.github.imsejin.common.util.JsonUtils;
 import io.github.imsejin.common.util.PathnameUtils;
 import io.github.imsejin.common.util.StringUtils;
-import io.github.imsejin.core.ChromeBrowser;
-import io.github.imsejin.core.Crawler;
-import io.github.imsejin.core.Downloader;
-import io.github.imsejin.core.LoginHelper;
+import io.github.imsejin.core.*;
+import io.github.imsejin.model.Arguments;
 import io.github.imsejin.model.Artist;
 import io.github.imsejin.model.Episode;
 import io.github.imsejin.model.Product;
@@ -56,44 +54,41 @@ public final class LezhinComicsDownloaderApplication {
             System.exit(1);
         }
 
-        final String username = args[0];
-        final String password = args[1];
-        final String language = args[2];
-        final String comicName = args[3];
-        final String episodeRange = args.length > 4 ? args[4] : null;
+        final Arguments arguments = Arguments.builder()
+                .username(args[0])
+                .password(args[1])
+                .language(args[2])
+                .comicName(args[3])
+                .episodeRange(args.length > 4 ? args[4] : null)
+                .build();
 
-        if (!Languages.contains(language)) {
+        if (!Languages.contains(arguments.getLanguage())) {
             printHelper(false, true, false);
             System.exit(1);
         }
 
-        if (episodeRange != null && !episodeRange.contains(SEPARATOR)) {
+        if (arguments.getEpisodeRange() != null && !arguments.getEpisodeRange().contains(SEPARATOR)) {
             printHelper(false, false, true);
             System.exit(1);
         }
 
         // 아이디와 비밀번호를 입력받아 로그인하고, 토큰을 가져온다.
-        final String accessToken = LoginHelper.login(language, username, password);
-
-        // 로그인에 실패하면, 프로그램을 종료한다.
-        if (accessToken == null) {
-            System.err.println("    Failed to login. Check your account information.\n");
-            ChromeBrowser.getDriver().quit();
-            System.exit(1);
-        }
+        arguments.setAccessToken(LoginHelper.login(arguments));
 
         // 해당 웹툰 페이지를 크롤링하여 회차별 정보를 JSON으로 얻어온다.
-        String jsonText = Crawler.getJson(language, comicName);
+        String jsonText = Crawler.getJson(arguments);
 
         // JSON을 파싱하여 객체로 변환한다.
         Product product = JsonUtils.toObject(jsonText, Product.class);
+        arguments.setProduct(product);
 
         // 다운로드를 위해, 데이터를 가공하고 웹툰 폴더를 생성한다.
         preprocess(product);
         File comicDir = makeDirectory(product);
+        arguments.setComicPathname(comicDir.getPath());
 
         // 이미지를 다운로드한다.
-        download(episodeRange, product, language, accessToken, comicDir);
+        download(arguments);
 
         // 애플리케이션을 정상 종료한다.
         ChromeBrowser.getDriver().quit();
@@ -126,26 +121,28 @@ public final class LezhinComicsDownloaderApplication {
         return comicDir;
     }
 
-    private static void download(String episodeRange, Product product, String language, String accessToken, File comicDir) {
+    private static void download(Arguments arguments) {
+        final String episodeRange = arguments.getEpisodeRange();
+
         if (StringUtils.isBlank(episodeRange)) {
             // 모든 에피소드를 다운로드한다.
-            Downloader.downloadAll(product, language, accessToken, comicDir);
+            Downloader.downloadAll(arguments);
 
         } else if (episodeRange.matches("[0-9]+" + SEPARATOR)) {
             // 지정한 에피소드부터 끝까지 다운로드한다.
             int from = Integer.parseInt(StringUtils.match("([0-9]+)" + SEPARATOR, episodeRange, 1));
-            Downloader.downloadFrom(product, language, accessToken, comicDir, from);
+            Downloader.downloadFrom(arguments, from);
 
         } else if (episodeRange.matches(SEPARATOR + "[0-9]+")) {
             // 처음부터 지정한 에피소드까지 다운로드한다.
             int to = Integer.parseInt(StringUtils.match(SEPARATOR + "([0-9]+)", episodeRange, 1));
-            Downloader.downloadTo(product, language, accessToken, comicDir, to);
+            Downloader.downloadTo(arguments, to);
 
         } else if (episodeRange.matches("[0-9]+" + SEPARATOR + "[0-9]+")) {
             // 지정한 에피소드들만 다운로드한다.
             int from = Integer.parseInt(StringUtils.match("([0-9]+)" + SEPARATOR + "[0-9]+", episodeRange, 1));
             int to = Integer.parseInt(StringUtils.match("[0-9]+" + SEPARATOR + "([0-9]+)", episodeRange, 1));
-            Downloader.downloadSome(product, language, accessToken, comicDir, from, to);
+            Downloader.downloadSome(arguments, from, to);
         }
     }
 

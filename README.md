@@ -10,9 +10,7 @@ This is downloader that helps you to login and downloads the specified comic for
 
 ### Preview
 
-![preview.gif](https://user-images.githubusercontent.com/46176032/82747023-5ef38f00-9dd0-11ea-9f42-18f744fb50a9.gif)
-
-※ *This preview is old version. The downloader doesn't work like this in latest version.*
+![preview.gif](https://user-images.githubusercontent.com/46176032/86532430-d73b8d00-bf04-11ea-9442-064af11aea9c.gif)
 
 <br>
 
@@ -37,10 +35,14 @@ This is downloader that helps you to login and downloads the specified comic for
 
 
 ```cmd
-java -jar {JAR filename} {id} {password} {comic name} [{episode range}]
+java -jar {JAR filename} {id} {password} {language} {comic name} [{episode range}]
 ```
 
 - *<ins>id</ins>, <ins>password</ins> (required)*: your lezhin comics account, not account of third party platform.
+- *<ins>language (required)</ins>*: the platform of lezhin comics you want to see.
+  - **ko** : korean
+  - **en** : english
+  - **ja** : japanese
 - *<ins>comic name</ins> (required)*: the webtoon name you want to download.
 - *<ins>episode range</ins> (optional)*
   - __skipped__ : all episodes
