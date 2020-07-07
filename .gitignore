@@ -3,6 +3,7 @@ bin/
 L_*/
 .gitconfig
 chromedriver*
+config.ini
 !.mvn/wrapper/maven-wrapper.jar
 
 
