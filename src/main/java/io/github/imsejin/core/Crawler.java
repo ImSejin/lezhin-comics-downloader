@@ -1,5 +1,6 @@
 package io.github.imsejin.core;
 
+import io.github.imsejin.common.constants.Languages;
 import io.github.imsejin.common.constants.URIs;
 import io.github.imsejin.model.Arguments;
 import io.github.imsejin.model.Episode;
@@ -34,10 +35,18 @@ public final class Crawler {
      * </script>
      * }</pre>
      */
-    public static String getJson(Arguments arguments) {
+    public static String getJson(Arguments arguments) throws InterruptedException {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
+        // 언어/지역 설정 변경 페이지가 노출되면 다운로드할 수 없기에, 미리 API를 호출하여 설정을 변경한다.
+        String locale = Languages.from(arguments.getLanguage()).getLocale();
+        driver.get(URIs.HOME.value() + arguments.getLanguage() + "/locale/" + locale + "?locale=" + locale);
+
+        // 해당 웹툰 페이지로 이동한다.
         driver.get(URIs.HOME.value() + arguments.getLanguage() + URIs.COMIC.value() + arguments.getComicName());
+
+        // DOM 렌더링을 기다린다
+        TimeUnit.SECONDS.sleep(2);
 
         // 웹툰의 정보가 window 객체의 필드로 정의되어 있어, 이를 가져오기 위해 로컬스토리지에 저장한다.
         driver.executeScript("localStorage.setItem('product', JSON.stringify(window.__LZ_PRODUCT__.product));");

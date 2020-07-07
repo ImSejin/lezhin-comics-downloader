@@ -1,17 +1,23 @@
 package io.github.imsejin.common.constants;
 
+import lombok.Getter;
+
 import java.util.stream.Stream;
 
 public enum Languages implements Dictionary {
 
-    KOREAN("ko"),
-    ENGLISH("en"),
-    JAPANESE("ja");
+    KOREAN("ko", "ko-KR"),
+    ENGLISH("en", "en-US"),
+    JAPANESE("ja", "ja-JP");
 
     private final String value;
 
-    Languages(String lang) {
+    @Getter
+    private final String locale;
+
+    Languages(String lang, String locale) {
         this.value = lang;
+        this.locale = locale;
     }
 
     @Override
@@ -26,6 +32,12 @@ public enum Languages implements Dictionary {
 
     public static boolean contains(String value) {
         return Stream.of(Languages.values()).anyMatch(lang -> lang.value.equals(value));
+
+    public static Languages from(String value) {
+        return Stream.of(values())
+                .filter(lang -> lang.value.equals(value))
+                .findAny()
+                .orElse(null);
     }
 
 }

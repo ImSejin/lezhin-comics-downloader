@@ -50,7 +50,7 @@ public final class LezhinComicsDownloaderApplication {
 
     private static final String SEPARATOR = EpisodeRange.SEPARATOR.value();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         // 필요한 인자를 넣지 않았다면, 프로그램을 종료한다.
         if (args == null || args.length < 2) {
             UsagePrinter.printAndQuit(
