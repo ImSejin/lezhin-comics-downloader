@@ -24,6 +24,7 @@
 
 package io.github.imsejin;
 
+import io.github.imsejin.common.UsagePrinter;
 import io.github.imsejin.common.constants.EpisodeRange;
 import io.github.imsejin.common.util.FilenameUtils;
 import io.github.imsejin.common.util.JsonUtils;
@@ -52,8 +53,17 @@ public final class LezhinComicsDownloaderApplication {
     public static void main(String[] args) {
         // 필요한 인자를 넣지 않았다면, 프로그램을 종료한다.
         if (args == null || args.length < 2) {
-            printHelper(true, true, true);
-            System.exit(1);
+            UsagePrinter.printAndQuit(
+                    "- USAGE: java -jar {JAR filename} {id} {password} {language} {comic name} [{episode range}]",
+                    "- WHAT LANGUAGES DOES THE DOWNLOADER SUPPORT?",
+                    "    ko : korean",
+                    "    en : english",
+                    "    ja : japanese",
+                    "- HOW TO SETUP EPISODE RANGE?",
+                    "    case 1. skipped : all of episodes",
+                    "    case 2. 8" + SEPARATOR + "      : from ep.8 to the end of the episode",
+                    "    case 3. " + SEPARATOR + "25     : from the beginning of the episode to ep.25",
+                    "    case 4. 1" + SEPARATOR + "10    : from ep.1 to ep.10");
         }
 
         final Arguments arguments = Arguments.builder()
@@ -134,31 +144,6 @@ public final class LezhinComicsDownloaderApplication {
             int to = Integer.parseInt(StringUtils.match("[0-9]+" + SEPARATOR + "([0-9]+)", episodeRange, 1));
             Downloader.downloadSome(arguments, from, to);
         }
-    }
-
-    private static void printHelper(boolean usage, boolean lang, boolean range) {
-        System.err.println();
-
-        if (usage) {
-            System.err.println("    - USAGE: java -jar {JAR filename} {id} {password} {language} {comic name} [{episode range}]");
-        }
-
-        if (lang) {
-            System.err.println("    - WHAT LANGUAGES DOES THE DOWNLOADER SUPPORT?");
-            System.err.println("        ko : korean");
-            System.err.println("        en : english");
-            System.err.println("        ja : japanese");
-        }
-
-        if (range) {
-            System.err.println("    - HOW TO SETUP EPISODE RANGE?");
-            System.err.println("        case 1. skipped : all of episodes");
-            System.err.println("        case 2. 8" + SEPARATOR + "      : from ep.8 to the end of the episode");
-            System.err.println("        case 3. " + SEPARATOR + "25     : from the beginning of the episode to ep.25");
-            System.err.println("        case 4. 1" + SEPARATOR + "10    : from ep.1 to ep.10");
-        }
-
-        System.err.println();
     }
 
 }

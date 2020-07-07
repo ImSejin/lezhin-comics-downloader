@@ -1,5 +1,6 @@
 package io.github.imsejin.model;
 
+import io.github.imsejin.common.UsagePrinter;
 import io.github.imsejin.common.constants.EpisodeRange;
 import io.github.imsejin.common.constants.Languages;
 import io.github.imsejin.common.util.IniUtils;
@@ -38,8 +39,7 @@ public class Arguments {
             section = IniUtils.readSection(file, "account");
         } catch (IOException ex) {
             // 'config.ini' 파일이 없거나, 'account' 섹션이 없는 경우
-            System.err.println("\n    The file 'config.ini' or the section 'account' does not exist.\n");
-            System.exit(1);
+            UsagePrinter.printAndQuit("The file 'config.ini' or the section 'account' does not exist.");
         }
 
         String username = section.get("username");
@@ -47,8 +47,7 @@ public class Arguments {
 
         // 유효하지 않은 계정 정보의 경우
         if (StringUtils.anyBlanks(username, password)) {
-            System.err.println("\n    ID or password is not valid.\n");
-            System.exit(1);
+            UsagePrinter.printAndQuit("ID or password is not valid.");
         }
 
         this.username = username;
@@ -58,14 +57,22 @@ public class Arguments {
     private Arguments(String language, String comicName, String episodeRange, String accessToken, Product product, String comicPathname) {
         // 유효하지 않은 언어의 경우
         if (!Languages.contains(language)) {
-            printHelper(false, true, false);
-            System.exit(1);
+            UsagePrinter.printAndQuit(
+                    "- WHAT LANGUAGES DOES THE DOWNLOADER SUPPORT?",
+                    "    ko : korean",
+                    "    en : english",
+                    "    ja : japanese");
         }
 
         // 유효하지 않은 에피소드 범위의 경우
-        if (episodeRange != null && !episodeRange.contains(EpisodeRange.SEPARATOR.value())) {
-            printHelper(false, false, true);
-            System.exit(1);
+        final String separator = EpisodeRange.SEPARATOR.value();
+        if (episodeRange != null && !episodeRange.contains(separator)) {
+            UsagePrinter.printAndQuit(
+                    "- HOW TO SETUP EPISODE RANGE?",
+                    "    case 1. skipped : all of episodes",
+                    "    case 2. 8" + separator + "      : from ep.8 to the end of the episode",
+                    "    case 3. " + separator + "25     : from the beginning of the episode to ep.25",
+                    "    case 4. 1" + separator + "10    : from ep.1 to ep.10");
         }
 
         this.language = language;
@@ -79,39 +86,11 @@ public class Arguments {
     public void setAccessToken(String accessToken) {
         // 로그인에 실패하면, 프로그램을 종료한다.
         if (accessToken == null) {
-            System.err.println("    Failed to login. Check your account information.\n");
             ChromeBrowser.getDriver().quit();
-            System.exit(1);
+            UsagePrinter.printAndQuit("Failed to login. Check your account information.");
         }
 
         this.accessToken = accessToken;
-    }
-
-    private static void printHelper(boolean usage, boolean lang, boolean range) {
-        final String SEPARATOR = EpisodeRange.SEPARATOR.value();
-
-        System.err.println();
-
-        if (usage) {
-            System.err.println("    - USAGE: java -jar {JAR filename} {id} {password} {language} {comic name} [{episode range}]");
-        }
-
-        if (lang) {
-            System.err.println("    - WHAT LANGUAGES DOES THE DOWNLOADER SUPPORT?");
-            System.err.println("        ko : korean");
-            System.err.println("        en : english");
-            System.err.println("        ja : japanese");
-        }
-
-        if (range) {
-            System.err.println("    - HOW TO SETUP EPISODE RANGE?");
-            System.err.println("        case 1. skipped : all of episodes");
-            System.err.println("        case 2. 8" + SEPARATOR + "      : from ep.8 to the end of the episode");
-            System.err.println("        case 3. " + SEPARATOR + "25     : from the beginning of the episode to ep.25");
-            System.err.println("        case 4. 1" + SEPARATOR + "10    : from ep.1 to ep.10");
-        }
-
-        System.err.println();
     }
 
     public static ArgumentsBuilder builder() {
