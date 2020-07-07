@@ -28,7 +28,7 @@ public class PathnameUtilsTest {
     }
 
     @Test
-    public void testRemoveFileSeparators() {
+    public void removeFileSeparators() {
         // when
         final String separatorForRegex = File.separator.equals("\\") ? "\\\\" : File.separator;
         String actual = pathname.replaceAll(separatorForRegex, "");
@@ -38,7 +38,7 @@ public class PathnameUtilsTest {
     }
 
     @Test
-    public void testCorrect() {
+    public void correct() {
         // given
         String pathname = "\\// / C:\\ Program Files / \\/\\ \\ Java\\jdk8 /\\/ / \\ \\ ";
 
@@ -51,7 +51,7 @@ public class PathnameUtilsTest {
     }
 
     @Test
-    public void testConcat() {
+    public void concat() {
         // given
 //        String pathname1 = "/users";
 //        String pathname2 = "/data/";

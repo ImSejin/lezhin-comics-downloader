@@ -1,14 +1,14 @@
 package io.github.imsejin.core;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 import org.openqa.selenium.chrome.ChromeDriver;
+
+import static org.junit.Assert.assertTrue;
 
 public class ChromeBrowserTest {
 
     @Test
-    public void testGetJson() {
+    public void getJson() {
         // given
         ChromeDriver driver = ChromeBrowser.getDriver();
 

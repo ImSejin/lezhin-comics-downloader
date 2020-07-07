@@ -78,7 +78,8 @@ public enum URIs implements Dictionary {
     }
 
     public static boolean contains(String value) {
-        return Stream.of(URIs.values()).anyMatch(uri -> uri.value.equals(value));
+        return Stream.of(URIs.values())
+                .anyMatch(uri -> uri.value.equals(value));
     }
 
 }

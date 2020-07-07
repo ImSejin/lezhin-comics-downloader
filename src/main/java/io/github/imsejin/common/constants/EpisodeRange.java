@@ -27,7 +27,8 @@ public enum EpisodeRange implements Dictionary {
     }
 
     public static boolean contains(String value) {
-        return Stream.of(EpisodeRange.values()).anyMatch(range -> range.value.equals(value));
+        return Stream.of(EpisodeRange.values())
+                .anyMatch(range -> range.value.equals(value));
     }
 
 }

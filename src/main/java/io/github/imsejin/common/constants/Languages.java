@@ -31,7 +31,9 @@ public enum Languages implements Dictionary {
     }
 
     public static boolean contains(String value) {
-        return Stream.of(Languages.values()).anyMatch(lang -> lang.value.equals(value));
+        return Stream.of(values())
+                .anyMatch(lang -> lang.value.equals(value));
+    }
 
     public static Languages from(String value) {
         return Stream.of(values())

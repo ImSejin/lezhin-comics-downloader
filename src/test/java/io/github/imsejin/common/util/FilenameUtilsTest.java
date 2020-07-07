@@ -28,7 +28,7 @@ public class FilenameUtilsTest {
     public String expectedFilename;
 
     @Test
-    public void testToSafeName() {
+    public void toSafeName() {
         // when
         String actual = FilenameUtils.toSafeName(filename);
 

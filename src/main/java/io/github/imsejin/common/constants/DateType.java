@@ -56,7 +56,8 @@ public enum DateType implements Dictionary {
     }
 
     public static boolean contains(String value) {
-        return Stream.of(DateType.values()).anyMatch(type -> type.pattern.equals(value));
+        return Stream.of(DateType.values())
+                .anyMatch(type -> type.pattern.equals(value));
     }
 
 }
