@@ -35,7 +35,7 @@ This is downloader that helps you to login and downloads the specified comic for
 
 
 ```cmd
-java -jar {JAR filename} {id} {password} {language} {comic name} [{episode range}]
+java -jar {JAR filename} {language} {comic name} [{episode range}]
 ```
 
 - *<ins>id</ins>, <ins>password</ins> (required)*: your lezhin comics account, not account of third party platform.
@@ -45,7 +45,7 @@ java -jar {JAR filename} {id} {password} {language} {comic name} [{episode range
   - **ja** : japanese
 - *<ins>comic name</ins> (required)*: the webtoon name you want to download.
 
-<img style="width:25em" alt="comic-name" src="https://user-images.githubusercontent.com/46176032/86545858-88c1d900-bf6c-11ea-9c14-64692abbee3a.png">
+<img width="350" alt="comic-name" src="https://user-images.githubusercontent.com/46176032/86545858-88c1d900-bf6c-11ea-9c14-64692abbee3a.png">
 
 - *<ins>episode range</ins> (optional)*
   - __skipped__ : all episodes
@@ -58,7 +58,7 @@ java -jar {JAR filename} {id} {password} {language} {comic name} [{episode range
 ### Command examples
 
 ```cmd
-java -jar lezhin-comics-downloader.jar test@gmail.com test123 en appetite
+java -jar lezhin-comics-downloader.jar en appetite
 ```
 
 Downloads all episodes of the comic named appetite.
@@ -66,7 +66,7 @@ Downloads all episodes of the comic named appetite.
 <br>
 
 ```cmd
-java -jar lezhin-comics-downloader.jar test@gmail.com test123 en appetite 8~
+java -jar lezhin-comics-downloader.jar en appetite 8~
 ```
 
 Downloads the episodes of the comic named appetite from ep.8 to the end.
@@ -74,7 +74,7 @@ Downloads the episodes of the comic named appetite from ep.8 to the end.
 <br>
 
 ```cmd
-java -jar lezhin-comics-downloader.jar test@gmail.com test123 en appetite ~25
+java -jar lezhin-comics-downloader.jar en appetite ~25
 ```
 
 Downloads the episodes of the comic named appetite from the beginning to ep.25.
@@ -82,7 +82,7 @@ Downloads the episodes of the comic named appetite from the beginning to ep.25.
 <br>
 
 ```cmd
-java -jar lezhin-comics-downloader.jar test@gmail.com test123 en appetite 1~10
+java -jar lezhin-comics-downloader.jar en appetite 1~10
 ```
 
 Downloads the episodes of the comic named appetite from ep.1 to ep.10.
@@ -95,5 +95,6 @@ Downloads the episodes of the comic named appetite from ep.1 to ep.10.
 - Selenium
 - Gson
 - Progress Bar
+- Ini4j
 
 
