@@ -24,7 +24,7 @@ public final class LoginHelper {
 
         // 존재하지 않는 계정의 경우
         if (StringUtils.isBlank(accessToken)) {
-            System.err.println("\n    The account does not exists.");
+            System.err.println("\n    The account does not exist.");
             return null;
         }
 

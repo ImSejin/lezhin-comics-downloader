@@ -1,11 +1,6 @@
 package io.github.imsejin.core;
 
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
-
+import io.github.imsejin.common.util.StringUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -13,7 +8,11 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import io.github.imsejin.common.util.StringUtils;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
+
+import static org.junit.Assert.assertTrue;
 
 public class LoginHelperTest {
 
@@ -51,7 +50,7 @@ public class LoginHelperTest {
         try {
             script = driver.findElementByXPath("//script[not(@src) and contains(text(), '__LZ_ME__')]");
         } catch (NoSuchElementException ex) {
-            System.err.println("The account does not exists.");
+            System.err.println("The account does not exist.");
             return;
         }
 
