@@ -51,17 +51,15 @@ public final class LezhinComicsDownloaderApplication {
 
     public static void main(String[] args) {
         // 필요한 인자를 넣지 않았다면, 프로그램을 종료한다.
-        if (args == null || args.length < 4) {
+        if (args == null || args.length < 2) {
             printHelper(true, true, true);
             System.exit(1);
         }
 
         final Arguments arguments = Arguments.builder()
-                .username(args[0])
-                .password(args[1])
-                .language(args[2])
-                .comicName(args[3])
-                .episodeRange(args.length > 4 ? args[4] : null)
+                .language(args[0])
+                .comicName(args[1])
+                .episodeRange(args.length > 2 ? args[2] : null)
                 .build();
 
         // 아이디와 비밀번호를 입력받아 로그인하고, 토큰을 가져온다.
