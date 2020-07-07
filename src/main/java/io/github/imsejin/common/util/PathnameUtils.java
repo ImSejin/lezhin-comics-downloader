@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static io.github.imsejin.common.util.DateUtils.today;
+import static io.github.imsejin.common.util.DateTimeUtils.today;
 
 /**
  * 경로명 유틸리티<br>
@@ -108,7 +108,7 @@ public final class PathnameUtils {
      * Adds the current year/month (yyyy/MM) pathname to the end of the pathname.
      * 
      * <pre>
-     * DateUtils.today(): "20191231"
+     * DateTimeUtils.today(): "20191231"
      * 
      * PathnameUtils.appendYearMonth("C:\\Program Files"): "C:\\Program Files\\2019\\12"
      * </pre>
@@ -122,7 +122,7 @@ public final class PathnameUtils {
      * Adds the current year/month/day (yyyy/MM/dd) pathname to the end of the pathname.
      * 
      * <pre>
-     * DateUtils.today(): "20191231"
+     * DateTimeUtils.today(): "20191231"
      * 
      * PathnameUtils.appendYearMonthDay("C:\\Program Files"): "C:\\Program Files\\2019\\12\\31"
      * </pre>

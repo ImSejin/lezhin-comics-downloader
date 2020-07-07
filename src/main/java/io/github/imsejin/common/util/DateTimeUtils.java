@@ -14,7 +14,7 @@ import static java.time.format.DateTimeFormatter.ofPattern;
 
 /**
  * 날짜 유틸리티<br>
- * Date utilities
+ * Date time utilities
  * 
  * <p>
  * 
@@ -22,17 +22,17 @@ import static java.time.format.DateTimeFormatter.ofPattern;
  * 
  * @author SEJIN
  */
-public final class DateUtils {
+public final class DateTimeUtils {
 
-    private DateUtils() {}
+    private DateTimeUtils() {}
 
     /**
      * 윤년인지 확인한다.<br>
      * Checks if it's leap year.
      * 
      * <pre>
-     * DateUtils.isLeapYear(2019): false
-     * DateUtils.isLeapYear(2020): true
+     * DateTimeUtils.isLeapYear(2019): false
+     * DateTimeUtils.isLeapYear(2020): true
      * </pre>
      */
     public static boolean isLeapYear(int year) {
@@ -44,7 +44,7 @@ public final class DateUtils {
      * Return today's date.
      * 
      * <pre>
-     * DateUtils.today(): "20191231"
+     * DateTimeUtils.today(): "20191231"
      * </pre>
      */
     public static String today() {
@@ -56,11 +56,11 @@ public final class DateUtils {
      * Returns the corresponding element of today's date.
      * 
      * <pre>
-     * DateUtils.today(): "20191231"
+     * DateTimeUtils.today(): "20191231"
      * 
-     * DateUtils.today(DateType.YEAR): "2019"
-     * DateUtils.today(DateType.MONTH): "12"
-     * DateUtils.today(DateType.DAY): "31"
+     * DateTimeUtils.today(DateType.YEAR): "2019"
+     * DateTimeUtils.today(DateType.MONTH): "12"
+     * DateTimeUtils.today(DateType.DAY): "31"
      * </pre>
      */
     public static String today(DateType type) {
@@ -72,8 +72,8 @@ public final class DateUtils {
      * Returns yesterday's date (yyyyMMdd).
      * 
      * <pre>
-     * DateUtils.today(): "20191231"
-     * DateUtils.yesterday(): "20191230"
+     * DateTimeUtils.today(): "20191231"
+     * DateTimeUtils.yesterday(): "20191230"
      * </pre>
      */
     public static String yesterday() {
@@ -85,11 +85,11 @@ public final class DateUtils {
      * Returns the corresponding element of yesterday's date.
      * 
      * <pre>
-     * DateUtils.yesterday(): "20191230"
+     * DateTimeUtils.yesterday(): "20191230"
      * 
-     * DateUtils.yesterday(DateType.YEAR): "2019"
-     * DateUtils.yesterday(DateType.MONTH): "12"
-     * DateUtils.yesterday(DateType.DAY): "30"
+     * DateTimeUtils.yesterday(DateType.YEAR): "2019"
+     * DateTimeUtils.yesterday(DateType.MONTH): "12"
+     * DateTimeUtils.yesterday(DateType.DAY): "30"
      * </pre>
      */
     public static String yesterday(DateType type) {
@@ -101,7 +101,7 @@ public final class DateUtils {
      * Returns the current time.
      * 
      * <pre>
-     * DateUtils.now(): "20191231175959"
+     * DateTimeUtils.now(): "20191231175959"
      * </pre>
      */
     public static String now() {
@@ -113,7 +113,7 @@ public final class DateUtils {
      * Returns the current time formatted.
      * 
      * <pre>
-     * DateUtils.formattedNow(): "2019-12-31 17:59:59"
+     * DateTimeUtils.formattedNow(): "2019-12-31 17:59:59"
      * </pre>
      */
     public static String formattedNow() {
@@ -125,7 +125,7 @@ public final class DateUtils {
      * Returns the current time in console format.
      * 
      * <pre>
-     * DateUtils.consoleDateTime(): "2019-12-31 17:59:59.311"
+     * DateTimeUtils.consoleDateTime(): "2019-12-31 17:59:59.311"
      * </pre>
      */
     public static String consoleDateTime() {
@@ -139,10 +139,10 @@ public final class DateUtils {
      * (Support date formats for "yyyy-MMdd", "yyyy-MM-dd")
      * 
      * <pre>
-     * DateUtils.validate("2019-02-28"): true
-     * DateUtils.validate("20190229"): false
-     * DateUtils.validate("20200229"): true
-     * DateUtils.validate("2020-02-29"): true
+     * DateTimeUtils.validate("2019-02-28"): true
+     * DateTimeUtils.validate("20190229"): false
+     * DateTimeUtils.validate("20200229"): true
+     * DateTimeUtils.validate("2020-02-29"): true
      * </pre>
      */
     public static boolean validate(String date) {
@@ -166,11 +166,11 @@ public final class DateUtils {
      * (Support date formats for "yyyy-MMdd", "yyyy-MM-dd")
      * 
      * <pre>
-     * DateUtils.validate("20190228", DayOfWeek.THURSDAY): true
-     * DateUtils.validate("2019-02-28", DayOfWeek.THURSDAY): true
-     * DateUtils.validate("20190229", DayOfWeek.FRIDAY): false
-     * DateUtils.validate("20200229", DayOfWeek.SATURDAY): true
-     * DateUtils.validate("2020-02-29", DayOfWeek.SATURDAY): true
+     * DateTimeUtils.validate("20190228", DayOfWeek.THURSDAY): true
+     * DateTimeUtils.validate("2019-02-28", DayOfWeek.THURSDAY): true
+     * DateTimeUtils.validate("20190229", DayOfWeek.FRIDAY): false
+     * DateTimeUtils.validate("20200229", DayOfWeek.SATURDAY): true
+     * DateTimeUtils.validate("2020-02-29", DayOfWeek.SATURDAY): true
      * </pre>
      */
     public static boolean validate(String date, DayOfWeek dayOfWeek) {
@@ -191,8 +191,8 @@ public final class DateUtils {
      * Returns the date including the last day of the year and month.
      * 
      * <pre>
-     * DateUtils.withMonthlyLastDate(2019, 2): "20190228"
-     * DateUtils.withMonthlyLastDate(2020, 2): "20200229"
+     * DateTimeUtils.withMonthlyLastDate(2019, 2): "20190228"
+     * DateTimeUtils.withMonthlyLastDate(2020, 2): "20200229"
      * </pre>
      */
     public static String withMonthlyLastDate(int year, int month) {
@@ -205,8 +205,8 @@ public final class DateUtils {
      * Returns the date including the last day of the year and month.
      * 
      * <pre>
-     * DateUtils.withMonthlyLastDate("2019", "2"): "20190228"
-     * DateUtils.withMonthlyLastDate("2020", "2"): "20200229"
+     * DateTimeUtils.withMonthlyLastDate("2019", "2"): "20190228"
+     * DateTimeUtils.withMonthlyLastDate("2020", "2"): "20200229"
      * </pre>
      */
     public static String withMonthlyLastDate(String year, String month) {
@@ -221,7 +221,7 @@ public final class DateUtils {
      * <pre>
      * String date = "20190606,20190501~20190531,yesterday~today,20190601~today,today,yesterday,20190101,20181201~20190101";
      * 
-     * DateUtils.convertCompoundedDate(date):
+     * DateTimeUtils.convertCompoundedDate(date):
      * {
      *   "simpleDates": [
      *     "20190606",
@@ -262,22 +262,22 @@ public final class DateUtils {
         // ,(comma)를 기준으로 날짜 조건을 분리한다
         List<String> temp1 = Arrays.asList(date.split(","));
         List<String> temp2 = new ArrayList<>();
-        for (int i = 0; i < temp1.size(); i++) {
-            if (temp1.get(i).contains("~")) {
+        for (String value : temp1) {
+            if (value.contains("~")) {
                 // 복합일자를 분리한다
-                temp2.add(temp1.get(i));
+                temp2.add(value);
             } else {
                 // 존재하는 날짜인지 확인한다
-                if (!validate(temp1.get(i))) throw new RuntimeException("Invalid date: " + temp1.get(i));
+                if (!validate(value)) throw new RuntimeException("Invalid date: " + value);
 
                 // 단일일자를 분리한다
-                simpleDates.add(temp1.get(i));
+                simpleDates.add(value);
             }
         }
 
         // 복합일자의 시작일과 종료일을 구분한다
-        for (int i = 0; i < temp2.size(); i++) {
-            String[] temp3 = temp2.get(i).split("~");
+        for (String s : temp2) {
+            String[] temp3 = s.split("~");
 
             // 존재하는 날짜인지 확인한다
             if (!validate(temp3[0])) throw new RuntimeException("Invalid date: " + temp3[0]);
