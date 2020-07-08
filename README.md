@@ -28,9 +28,11 @@ This is downloader that helps you to login and downloads the specified comic for
 
 5. Downloads the latest released lezhin-comics-downloader [here](https://github.com/ImSejin/lezhin-comics-downloader/releases).
 
-6. Places two files in the same path.
+6. Downloads config.ini [here](https://raw.githubusercontent.com/ImSejin/lezhin-comics-downloader/master/config.ini) and writes your account in the file.
 
-7. Uses the following command to run the downloader.
+7. Places three files in the same path.
+
+8. Uses the following command to run the downloader.
 
 
 
