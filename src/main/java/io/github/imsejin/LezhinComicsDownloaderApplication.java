@@ -54,7 +54,7 @@ public final class LezhinComicsDownloaderApplication {
         // 필요한 인자를 넣지 않았다면, 프로그램을 종료한다.
         if (args == null || args.length < 2) {
             UsagePrinter.printAndQuit(
-                    "- USAGE: java -jar {JAR filename} {id} {password} {language} {comic name} [{episode range}]",
+                    "- USAGE: java -jar {JAR filename} {language} {comic name} [{episode range}]",
                     "- WHAT LANGUAGES DOES THE DOWNLOADER SUPPORT?",
                     "    ko : korean",
                     "    en : english",
