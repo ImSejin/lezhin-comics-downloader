@@ -1,10 +1,12 @@
 package io.github.imsejin.common.constants;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.util.stream.Stream;
 
-public enum Languages implements Dictionary {
+@RequiredArgsConstructor
+public enum Languages implements KeyValue {
 
     KOREAN("ko", "ko-KR"),
     ENGLISH("en", "en-US"),
@@ -14,11 +16,6 @@ public enum Languages implements Dictionary {
 
     @Getter
     private final String locale;
-
-    Languages(String lang, String locale) {
-        this.value = lang;
-        this.locale = locale;
-    }
 
     @Override
     public String key() {

@@ -1,8 +1,11 @@
 package io.github.imsejin.common.constants;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.stream.Stream;
 
-public enum URIs implements Dictionary {
+@RequiredArgsConstructor
+public enum URIs implements KeyValue {
 
     /**
      * 레진코믹스의 메인페이지 URI<br>
@@ -62,10 +65,6 @@ public enum URIs implements Dictionary {
     IMG(CDN.value() + "v2/comics/");
 
     private final String value;
-
-    URIs(String uri) {
-        this.value = uri;
-    }
 
     @Override
     public String key() {

@@ -1,8 +1,11 @@
 package io.github.imsejin.common.constants;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.stream.Stream;
 
-public enum DateType implements Dictionary {
+@RequiredArgsConstructor
+public enum DateType implements KeyValue {
 
     YEAR("yyyy"), MONTH("MM"), DAY("dd"), HOUR("HH"), MINUTE("mm"), SECOND("ss"), MILLISECOND("SSS"),
 
@@ -40,10 +43,6 @@ public enum DateType implements Dictionary {
     F_ALL(F_DATE.value() + F_HOUR_2_MILSEC.value());
 
     private final String pattern;
-
-    DateType(String pattern) {
-        this.pattern = pattern;
-    }
 
     @Override
     public String key() {
