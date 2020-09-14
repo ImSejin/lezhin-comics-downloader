@@ -1,6 +1,6 @@
 package io.github.imsejin.common.constants;
 
-public interface Dictionary {
+public interface KeyValue {
 
     String key();
 

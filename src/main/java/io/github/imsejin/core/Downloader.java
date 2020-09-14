@@ -40,9 +40,6 @@ public final class Downloader {
     }
 
     public static void downloadSome(Arguments arguments, int from, int to) {
-        long comicId = arguments.getProduct().getId();
-        String comicName = arguments.getProduct().getAlias();
-
         List<Episode> episodes = arguments.getProduct().getEpisodes();
 
         // 에피소드 번호를 인덱스에 맞게 변경한다.
@@ -51,14 +48,13 @@ public final class Downloader {
         // 해당 웹툰의 마지막 에피소드 번호를 초과하는 에피소드 번호를 지정하면, 마지막 에피소드까지 다운로드하는 것으로 변경한다.
         to = Math.min(to, episodes.size());
 
-        /*
         // Single-threaded way
         for (int i = from; i < to; i++) {
             Episode episode = episodes.get(i);
             downloadOne(arguments, episode, i + 1);
         }
-        */
 
+        /*
         // Multi-threaded way
         List<Episode> slicedEpisodes = episodes.subList(from, to);
         Map<Integer, Episode> map = CollectionUtils.toMap(slicedEpisodes);
@@ -68,6 +64,7 @@ public final class Downloader {
             Episode episode = entry.getValue();
             downloadOne(arguments, episode, i + 1);
         });
+        */
     }
 
     public static void downloadOne(Arguments arguments, Episode episode, int num) {

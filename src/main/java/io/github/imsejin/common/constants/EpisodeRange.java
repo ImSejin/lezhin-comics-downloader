@@ -1,8 +1,11 @@
 package io.github.imsejin.common.constants;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.stream.Stream;
 
-public enum EpisodeRange implements Dictionary {
+@RequiredArgsConstructor
+public enum EpisodeRange implements KeyValue {
 
     /**
      * 에피소드 번호의 구분자<br>
@@ -11,10 +14,6 @@ public enum EpisodeRange implements Dictionary {
     SEPARATOR("~");
 
     private final String value;
-
-    EpisodeRange(String value) {
-        this.value = value;
-    }
 
     @Override
     public String key() {
