@@ -24,7 +24,6 @@
 
 package io.github.imsejin;
 
-import io.github.imsejin.common.UsagePrinter;
 import io.github.imsejin.common.constants.EpisodeRange;
 import io.github.imsejin.common.util.FilenameUtils;
 import io.github.imsejin.common.util.JsonUtils;
@@ -38,6 +37,7 @@ import io.github.imsejin.model.Arguments;
 import io.github.imsejin.model.Artist;
 import io.github.imsejin.model.Episode;
 import io.github.imsejin.model.Product;
+import org.apache.commons.cli.*;
 
 import java.io.File;
 import java.util.Collections;
@@ -51,25 +51,12 @@ public final class LezhinComicsDownloaderApplication {
     private static final String SEPARATOR = EpisodeRange.SEPARATOR.value();
 
     public static void main(String[] args) throws InterruptedException {
-        // 필요한 인자를 넣지 않았다면, 프로그램을 종료한다.
-        if (args == null || args.length < 2) {
-            UsagePrinter.printAndQuit(
-                    "- USAGE: java -jar {JAR filename} {language} {comic name} [{episode range}]",
-                    "- WHAT LANGUAGES DOES THE DOWNLOADER SUPPORT?",
-                    "    ko : korean",
-                    "    en : english",
-                    "    ja : japanese",
-                    "- HOW TO SETUP EPISODE RANGE?",
-                    "    case 1. skipped : all of episodes",
-                    "    case 2. 8" + SEPARATOR + "      : from ep.8 to the end of the episode",
-                    "    case 3. " + SEPARATOR + "25     : from the beginning of the episode to ep.25",
-                    "    case 4. 1" + SEPARATOR + "10    : from ep.1 to ep.10");
-        }
+        CommandLine cmd = validate(args);
 
         final Arguments arguments = Arguments.builder()
-                .language(args[0])
-                .comicName(args[1])
-                .episodeRange(args.length > 2 ? args[2] : null)
+                .language(cmd.getOptionValue('l'))
+                .comicName(cmd.getOptionValue('n'))
+                .episodeRange(cmd.getOptionValue('r', null))
                 .build();
 
         // 아이디와 비밀번호를 입력받아 로그인하고, 토큰을 가져온다.
@@ -93,6 +80,47 @@ public final class LezhinComicsDownloaderApplication {
         // 애플리케이션을 정상 종료한다.
         ChromeBrowser.getDriver().quit();
         System.exit(0);
+    }
+
+    private static CommandLine validate(String[] args) {
+        // language 옵션
+        Option lang = Option.builder("l")
+                .longOpt("lang")
+                .desc("language of lezhin platform you want to see")
+                .valueSeparator()
+                .hasArg()
+                .required()
+                .build();
+        // comicName 옵션
+        Option name = Option.builder("n")
+                .longOpt("name")
+                .desc("webtoon name you want to download")
+                .valueSeparator()
+                .hasArg()
+                .required()
+                .build();
+        // episodeRange 옵션
+        Option range = Option.builder("r")
+                .longOpt("range")
+                .desc("range of episodes you want to download")
+                .hasArg()
+                .valueSeparator()
+                .build();
+
+        Options options = new Options().addOption(lang).addOption(name).addOption(range);
+
+        // 옵션 및 인자를 분석한다.
+        CommandLine cmd;
+        try {
+            cmd = new DefaultParser().parse(options, args);
+        } catch (ParseException e) {
+            // 필요한 옵션 및 인자가 없다면, 프로그램을 종료한다.
+            new HelpFormatter().printHelp(" ", null, options, "", true);
+            System.exit(1);
+            return null;
+        }
+
+        return cmd;
     }
 
     private static void preprocess(Product product) {
