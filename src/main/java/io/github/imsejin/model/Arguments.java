@@ -70,9 +70,9 @@ public class Arguments {
             UsagePrinter.printAndQuit(
                     "- HOW TO SETUP EPISODE RANGE?",
                     "    case 1. skipped : all of episodes",
-                    "    case 2. 8" + separator + "      : from ep.8 to the end of the episode",
-                    "    case 3. " + separator + "25     : from the beginning of the episode to ep.25",
-                    "    case 4. 1" + separator + "10    : from ep.1 to ep.10");
+                    String.format("    case 2. 8%s      : from ep.8 to the end of the episode", separator),
+                    String.format("    case 3. %s25     : from the beginning of the episode to ep.25", separator),
+                    String.format("    case 4. 1%s10    : from ep.1 to ep.10", separator));
         }
 
         this.language = language;
