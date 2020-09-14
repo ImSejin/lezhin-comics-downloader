@@ -37,7 +37,7 @@ This is downloader that helps you to login and downloads the specified comic for
 
 
 ```cmd
-java -jar {JAR filename} {language} {comic name} [{episode range}]
+java -jar {JAR filename} -l=<language> -n=<comic name> [-r=<episode range>]
 ```
 
 - *<ins>id</ins>, <ins>password</ins> (required)*: your lezhin comics account, not account of third party platform.
@@ -60,7 +60,7 @@ java -jar {JAR filename} {language} {comic name} [{episode range}]
 ### Command examples
 
 ```cmd
-java -jar lezhin-comics-downloader.jar en appetite
+java -jar lezhin-comics-downloader.jar -l=en -n=appetite
 ```
 
 Downloads all episodes of the comic named appetite.
@@ -68,7 +68,7 @@ Downloads all episodes of the comic named appetite.
 <br>
 
 ```cmd
-java -jar lezhin-comics-downloader.jar en appetite 8~
+java -jar lezhin-comics-downloader.jar -l=en -n=appetite -r=8~
 ```
 
 Downloads the episodes of the comic named appetite from ep.8 to the end.
@@ -76,7 +76,7 @@ Downloads the episodes of the comic named appetite from ep.8 to the end.
 <br>
 
 ```cmd
-java -jar lezhin-comics-downloader.jar en appetite ~25
+java -jar lezhin-comics-downloader.jar -l=en -n=appetite -r=~25
 ```
 
 Downloads the episodes of the comic named appetite from the beginning to ep.25.
@@ -84,7 +84,7 @@ Downloads the episodes of the comic named appetite from the beginning to ep.25.
 <br>
 
 ```cmd
-java -jar lezhin-comics-downloader.jar en appetite 1~10
+java -jar lezhin-comics-downloader.jar -l=en -n=appetite -r=1~10
 ```
 
 Downloads the episodes of the comic named appetite from ep.1 to ep.10.
@@ -98,5 +98,6 @@ Downloads the episodes of the comic named appetite from ep.1 to ep.10.
 - Gson
 - Progress Bar
 - Ini4j
+- Apache Commons CLI
 
 
