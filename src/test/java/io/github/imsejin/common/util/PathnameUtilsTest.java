@@ -1,5 +1,6 @@
 package io.github.imsejin.common.util;
 
+import io.github.imsejin.util.PathnameUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -13,18 +14,18 @@ import static org.junit.Assert.assertEquals;
 @RunWith(Parameterized.class)
 public class PathnameUtilsTest {
 
-    @Parameterized.Parameters
-    public static Collection<Object> params() {
-        return Arrays.asList(new Object[][] {
-                {"C:\\Program Files\\Java", "C:Program FilesJava"}
-        });
-    }
-
     private final String pathname;
     private final String expectedPathname;
     public PathnameUtilsTest(String pathname, String expectedPathname) {
         this.pathname = pathname;
         this.expectedPathname = expectedPathname;
+    }
+
+    @Parameterized.Parameters
+    public static Collection<Object> params() {
+        return Arrays.asList(new Object[][]{
+                {"C:\\Program Files\\Java", "C:Program FilesJava"}
+        });
     }
 
     @Test

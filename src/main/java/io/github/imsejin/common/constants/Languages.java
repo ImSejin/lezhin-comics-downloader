@@ -1,9 +1,10 @@
 package io.github.imsejin.common.constants;
 
+import io.github.imsejin.constant.interfaces.KeyValue;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.util.stream.Stream;
+import java.util.Arrays;
 
 @RequiredArgsConstructor
 public enum Languages implements KeyValue {
@@ -17,6 +18,18 @@ public enum Languages implements KeyValue {
     @Getter
     private final String locale;
 
+    public static boolean contains(String value) {
+        return Arrays.stream(values())
+                .anyMatch(lang -> lang.value.equals(value));
+    }
+
+    public static Languages from(String value) {
+        return Arrays.stream(values())
+                .filter(lang -> lang.value.equals(value))
+                .findAny()
+                .orElse(null);
+    }
+
     @Override
     public String key() {
         return name();
@@ -25,18 +38,6 @@ public enum Languages implements KeyValue {
     @Override
     public String value() {
         return this.value;
-    }
-
-    public static boolean contains(String value) {
-        return Stream.of(values())
-                .anyMatch(lang -> lang.value.equals(value));
-    }
-
-    public static Languages from(String value) {
-        return Stream.of(values())
-                .filter(lang -> lang.value.equals(value))
-                .findAny()
-                .orElse(null);
     }
 
 }

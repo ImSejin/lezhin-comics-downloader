@@ -1,5 +1,8 @@
 package io.github.imsejin.common.util;
 
+import io.github.imsejin.util.IniUtils;
+import io.github.imsejin.util.PathnameUtils;
+import io.github.imsejin.util.StringUtils;
 import org.junit.Test;
 
 import java.io.File;
@@ -8,11 +11,11 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 public class IniUtilsTest {
 
-    private final File file = new File(PathnameUtils.currentPathname(),"config.ini");
+    private final File file = new File(PathnameUtils.getCurrentPathname(), "config.ini");
 
     @Test
     public void readValue() throws IOException {
@@ -24,7 +27,7 @@ public class IniUtilsTest {
         String actual = IniUtils.readValue(file, sectionName, name);
 
         // then
-        assertTrue(StringUtils.isNotBlank(actual));
+        assertFalse(StringUtils.isNullOrBlank(actual));
     }
 
     @Test
@@ -36,8 +39,8 @@ public class IniUtilsTest {
         Map<String, String> map = IniUtils.readSection(file, sectionName);
 
         // then
-        assertTrue(StringUtils.isNotBlank(map.get("username")));
-        assertTrue(StringUtils.isNotBlank(map.get("password")));
+        assertFalse(StringUtils.isNullOrBlank(map.get("username")));
+        assertFalse(StringUtils.isNullOrBlank(map.get("password")));
     }
 
     @Test

@@ -25,10 +25,6 @@
 package io.github.imsejin;
 
 import io.github.imsejin.common.constants.EpisodeRange;
-import io.github.imsejin.common.util.FilenameUtils;
-import io.github.imsejin.common.util.JsonUtils;
-import io.github.imsejin.common.util.PathnameUtils;
-import io.github.imsejin.common.util.StringUtils;
 import io.github.imsejin.core.ChromeBrowser;
 import io.github.imsejin.core.Crawler;
 import io.github.imsejin.core.Downloader;
@@ -37,6 +33,10 @@ import io.github.imsejin.model.Arguments;
 import io.github.imsejin.model.Artist;
 import io.github.imsejin.model.Episode;
 import io.github.imsejin.model.Product;
+import io.github.imsejin.util.FilenameUtils;
+import io.github.imsejin.util.JsonUtils;
+import io.github.imsejin.util.PathnameUtils;
+import io.github.imsejin.util.StringUtils;
 import org.apache.commons.cli.*;
 
 import java.io.File;
@@ -130,20 +130,20 @@ public final class LezhinComicsDownloaderApplication {
         Collections.reverse(episodes);
 
         // 디렉터리명에 허용되지 않는 문자열을 치환한다.
-        product.getDisplay().setTitle(FilenameUtils.toSafeName(product.getDisplay().getTitle()));
+        product.getDisplay().setTitle(FilenameUtils.replaceUnallowables(product.getDisplay().getTitle()));
         episodes.forEach(
-                episode -> episode.getDisplay().setTitle(FilenameUtils.toSafeName(episode.getDisplay().getTitle())));
+                episode -> episode.getDisplay().setTitle(FilenameUtils.replaceUnallowables(episode.getDisplay().getTitle())));
     }
 
     private static File makeDirectory(Product product) {
         // 웹툰 이름으로 디렉터리를 생성한다.
         String comicDirName = "L_" + product.getDisplay().getTitle() + " - "
                 + product.getArtists().stream()
-                    .map(Artist::getName)
-                    .map(FilenameUtils::toSafeName)
-                    .collect(Collectors.joining(", "));
+                .map(Artist::getName)
+                .map(FilenameUtils::replaceUnallowables)
+                .collect(Collectors.joining(", "));
 
-        File comicDir = new File(PathnameUtils.currentPathname(), comicDirName);
+        File comicDir = new File(PathnameUtils.getCurrentPathname(), comicDirName);
         if (!comicDir.exists()) comicDir.mkdirs();
 
         return comicDir;
@@ -152,7 +152,7 @@ public final class LezhinComicsDownloaderApplication {
     private static void download(Arguments arguments) {
         final String episodeRange = arguments.getEpisodeRange();
 
-        if (StringUtils.isBlank(episodeRange)) {
+        if (StringUtils.isNullOrEmpty(episodeRange)) {
             // 모든 에피소드를 다운로드한다.
             Downloader.downloadAll(arguments);
 

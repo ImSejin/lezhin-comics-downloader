@@ -1,8 +1,8 @@
 package io.github.imsejin.core;
 
 import io.github.imsejin.common.constants.URIs;
-import io.github.imsejin.common.util.StringUtils;
 import io.github.imsejin.model.Arguments;
+import io.github.imsejin.util.StringUtils;
 import lombok.SneakyThrows;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -23,7 +23,7 @@ public final class LoginHelper {
         String accessToken = getAccessToken(arguments);
 
         // 존재하지 않는 계정의 경우
-        if (StringUtils.isBlank(accessToken)) {
+        if (StringUtils.isNullOrEmpty(accessToken)) {
             System.err.print("\n    The account does not exist.");
             return null;
         }
