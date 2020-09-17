@@ -1,5 +1,6 @@
 package io.github.imsejin.common.util;
 
+import io.github.imsejin.util.FilenameUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -12,6 +13,12 @@ import static org.junit.Assert.assertEquals;
 @RunWith(Parameterized.class)
 public class FilenameUtilsTest {
 
+    @Parameterized.Parameter(0)
+    public String filename;
+
+    @Parameterized.Parameter(1)
+    public String expectedFilename;
+
     @Parameterized.Parameters
     public static Collection<Object> params() {
         return Arrays.asList(new String[][]{
@@ -21,16 +28,10 @@ public class FilenameUtilsTest {
         });
     }
 
-    @Parameterized.Parameter(0)
-    public String filename;
-
-    @Parameterized.Parameter(1)
-    public String expectedFilename;
-
     @Test
     public void toSafeName() {
         // when
-        String actual = FilenameUtils.toSafeName(filename);
+        String actual = FilenameUtils.replaceUnallowables(filename);
 
         // then
         assertEquals(expectedFilename, actual);

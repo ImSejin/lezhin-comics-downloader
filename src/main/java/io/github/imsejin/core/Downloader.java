@@ -3,11 +3,10 @@ package io.github.imsejin.core;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import io.github.imsejin.common.constants.Languages;
-import io.github.imsejin.common.util.CollectionUtils;
-import io.github.imsejin.common.util.JsonUtils;
-import io.github.imsejin.common.util.StringUtils;
 import io.github.imsejin.model.Arguments;
 import io.github.imsejin.model.Episode;
+import io.github.imsejin.util.JsonUtils;
+import io.github.imsejin.util.StringUtils;
 import lombok.SneakyThrows;
 import me.tongfei.progressbar.ProgressBar;
 import me.tongfei.progressbar.ProgressBarStyle;
@@ -19,11 +18,11 @@ import java.util.Map;
 
 public final class Downloader {
 
-    private Downloader() {}
-
     private static final String IMG_FORMAT_EXTENSION = ".webp"; // or ".jpg"
-
     private static final byte[] BUFFER = new byte[1024];
+
+    private Downloader() {
+    }
 
     public static void downloadAll(Arguments arguments) {
         int to = arguments.getProduct().getEpisodes().size();
@@ -81,7 +80,7 @@ public final class Downloader {
         if (numOfImages < 1) return;
 
         // 에피소드 이름으로 디렉터리를 생성한다.
-        String episodeDirName = StringUtils.lPad(num, 4, '0') + " - " + episode.getDisplay().getTitle();
+        String episodeDirName = StringUtils.padStart(4, String.valueOf(num), "0") + " - " + episode.getDisplay().getTitle();
         File episodeDir = new File(arguments.getComicPathname(), episodeDirName);
         if (!episodeDir.exists()) episodeDir.mkdirs();
 
@@ -97,7 +96,7 @@ public final class Downloader {
                 URL url = URLFactory.image(arguments.getProduct().getId(), episode.getId(), i, arguments.getAccessToken());
 
                 // 이미지를 다운로드한다.
-                File image = new File(episodeDir, StringUtils.lPad(String.valueOf(i), 3, '0') + IMG_FORMAT_EXTENSION);
+                File image = new File(episodeDir, StringUtils.padStart(3, String.valueOf(i), "0") + IMG_FORMAT_EXTENSION);
                 int result = createImage(url, image);
 
                 // 다운로드에 실패하면 해당 회차를 건너뛴다.
@@ -129,7 +128,7 @@ public final class Downloader {
         }
     }
 
-    @SneakyThrows({ IOException.class, JsonSyntaxException.class })
+    @SneakyThrows(JsonSyntaxException.class)
     private static int getNumOfImagesInEpisode(Arguments arguments, Episode episode) {
         URL url = URLFactory.oneEpisodeAPI(arguments.getProduct().getAlias(), episode.getName(), arguments.getAccessToken());
         JsonObject json = JsonUtils.readJsonFromUrl(url);

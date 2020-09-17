@@ -1,8 +1,9 @@
 package io.github.imsejin.common.constants;
 
+import io.github.imsejin.constant.interfaces.KeyValue;
 import lombok.RequiredArgsConstructor;
 
-import java.util.stream.Stream;
+import java.util.Arrays;
 
 @RequiredArgsConstructor
 public enum EpisodeRange implements KeyValue {
@@ -15,6 +16,11 @@ public enum EpisodeRange implements KeyValue {
 
     private final String value;
 
+    public static boolean contains(String value) {
+        return Arrays.stream(EpisodeRange.values())
+                .anyMatch(range -> range.value.equals(value));
+    }
+
     @Override
     public String key() {
         return this.name();
@@ -23,11 +29,6 @@ public enum EpisodeRange implements KeyValue {
     @Override
     public String value() {
         return this.value;
-    }
-
-    public static boolean contains(String value) {
-        return Stream.of(EpisodeRange.values())
-                .anyMatch(range -> range.value.equals(value));
     }
 
 }

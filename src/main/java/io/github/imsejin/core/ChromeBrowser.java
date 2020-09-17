@@ -1,18 +1,28 @@
 package io.github.imsejin.core;
 
-import io.github.imsejin.common.util.PathnameUtils;
+import io.github.imsejin.util.PathnameUtils;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 public final class ChromeBrowser {
 
-    private ChromeBrowser() {}
-
-    private static final String CHROME_DRIVER_PATHNAME = PathnameUtils.chromeDriverPathname();
+    private static final String CHROME_DRIVER_PATHNAME;
 
     static {
+        // Assigns chrome driver pathname.
+        final String currentPathname = PathnameUtils.getCurrentPathname();
+        String filename = "chromedriver.exe";                                                 // for Microsoft Windows
+        if (Files.notExists(Paths.get(currentPathname, filename))) filename = "chromedriver"; // for Linux and macOS
+        CHROME_DRIVER_PATHNAME = Paths.get(currentPathname, filename).toString();
+
         // WebDriver의 경로를 설정한다.
         System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_PATHNAME);
+    }
+
+    private ChromeBrowser() {
     }
 
     public static ChromeDriver getDriver() {

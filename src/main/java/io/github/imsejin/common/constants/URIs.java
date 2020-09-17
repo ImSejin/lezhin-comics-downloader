@@ -1,8 +1,9 @@
 package io.github.imsejin.common.constants;
 
+import io.github.imsejin.constant.interfaces.KeyValue;
 import lombok.RequiredArgsConstructor;
 
-import java.util.stream.Stream;
+import java.util.Arrays;
 
 @RequiredArgsConstructor
 public enum URIs implements KeyValue {
@@ -66,6 +67,11 @@ public enum URIs implements KeyValue {
 
     private final String value;
 
+    public static boolean contains(String value) {
+        return Arrays.stream(URIs.values())
+                .anyMatch(uri -> uri.value.equals(value));
+    }
+
     @Override
     public String key() {
         return this.name();
@@ -74,11 +80,6 @@ public enum URIs implements KeyValue {
     @Override
     public String value() {
         return this.value;
-    }
-
-    public static boolean contains(String value) {
-        return Stream.of(URIs.values())
-                .anyMatch(uri -> uri.value.equals(value));
     }
 
 }

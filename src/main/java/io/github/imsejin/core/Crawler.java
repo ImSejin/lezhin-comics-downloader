@@ -15,15 +15,16 @@ import java.util.concurrent.TimeUnit;
 
 public final class Crawler {
 
-    private Crawler() {}
+    private Crawler() {
+    }
 
     /**
      * 웹툰 정보를 찾아, JSON 형태의 문자열로 반환한다.<br>
      * Finds webtoon information, converts to the JSON format string and return it.<br><br>
-     * 
+     * <p>
      * 일반적으로 접근했을 때와 크롤러로 접근했을 때의 페이지가 다르다.<br>
      * 필요한 모든 정보가 script 태그 내 JSON 형태로 있어서 이를 이용한다.
-     * 
+     *
      * <pre>{@code
      * <script>
      * __LZ_MESSAGE__ = {...};

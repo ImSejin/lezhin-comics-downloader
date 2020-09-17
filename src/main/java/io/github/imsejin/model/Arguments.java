@@ -3,15 +3,14 @@ package io.github.imsejin.model;
 import io.github.imsejin.common.UsagePrinter;
 import io.github.imsejin.common.constants.EpisodeRange;
 import io.github.imsejin.common.constants.Languages;
-import io.github.imsejin.common.util.IniUtils;
-import io.github.imsejin.common.util.PathnameUtils;
-import io.github.imsejin.common.util.StringUtils;
 import io.github.imsejin.core.ChromeBrowser;
+import io.github.imsejin.util.IniUtils;
+import io.github.imsejin.util.PathnameUtils;
+import io.github.imsejin.util.StringUtils;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 
 @Getter
@@ -32,12 +31,12 @@ public class Arguments {
     private String comicPathname;
 
     {
-        final File file = new File(PathnameUtils.currentPathname(),"config.ini");
+        final File file = new File(PathnameUtils.getCurrentPathname(), "config.ini");
 
         Map<String, String> section = null;
         try {
             section = IniUtils.readSection(file, "account");
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             // 'config.ini' 파일이 없거나, 'account' 섹션이 없는 경우
             UsagePrinter.printAndQuit("The file 'config.ini' or the section 'account' does not exist.");
         }
@@ -46,7 +45,7 @@ public class Arguments {
         String password = section.get("password");
 
         // 유효하지 않은 계정 정보의 경우
-        if (StringUtils.anyBlanks(username, password)) {
+        if (StringUtils.anyEquals(username, password)) {
             UsagePrinter.printAndQuit("ID or password is not valid.");
         }
 
@@ -83,6 +82,10 @@ public class Arguments {
         this.comicPathname = comicPathname;
     }
 
+    public static ArgumentsBuilder builder() {
+        return new ArgumentsBuilder();
+    }
+
     public void setAccessToken(String accessToken) {
         // 로그인에 실패하면, 프로그램을 종료한다.
         if (accessToken == null) {
@@ -93,13 +96,7 @@ public class Arguments {
         this.accessToken = accessToken;
     }
 
-    public static ArgumentsBuilder builder() {
-        return new ArgumentsBuilder();
-    }
-
     public static class ArgumentsBuilder {
-
-        private ArgumentsBuilder() {}
 
         private String _language;
         private String _comicName;
@@ -107,6 +104,9 @@ public class Arguments {
         private String _accessToken;
         private Product _product;
         private String _comicPathname;
+
+        private ArgumentsBuilder() {
+        }
 
         public Arguments build() {
             return new Arguments(_language, _comicName, _episodeRange, _accessToken, _product, _comicPathname);

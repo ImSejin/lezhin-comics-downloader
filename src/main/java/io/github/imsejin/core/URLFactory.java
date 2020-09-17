@@ -8,9 +8,10 @@ import java.net.URL;
 
 public final class URLFactory {
 
-    private URLFactory() {}
-
     private static final StringBuilder $ = new StringBuilder();
+
+    private URLFactory() {
+    }
 
     /**
      * StringBuilder의 버퍼를 지운다.<br>
@@ -30,14 +31,14 @@ public final class URLFactory {
         init();
 
         $.append(URIs.IMG.value())
-        .append(comicId)
-        .append("/episodes/")
-        .append(episodeId)
-        .append("/contents/scrolls/")
-        .append(filename)
-        .append(".webp?access_token=")
-        .append(accessToken)
-        .append("&purchased=false"); // 구매한 유료 에피소드라면 true로 변경한다.
+                .append(comicId)
+                .append("/episodes/")
+                .append(episodeId)
+                .append("/contents/scrolls/")
+                .append(filename)
+                .append(".webp?access_token=")
+                .append(accessToken)
+                .append("&purchased=false"); // 구매한 유료 에피소드라면 true로 변경한다.
 
         return new URL($.toString());
     }
@@ -66,11 +67,11 @@ public final class URLFactory {
         init();
 
         $.append(URIs.EPISODE_INFO.value())
-        .append(comicName)
-        .append('/')
-        .append(episodeName)
-        .append(".json?access_token=")
-        .append(accessToken);
+                .append(comicName)
+                .append('/')
+                .append(episodeName)
+                .append(".json?access_token=")
+                .append(accessToken);
 
         return new URL($.toString());
     }
@@ -85,9 +86,9 @@ public final class URLFactory {
         init();
 
         $.append(URIs.EPISODE_INFO.value())
-        .append(comicName)
-        .append("?access_token=")
-        .append(accessToken);
+                .append(comicName)
+                .append("?access_token=")
+                .append(accessToken);
 
         return new URL($.toString());
     }
