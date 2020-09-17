@@ -2,7 +2,8 @@ package io.github.imsejin.common;
 
 public final class UsagePrinter {
 
-    private UsagePrinter() {}
+    private UsagePrinter() {
+    }
 
     public static void printAndQuit(String... messages) {
         System.out.println();

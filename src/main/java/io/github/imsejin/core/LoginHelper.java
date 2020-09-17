@@ -13,7 +13,8 @@ import java.util.concurrent.TimeUnit;
 
 public final class LoginHelper {
 
-    private LoginHelper() {}
+    private LoginHelper() {
+    }
 
     /**
      * 로그인하여 액세스 토큰을 얻는다.<br>
@@ -35,7 +36,7 @@ public final class LoginHelper {
     /**
      * 로그인하여 액세스 토큰을 찾아, 반환한다.<br>
      * Finds access token after login, returns it.
-     * 
+     *
      * <pre>{@code
      * <script>
      * __LZ_CONFIG__ = _.merge(window.__LZ_CONFIG__, {
@@ -56,7 +57,7 @@ public final class LoginHelper {
      *     token: '5be30a25-a044-410c-88b0-19a1da968a64',
      *     genres: {"romance":"로맨스","fantasy":"판타지","horror":"호러","lightnovel":"라이트노벨","sports":"스포츠","gl":"백합","historical":"시대극","bl":"BL","gore":"스릴러","girl":"소녀만화","gag":"개그","food":"음식","otona":"오토나","drama":"드라마","mystery":"미스터리","sf":"SF","martial":"무협","school":"학원","mature_female":"레이디스코믹","tl":"TL","action":"액션","adult":"성인","day":"일상","gallery":"갤러리"}
      * });
-     * 
+     *
      * __LZ_ME__ = _.merge(window.__LZ_ME__, {
      *     userId: '5412133348822268',
      *     adult: true,

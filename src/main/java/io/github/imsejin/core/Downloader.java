@@ -17,11 +17,11 @@ import java.util.List;
 
 public final class Downloader {
 
-    private Downloader() {}
-
     private static final String IMG_FORMAT_EXTENSION = ".webp"; // or ".jpg"
-
     private static final byte[] BUFFER = new byte[1024];
+
+    private Downloader() {
+    }
 
     public static void downloadAll(Arguments arguments) {
         int to = arguments.getProduct().getEpisodes().size();
