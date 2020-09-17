@@ -16,6 +16,13 @@
     </properties>
 
     <dependencies>
+        <!-- Common Utils -->
+        <dependency>
+            <groupId>io.github.imsejin</groupId>
+            <artifactId>common-utils</artifactId>
+            <version>0.1.0</version>
+        </dependency>
+
         <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
