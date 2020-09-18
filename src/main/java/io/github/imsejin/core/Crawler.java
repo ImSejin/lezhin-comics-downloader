@@ -36,7 +36,8 @@ public final class Crawler {
      * </script>
      * }</pre>
      */
-    public static String getJson(Arguments arguments) throws InterruptedException {
+    @SneakyThrows(InterruptedException.class)
+    public static String getJson(Arguments arguments) {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
         // 언어/지역 설정 변경 페이지가 노출되면 다운로드할 수 없기에, 미리 API를 호출하여 설정을 변경한다.
@@ -60,22 +61,23 @@ public final class Crawler {
     public static int getNumOfImagesInEpisode(Arguments arguments, Episode episode) {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
-        driver.get(URLFactory.oneEpisodeViewer(arguments.getLanguage(), arguments.getComicName(), episode.getName()).toString());
+        driver.get(URLFactory.oneEpisodeViewer(
+                arguments.getLanguage(), arguments.getComicName(), episode.getName()).toString());
 
-        // DOM 렌더링을 기다린다
+        // DOM 렌더링을 기다린다.
         TimeUnit.SECONDS.sleep(2);
 
-        List<WebElement> images;
         try {
             WebElement scrollList = driver.findElementById("scroll-list");
-            images = scrollList.findElements(By.xpath(".//div[@class='cut' and not(contains(@class, 'cutLicense')) and @data-cut-index and @data-cut-type='cut']"));
+            List<WebElement> images = scrollList.findElements(
+                    By.xpath(".//div[@class='cut' and not(contains(@class, 'cutLicense')) and @data-cut-index and @data-cut-type='cut']"));
+
+            // Success
+            return images.size();
         } catch (NoSuchElementException ex) {
             // Fail
             return 0;
         }
-
-        // Success
-        return images.size();
     }
 
 }
