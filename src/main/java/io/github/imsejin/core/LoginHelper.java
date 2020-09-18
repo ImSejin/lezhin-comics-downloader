@@ -9,16 +9,26 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Helps you login to lezhin comics with selenium.
+ *
+ * @see ChromeBrowser
+ * @see ChromeDriver
+ */
 public final class LoginHelper {
 
     private LoginHelper() {
     }
 
     /**
-     * 로그인하여 액세스 토큰을 얻는다.<br>
-     * Logins and gets an access token.
+     * Gets an access token after login.
+     *
+     * @param arguments arguments required to login
+     * @return access token
+     * (e.g. 5be30a25-a044-410c-88b0-19a1da968a64) ... {@link UUID#randomUUID()}
      */
     public static String login(Arguments arguments) {
         String accessToken = getAccessToken(arguments);
@@ -34,8 +44,28 @@ public final class LoginHelper {
     }
 
     /**
-     * 로그인하여 액세스 토큰을 찾아, 반환한다.<br>
-     * Finds access token after login, returns it.
+     * Finds an access token after login.
+     *
+     * <p> This is the first place to run a chrome driver.
+     * First, {@link ChromeDriver} finds the root element that is
+     * {@code <form id="login-form" action="/login" method="post"></form>}.
+     * And then it finds the three element in the root.
+     *     <ol>
+     *         <li>{@code <input id="login-email">}</li>
+     *         <li>{@code <input id="login-password">}</li>
+     *         <li>{@code <button type="submit"></button>}</li>
+     *     </ol>
+     *
+     * <p> {@link ChromeDriver} inputs username to the first element
+     * and does password to the second element.
+     * When input tags are filled by username and password,
+     * it clicks the third element so that login.
+     *
+     * <p> If {@link LoginHelper} successes to login,
+     * lezhin generates user's configurations that has an access token into script tag.
+     * So {@link ChromeDriver} extracts a token from the script tag of which {@code innerText}.
+     *
+     * <p> The following code is {@code innerText} in the script tag.
      *
      * <pre>{@code
      * <script>
@@ -70,6 +100,14 @@ public final class LoginHelper {
      * ...
      * </script>
      * }</pre>
+     *
+     * @param arguments arguments required to login
+     * @return access token
+     * (e.g. 5be30a25-a044-410c-88b0-19a1da968a64) ... {@link UUID#randomUUID()}
+     * @see ChromeBrowser
+     * @see ChromeDriver
+     * @see WebElement#getAttribute(String)
+     * @see java.util.regex.Matcher#group(int)
      */
     @SneakyThrows(InterruptedException.class)
     private static String getAccessToken(Arguments arguments) {
