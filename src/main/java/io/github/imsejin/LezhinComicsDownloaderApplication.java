@@ -51,7 +51,7 @@ public final class LezhinComicsDownloaderApplication {
     private LezhinComicsDownloaderApplication() {
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         CommandLine cmd = validate(args);
 
         final Arguments arguments = Arguments.builder()
@@ -110,18 +110,15 @@ public final class LezhinComicsDownloaderApplication {
 
         Options options = new Options().addOption(lang).addOption(name).addOption(range);
 
-        // 옵션 및 인자를 분석한다.
-        CommandLine cmd;
         try {
-            cmd = new DefaultParser().parse(options, args);
+            // 옵션 및 인자를 분석한다.
+            return new DefaultParser().parse(options, args);
         } catch (ParseException e) {
             // 필요한 옵션 및 인자가 없다면, 프로그램을 종료한다.
             new HelpFormatter().printHelp(" ", null, options, "", true);
             System.exit(1);
             return null;
         }
-
-        return cmd;
     }
 
     private static void preprocess(Product product) {
@@ -130,21 +127,21 @@ public final class LezhinComicsDownloaderApplication {
         // 해당 웹툰의 에피소드; 순서가 거꾸로 되어 있어 정렬한다.
         Collections.reverse(episodes);
 
-        // 디렉터리명에 허용되지 않는 문자열을 치환한다.
-        product.getDisplay().setTitle(FilenameUtils.replaceUnallowables(product.getDisplay().getTitle()));
-        episodes.forEach(
-                episode -> episode.getDisplay().setTitle(FilenameUtils.replaceUnallowables(episode.getDisplay().getTitle())));
+        // 에피소드 이름 중 디렉터리명에 허용되지 않는 문자열을 치환한다.
+        episodes.forEach(episode -> episode.getDisplay().setTitle(
+                FilenameUtils.replaceUnallowables(episode.getDisplay().getTitle())));
     }
 
     private static File makeDirectory(Product product) {
         // 웹툰 이름으로 디렉터리를 생성한다.
-        String comicDirName = "L_" + product.getDisplay().getTitle() + " - "
-                + product.getArtists().stream()
+        String comicTitle = FilenameUtils.replaceUnallowables(product.getDisplay().getTitle());
+        String artists = product.getArtists().stream()
                 .map(Artist::getName)
                 .map(FilenameUtils::replaceUnallowables)
                 .collect(Collectors.joining(", "));
+        String dirName = "L_" + comicTitle + " - " + artists;
 
-        File comicDir = new File(PathnameUtils.getCurrentPathname(), comicDirName);
+        File comicDir = new File(PathnameUtils.getCurrentPathname(), dirName);
         if (!comicDir.exists()) comicDir.mkdirs();
 
         return comicDir;
