@@ -1,6 +1,12 @@
 # Lezhin Comics Downloader
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/imsejin/lezhin-comics-downloader) ![jdk](https://img.shields.io/badge/jdk-8-orange) ![GitHub](https://img.shields.io/github/license/imsejin/lezhin-comics-downloader)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/imsejin/lezhin-comics-downloader)
+![jdk](https://img.shields.io/badge/jdk-8-orange)
+![GitHub](https://img.shields.io/github/license/imsejin/lezhin-comics-downloader)
+![GitHub All Releases](https://img.shields.io/github/downloads/imsejin/lezhin-comics-downloader/total)
+![GitHub Releases](https://img.shields.io/github/downloads/imsejin/lezhin-comics-downloader/latest/total)
+
+
 
 This is downloader that helps you to login and downloads the specified comic for all lezhin-comics even adults.
 
@@ -10,7 +16,7 @@ This is downloader that helps you to login and downloads the specified comic for
 
 ### Preview
 
-![preview.gif](https://user-images.githubusercontent.com/46176032/86532430-d73b8d00-bf04-11ea-9442-064af11aea9c.gif)
+![preview.gif](https://user-images.githubusercontent.com/46176032/93713243-81869080-fb95-11ea-8c70-031f26c8ebfc.gif)
 
 <br>
 
