@@ -110,7 +110,7 @@ public final class Crawler {
                 arguments.getLanguage(), arguments.getComicName(), episode.getName()).toString());
 
         // DOM 렌더링을 기다린다.
-        TimeUnit.SECONDS.sleep(2);
+        TimeUnit.SECONDS.sleep(4);
 
         try {
             WebElement scrollList = driver.findElementById("scroll-list");
