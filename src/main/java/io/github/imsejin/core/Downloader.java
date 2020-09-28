@@ -79,7 +79,9 @@ public final class Downloader {
         if (numOfImages < 1) return;
 
         // 에피소드 이름으로 디렉터리를 생성한다.
-        String episodeDirName = StringUtils.padStart(4, String.valueOf(num), "0") + " - " + episode.getDisplay().getTitle();
+        String episodeDirName = StringUtils.padStart(4, String.valueOf(num), "0")
+                + " - "
+                + episode.getDisplay().getTitle();
         File episodeDir = new File(arguments.getComicPathname(), episodeDirName);
         if (!episodeDir.exists()) episodeDir.mkdirs();
 
@@ -95,8 +97,10 @@ public final class Downloader {
                 URL url = URLFactory.image(arguments.getProduct().getId(), episode.getId(), i, arguments.getAccessToken());
 
                 // 이미지를 다운로드한다.
-                File image = new File(episodeDir, StringUtils.padStart(3, String.valueOf(i), "0") + IMG_FORMAT_EXTENSION);
-                int result = createImage(url, image);
+                File file = new File(episodeDir,
+                        StringUtils.padStart(3, String.valueOf(i), "0")
+                                + IMG_FORMAT_EXTENSION);
+                int result = createImage(url, file);
 
                 // 다운로드에 실패하면 해당 회차를 건너뛴다.
                 if (result == 0) break;
@@ -129,7 +133,10 @@ public final class Downloader {
 
     @SneakyThrows(JsonSyntaxException.class)
     private static int getNumOfImagesInEpisode(Arguments arguments, Episode episode) {
-        URL url = URLFactory.oneEpisodeAPI(arguments.getProduct().getAlias(), episode.getName(), arguments.getAccessToken());
+        URL url = URLFactory.oneEpisodeAPI(
+                arguments.getProduct().getAlias(),
+                episode.getName(),
+                arguments.getAccessToken());
         JsonObject json = JsonUtils.readJsonFromUrl(url);
 
         return json.get("cut").getAsInt();

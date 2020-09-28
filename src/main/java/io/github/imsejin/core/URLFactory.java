@@ -8,7 +8,7 @@ import java.net.URL;
 
 public final class URLFactory {
 
-    private static final StringBuilder $ = new StringBuilder();
+    private static final StringBuilder sb = new StringBuilder();
 
     private URLFactory() {
     }
@@ -18,7 +18,7 @@ public final class URLFactory {
      * Clears the buffer of StringBuilder.
      */
     private static void init() {
-        $.setLength(0);
+        sb.setLength(0);
     }
 
     /**
@@ -30,31 +30,31 @@ public final class URLFactory {
     public static synchronized URL image(long comicId, long episodeId, int filename, String accessToken) {
         init();
 
-        $.append(URIs.IMG.value())
-                .append(comicId)
-                .append("/episodes/")
-                .append(episodeId)
-                .append("/contents/scrolls/")
-                .append(filename)
-                .append(".webp?access_token=")
-                .append(accessToken)
-                .append("&purchased=false"); // 구매한 유료 에피소드라면 true로 변경한다.
+        sb.append(URIs.IMG.value());
+        sb.append(comicId);
+        sb.append("/episodes/");
+        sb.append(episodeId);
+        sb.append("/contents/scrolls/");
+        sb.append(filename);
+        sb.append(".webp?access_token=");
+        sb.append(accessToken);
+        sb.append("&purchased=false"); // 구매한 유료 에피소드라면 true로 변경한다.
 
-        return new URL($.toString());
+        return new URL(sb.toString());
     }
 
     @SneakyThrows(MalformedURLException.class)
     public static synchronized URL oneEpisodeViewer(String language, String comicName, String episodeName) {
         init();
 
-        $.append(URIs.HOME.value())
-                .append(language)
-                .append(URIs.COMIC.value())
-                .append(comicName)
-                .append('/')
-                .append(episodeName);
+        sb.append(URIs.HOME.value());
+        sb.append(language);
+        sb.append(URIs.COMIC.value());
+        sb.append(comicName);
+        sb.append('/');
+        sb.append(episodeName);
 
-        return new URL($.toString());
+        return new URL(sb.toString());
     }
 
     /**
@@ -66,14 +66,14 @@ public final class URLFactory {
     public static synchronized URL oneEpisodeAPI(String comicName, String episodeName, String accessToken) {
         init();
 
-        $.append(URIs.EPISODE_INFO.value())
-                .append(comicName)
-                .append('/')
-                .append(episodeName)
-                .append(".json?access_token=")
-                .append(accessToken);
+        sb.append(URIs.EPISODE_INFO.value());
+        sb.append(comicName);
+        sb.append('/');
+        sb.append(episodeName);
+        sb.append(".json?access_token=");
+        sb.append(accessToken);
 
-        return new URL($.toString());
+        return new URL(sb.toString());
     }
 
     /**
@@ -85,12 +85,12 @@ public final class URLFactory {
     public static synchronized URL allEpisodeAPI(String comicName, String accessToken) {
         init();
 
-        $.append(URIs.EPISODE_INFO.value())
-                .append(comicName)
-                .append("?access_token=")
-                .append(accessToken);
+        sb.append(URIs.EPISODE_INFO.value());
+        sb.append(comicName);
+        sb.append("?access_token=");
+        sb.append(accessToken);
 
-        return new URL($.toString());
+        return new URL(sb.toString());
     }
 
 }
