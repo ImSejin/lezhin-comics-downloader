@@ -3,14 +3,14 @@ package io.github.imsejin.core;
 import io.github.imsejin.common.constants.URIs;
 import io.github.imsejin.model.Arguments;
 import io.github.imsejin.util.StringUtils;
-import lombok.SneakyThrows;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Helps you login to lezhin comics with selenium.
@@ -109,15 +109,18 @@ public final class LoginHelper {
      * @see WebElement#getAttribute(String)
      * @see java.util.regex.Matcher#group(int)
      */
-    @SneakyThrows(InterruptedException.class)
     private static String getAccessToken(Arguments arguments) {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
-        // 로그인 페이지를 요청한다.
+        // Requests login page.
         driver.get(URIs.HOME.value() + arguments.getLanguage() + URIs.LOGIN.value());
 
-        // 계정정보를 작성한다.
+        // Waits for DOM to complete the rendering.
         WebElement loginForm = driver.findElementByXPath("//form[@id='login-form' and contains(@action, '/login') and @method='post']");
+        WebDriverWait waitLogin = new WebDriverWait(driver, 15);
+        waitLogin.until(ExpectedConditions.visibilityOfAllElements(loginForm));
+
+        // Inputs account information into the element.
         WebElement usernameInput = loginForm.findElement(By.xpath(".//input[@id='login-email']"));
         usernameInput.clear();
         usernameInput.sendKeys(arguments.getUsername());
@@ -125,14 +128,16 @@ public final class LoginHelper {
         passwordInput.clear();
         passwordInput.sendKeys(arguments.getPassword());
 
-        // 로그인한다.
+        // Does login.
         WebElement submitButton = loginForm.findElement(By.xpath(".//button[@type='submit']"));
         submitButton.click();
 
-        // 로그인 딜레이를 대기한다.
-        TimeUnit.SECONDS.sleep(2);
+        // Waits for DOM to complete the rendering.
+        WebDriverWait wait = new WebDriverWait(driver, 15);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//main[@id='main' and @class='lzCntnr lzCntnr--home']")));
 
-        // 액세스 토큰 정보가 있는 script 태그를 찾는다.
+        // Finds the script tag that has access token.
         WebElement script;
         try {
             script = driver.findElementByXPath("//script[not(@src) and contains(text(), '__LZ_ME__')]");
