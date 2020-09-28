@@ -22,7 +22,7 @@ public final class Crawler {
     }
 
     /**
-     * Gets webtoon information in the JSON format.
+     * Gets webtoon information as JSON string.
      *
      * <p> {@link Crawler} finds webtoon information,
      * converts it to the JSON format string and return it.
@@ -33,14 +33,14 @@ public final class Crawler {
      * <p> The following code is {@code innerText} in the script tag.
      *
      * <pre>{@code
-     * <script>
-     * __LZ_MESSAGE__ = {...};
-     * __LZ_PRODUCT__ = { productType: 'comic', product: {...}, departure: '', all: {...}, prefree: {...} };
-     * __LZ_DATA__ = {...};
-     * __LZ_CONTEXT__ = "";
-     * __LZ_ERROR_CODE__ = '${error}';
-     * __LZ_ERROR_MESSAGE__ = { 'error.COMIC_EPISODE.NOT_FOUND': "찾으시는 에피소드가 없습니다." };
-     * </script>
+     *     <script>
+     *     __LZ_MESSAGE__ = {...};
+     *     __LZ_PRODUCT__ = { productType: 'comic', product: {...}, departure: '', all: {...}, prefree: {...} };
+     *     __LZ_DATA__ = {...};
+     *     __LZ_CONTEXT__ = "";
+     *     __LZ_ERROR_CODE__ = '${error}';
+     *     __LZ_ERROR_MESSAGE__ = { 'error.COMIC_EPISODE.NOT_FOUND': "찾으시는 에피소드가 없습니다." };
+     *     </script>
      * }</pre>
      *
      * @param arguments arguments required to download episodes

@@ -52,39 +52,41 @@ public final class LezhinComicsDownloaderApplication {
     }
 
     public static void main(String[] args) {
+        // Validates and parses options and arguments.
         CommandLine cmd = validate(args);
 
+        // Sets up the arguments.
         final Arguments arguments = Arguments.builder()
                 .language(cmd.getOptionValue('l'))
                 .comicName(cmd.getOptionValue('n'))
                 .episodeRange(cmd.getOptionValue('r', null))
                 .build();
 
-        // 아이디와 비밀번호를 입력받아 로그인하고, 토큰을 가져온다.
+        // Login with username and password and gets a token.
         arguments.setAccessToken(LoginHelper.login(arguments));
 
-        // 해당 웹툰 페이지를 크롤링하여 회차별 정보를 JSON으로 얻어온다.
+        // Crawls the webtoon page so that gets the information on the episode as JSON string.
         String jsonText = Crawler.getJson(arguments);
 
-        // JSON을 파싱하여 객체로 변환한다.
+        // Parses JSON string and converts it to object.
         Product product = JsonUtils.toObject(jsonText, Product.class);
         arguments.setProduct(product);
 
-        // 다운로드를 위해, 데이터를 가공하고 웹툰 폴더를 생성한다.
+        // To download, pre-processes the data and creates a directory to save episodes.
         preprocess(product);
         File comicDir = makeDirectory(product);
         arguments.setComicPathname(comicDir.getPath());
 
-        // 이미지를 다운로드한다.
+        // Downloads images.
         download(arguments);
 
-        // 애플리케이션을 정상 종료한다.
+        // Quits the downloader.
         ChromeBrowser.getDriver().quit();
         System.exit(0);
     }
 
     private static CommandLine validate(String[] args) {
-        // language 옵션
+        // Option: language
         Option lang = Option.builder("l")
                 .longOpt("lang")
                 .desc("language of lezhin platform you want to see")
@@ -92,7 +94,7 @@ public final class LezhinComicsDownloaderApplication {
                 .hasArg()
                 .required()
                 .build();
-        // comicName 옵션
+        // Option: comicName
         Option name = Option.builder("n")
                 .longOpt("name")
                 .desc("webtoon name you want to download")
@@ -100,7 +102,7 @@ public final class LezhinComicsDownloaderApplication {
                 .hasArg()
                 .required()
                 .build();
-        // episodeRange 옵션
+        // Option: episodeRange
         Option range = Option.builder("r")
                 .longOpt("range")
                 .desc("range of episodes you want to download")
@@ -111,10 +113,10 @@ public final class LezhinComicsDownloaderApplication {
         Options options = new Options().addOption(lang).addOption(name).addOption(range);
 
         try {
-            // 옵션 및 인자를 분석한다.
+            // Parses options and arguments.
             return new DefaultParser().parse(options, args);
         } catch (ParseException e) {
-            // 필요한 옵션 및 인자가 없다면, 프로그램을 종료한다.
+            // Without required options or arguments, the program will exit.
             new HelpFormatter().printHelp(" ", null, options, "", true);
             System.exit(1);
             return null;
