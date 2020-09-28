@@ -9,11 +9,13 @@ import io.github.imsejin.util.PathnameUtils;
 import io.github.imsejin.util.StringUtils;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.File;
 import java.util.Map;
 
 @Getter
+@ToString
 public class Arguments {
 
     private final String username;
