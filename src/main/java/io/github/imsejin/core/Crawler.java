@@ -4,14 +4,14 @@ import io.github.imsejin.common.constants.Languages;
 import io.github.imsejin.common.constants.URIs;
 import io.github.imsejin.model.Arguments;
 import io.github.imsejin.model.Episode;
-import lombok.SneakyThrows;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * DOM Crawler
@@ -48,7 +48,6 @@ public final class Crawler {
      * @see ChromeBrowser
      * @see ChromeDriver#getLocalStorage()
      */
-    @SneakyThrows(InterruptedException.class)
     public static String getJson(Arguments arguments) {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
@@ -59,8 +58,10 @@ public final class Crawler {
         // 해당 웹툰 페이지로 이동한다.
         driver.get(URIs.HOME.value() + arguments.getLanguage() + URIs.COMIC.value() + arguments.getComicName());
 
-        // DOM 렌더링을 기다린다.
-        TimeUnit.SECONDS.sleep(2);
+        // Waits for DOM to complete the rendering.
+        WebDriverWait wait = new WebDriverWait(driver, 15);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//main[@id='main' and @class='lzCntnr lzCntnr--episode']")));
 
         // 웹툰의 정보가 window 객체의 필드로 정의되어 있어, 이를 가져오기 위해 로컬스토리지에 저장한다.
         driver.executeScript("localStorage.setItem('product', JSON.stringify(window.__LZ_PRODUCT__.product));");
@@ -102,18 +103,19 @@ public final class Crawler {
      * @see ChromeDriver
      * @see WebElement#findElements(By)
      */
-    @SneakyThrows(InterruptedException.class)
     public static int getNumOfImagesInEpisode(Arguments arguments, Episode episode) {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
         driver.get(URLFactory.oneEpisodeViewer(
                 arguments.getLanguage(), arguments.getComicName(), episode.getName()).toString());
 
-        // DOM 렌더링을 기다린다.
-        TimeUnit.SECONDS.sleep(4);
+        WebElement scrollList = driver.findElementById("scroll-list");
+
+        // Waits for DOM to complete the rendering.
+        WebDriverWait wait = new WebDriverWait(driver, 15);
+        wait.until(ExpectedConditions.visibilityOfAllElements(scrollList));
 
         try {
-            WebElement scrollList = driver.findElementById("scroll-list");
             List<WebElement> images = scrollList.findElements(
                     By.xpath(".//div[@class='cut' and not(contains(@class, 'cutLicense')) and @data-cut-index and @data-cut-type='cut']"));
 
