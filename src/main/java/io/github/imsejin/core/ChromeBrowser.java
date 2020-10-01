@@ -18,7 +18,7 @@ public final class ChromeBrowser {
         if (Files.notExists(Paths.get(currentPathname, filename))) filename = "chromedriver"; // for Linux and macOS
         CHROME_DRIVER_PATHNAME = Paths.get(currentPathname, filename).toString();
 
-        // WebDriver의 경로를 설정한다.
+        // Sets up pathname of web driver.
         System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_PATHNAME);
     }
 

@@ -11,15 +11,19 @@ import lombok.SneakyThrows;
 import me.tongfei.progressbar.ProgressBar;
 import me.tongfei.progressbar.ProgressBarStyle;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.IntStream;
 
 public final class Downloader {
 
     private static final String IMG_FORMAT_EXTENSION = ".webp"; // or ".jpg"
-    private static final byte[] BUFFER = new byte[1024];
 
     private Downloader() {
     }
@@ -47,23 +51,10 @@ public final class Downloader {
         // 해당 웹툰의 마지막 에피소드 번호를 초과하는 에피소드 번호를 지정하면, 마지막 에피소드까지 다운로드하는 것으로 변경한다.
         to = Math.min(to, episodes.size());
 
-        // Single-threaded way
         for (int i = from; i < to; i++) {
             Episode episode = episodes.get(i);
             downloadOne(arguments, episode, i + 1);
         }
-
-        /*
-        // Multi-threaded way
-        List<Episode> slicedEpisodes = episodes.subList(from, to);
-        Map<Integer, Episode> map = CollectionUtils.toMap(slicedEpisodes);
-
-        map.entrySet().parallelStream().forEach(entry -> {
-            int i = entry.getKey();
-            Episode episode = entry.getValue();
-            downloadOne(arguments, episode, i + 1);
-        });
-        */
     }
 
     public static void downloadOne(Arguments arguments, Episode episode, int num) {
@@ -80,30 +71,38 @@ public final class Downloader {
         if (numOfImages < 1) return;
 
         // 에피소드 이름으로 디렉터리를 생성한다.
-        String episodeDirName = StringUtils.padStart(4, String.valueOf(num), "0") + " - " + episode.getDisplay().getTitle();
+        String episodeDirName = StringUtils.padStart(4, String.valueOf(num), "0")
+                + " - "
+                + episode.getDisplay().getTitle();
         File episodeDir = new File(arguments.getComicPathname(), episodeDirName);
         if (!episodeDir.exists()) episodeDir.mkdirs();
 
         try (ProgressBar progressBar = new ProgressBar(
                 arguments.getProduct().getAlias() + " ep." + num, numOfImages,
-                500, System.err, ProgressBarStyle.ASCII, "", 1)) {
+                250, System.err, ProgressBarStyle.ASCII, "", 1)) {
             // `ProgressBar.step()`이 step 1부터 시작하기 때문에 step 0로 초기화한다.
             progressBar.stepTo(0);
 
-            // 마지막 이미지까지 다운로드한다.
-            for (int i = 1; i <= numOfImages; i++) {
-                // 이미지 URI를 생성한다
-                URL url = URLFactory.image(arguments.getProduct().getId(), episode.getId(), i, arguments.getAccessToken());
+            // 에피소드의 모든 이미지를 다운로드한다.
+            IntStream.rangeClosed(1, numOfImages).parallel().forEach(i -> {
+                // 이미지 URI를 생성한다.
+                URL url = URLFactory.image(
+                        arguments.getProduct().getId(),
+                        episode.getId(),
+                        i,
+                        arguments.getAccessToken());
 
                 // 이미지를 다운로드한다.
-                File image = new File(episodeDir, StringUtils.padStart(3, String.valueOf(i), "0") + IMG_FORMAT_EXTENSION);
-                int result = createImage(url, image);
+                File file = new File(episodeDir,
+                        StringUtils.padStart(3, String.valueOf(i), "0")
+                                + IMG_FORMAT_EXTENSION);
+                int result = createImage(url, file);
 
                 // 다운로드에 실패하면 해당 회차를 건너뛴다.
-                if (result == 0) break;
+                if (result == 0) return;
 
                 progressBar.stepBy(1);
-            }
+            });
         }
     }
 
@@ -111,14 +110,12 @@ public final class Downloader {
      * 이미지 URL로 이미지 파일을 생성한다. 성공하면 1을, 실패하면 0을 반환한다.<br>
      * Creates a image file with the image URL. Returns 1 if success, 0 else.
      */
-    private static int createImage(URL url, File image) {
-        try (InputStream in = url.openStream(); OutputStream out = new BufferedOutputStream(new FileOutputStream(image))) {
-            // 이미지 파일을 만든다.
+    private static int createImage(URL url, File file) {
+        try (InputStream in = url.openStream();
+             FileOutputStream out = new FileOutputStream(file)) {
             // Creates a image file.
-            int len;
-            while ((len = in.read(BUFFER)) > 0) {
-                out.write(BUFFER, 0, len);
-            }
+            ReadableByteChannel readChannel = Channels.newChannel(in);
+            out.getChannel().transferFrom(readChannel, 0, Long.MAX_VALUE);
 
             // Success
             return 1;
@@ -130,7 +127,10 @@ public final class Downloader {
 
     @SneakyThrows(JsonSyntaxException.class)
     private static int getNumOfImagesInEpisode(Arguments arguments, Episode episode) {
-        URL url = URLFactory.oneEpisodeAPI(arguments.getProduct().getAlias(), episode.getName(), arguments.getAccessToken());
+        URL url = URLFactory.oneEpisodeAPI(
+                arguments.getProduct().getAlias(),
+                episode.getName(),
+                arguments.getAccessToken());
         JsonObject json = JsonUtils.readJsonFromUrl(url);
 
         return json.get("cut").getAsInt();

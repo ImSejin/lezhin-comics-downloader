@@ -22,7 +22,7 @@ public final class Crawler {
     }
 
     /**
-     * Gets webtoon information in the JSON format.
+     * Gets webtoon information as JSON string.
      *
      * <p> {@link Crawler} finds webtoon information,
      * converts it to the JSON format string and return it.
@@ -33,14 +33,14 @@ public final class Crawler {
      * <p> The following code is {@code innerText} in the script tag.
      *
      * <pre>{@code
-     * <script>
-     * __LZ_MESSAGE__ = {...};
-     * __LZ_PRODUCT__ = { productType: 'comic', product: {...}, departure: '', all: {...}, prefree: {...} };
-     * __LZ_DATA__ = {...};
-     * __LZ_CONTEXT__ = "";
-     * __LZ_ERROR_CODE__ = '${error}';
-     * __LZ_ERROR_MESSAGE__ = { 'error.COMIC_EPISODE.NOT_FOUND': "찾으시는 에피소드가 없습니다." };
-     * </script>
+     *     <script>
+     *     __LZ_MESSAGE__ = {...};
+     *     __LZ_PRODUCT__ = { productType: 'comic', product: {...}, departure: '', all: {...}, prefree: {...} };
+     *     __LZ_DATA__ = {...};
+     *     __LZ_CONTEXT__ = "";
+     *     __LZ_ERROR_CODE__ = '${error}';
+     *     __LZ_ERROR_MESSAGE__ = { 'error.COMIC_EPISODE.NOT_FOUND': "찾으시는 에피소드가 없습니다." };
+     *     </script>
      * }</pre>
      *
      * @param arguments arguments required to download episodes
@@ -53,10 +53,12 @@ public final class Crawler {
 
         // 언어/지역 설정 변경 페이지가 노출되면 다운로드할 수 없기에, 미리 API를 호출하여 설정을 변경한다.
         String locale = Languages.from(arguments.getLanguage()).getLocale();
-        driver.get(URIs.HOME.value() + arguments.getLanguage() + "/locale/" + locale + "?locale=" + locale);
+        String localeUrl = URIs.LOCALE.get(arguments.getLanguage(), locale);
+        driver.get(localeUrl);
 
         // 해당 웹툰 페이지로 이동한다.
-        driver.get(URIs.HOME.value() + arguments.getLanguage() + URIs.COMIC.value() + arguments.getComicName());
+        String comicUrl = URIs.COMIC.get(arguments.getLanguage(), arguments.getComicName());
+        driver.get(comicUrl);
 
         // Waits for DOM to complete the rendering.
         WebDriverWait wait = new WebDriverWait(driver, 15);
@@ -106,8 +108,9 @@ public final class Crawler {
     public static int getNumOfImagesInEpisode(Arguments arguments, Episode episode) {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
-        driver.get(URLFactory.oneEpisodeViewer(
-                arguments.getLanguage(), arguments.getComicName(), episode.getName()).toString());
+        String episodeUrl = URIs.EPISODE.get(
+                arguments.getLanguage(), arguments.getComicName(), episode.getName());
+        driver.get(episodeUrl);
 
         WebElement scrollList = driver.findElementById("scroll-list");
 

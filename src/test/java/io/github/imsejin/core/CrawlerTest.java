@@ -1,5 +1,6 @@
 package io.github.imsejin.core;
 
+import io.github.imsejin.common.constants.URIs;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -19,10 +20,11 @@ public class CrawlerTest {
         String language = "ja";
         String comicName = "jisoo";
         String episodeName = "1";
+        String episodeUrl = URIs.EPISODE.get(language, comicName, episodeName);
 
         // when
         ChromeDriver driver = ChromeBrowser.getDriver();
-        driver.get(URLFactory.oneEpisodeViewer(language, comicName, episodeName).toString());
+        driver.get(episodeUrl);
 
         WebElement scrollList = driver.findElementById("scroll-list");
 

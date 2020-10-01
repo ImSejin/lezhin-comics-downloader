@@ -27,19 +27,19 @@ public final class LoginHelper {
      * Gets an access token after login.
      *
      * @param arguments arguments required to login
-     * @return access token
-     * (e.g. 5be30a25-a044-410c-88b0-19a1da968a64) ... {@link UUID#randomUUID()}
+     * @return access token({@link UUID#randomUUID()})
+     * (e.g. 5be30a25-a044-410c-88b0-19a1da968a64)
      */
     public static String login(Arguments arguments) {
         String accessToken = getAccessToken(arguments);
 
-        // 존재하지 않는 계정의 경우
+        // When the account information is not valid.
         if (StringUtils.isNullOrEmpty(accessToken)) {
             System.err.print("\n    The account does not exist.");
             return null;
         }
 
-        System.out.println("\n    Success to login. -> " + URIs.HOME.value() + arguments.getLanguage() + URIs.LOGIN.value() + "\n");
+        System.out.println("\n    Success to login. -> " + URIs.LOGIN.get(arguments.getLanguage()) + "\n");
         return accessToken;
     }
 
@@ -68,37 +68,37 @@ public final class LoginHelper {
      * <p> The following code is {@code innerText} in the script tag.
      *
      * <pre>{@code
-     * <script>
-     * __LZ_CONFIG__ = _.merge(window.__LZ_CONFIG__, {
-     *     apiUrl: 'api.lezhin.com',
-     *     cdnUrl: 'https://cdn.lezhin.com',
-     *     recoUrl: 'dondog.lezhin.com',
-     *     payUrl: 'https://pay.lezhin.com',
-     *     pantherUrl: 'https://panther.lezhin.com',
-     *     locale: 'ko-KR',
-     *     country: 'kr',
-     *     language: 'ko',
-     *     adultKind: 'kid',
-     *     allowAdult: true,
-     *     isEmbedded: false,
-     *     now: (new Date('2020-06-22T09:27:54+09:00')).getTime(),
-     *     authAdult: 'true',
-     *     rid: '58Hk',
-     *     token: '5be30a25-a044-410c-88b0-19a1da968a64',
-     *     genres: {"romance":"로맨스","fantasy":"판타지","horror":"호러","lightnovel":"라이트노벨","sports":"스포츠","gl":"백합","historical":"시대극","bl":"BL","gore":"스릴러","girl":"소녀만화","gag":"개그","food":"음식","otona":"오토나","drama":"드라마","mystery":"미스터리","sf":"SF","martial":"무협","school":"학원","mature_female":"레이디스코믹","tl":"TL","action":"액션","adult":"성인","day":"일상","gallery":"갤러리"}
-     * });
+     *     <script>
+     *     __LZ_CONFIG__ = _.merge(window.__LZ_CONFIG__, {
+     *         apiUrl: 'api.lezhin.com',
+     *         cdnUrl: 'https://cdn.lezhin.com',
+     *         recoUrl: 'dondog.lezhin.com',
+     *         payUrl: 'https://pay.lezhin.com',
+     *         pantherUrl: 'https://panther.lezhin.com',
+     *         locale: 'ko-KR',
+     *         country: 'kr',
+     *         language: 'ko',
+     *         adultKind: 'kid',
+     *         allowAdult: true,
+     *         isEmbedded: false,
+     *         now: (new Date('2020-06-22T09:27:54+09:00')).getTime(),
+     *         authAdult: 'true',
+     *         rid: '58Hk',
+     *         token: '5be30a25-a044-410c-88b0-19a1da968a64',
+     *         genres: {"romance":"로맨스","fantasy":"판타지","horror":"호러","lightnovel":"라이트노벨","sports":"스포츠","gl":"백합","historical":"시대극","bl":"BL","gore":"스릴러","girl":"소녀만화","gag":"개그","food":"음식","otona":"오토나","drama":"드라마","mystery":"미스터리","sf":"SF","martial":"무협","school":"학원","mature_female":"레이디스코믹","tl":"TL","action":"액션","adult":"성인","day":"일상","gallery":"갤러리"}
+     *     });
      *
-     * __LZ_ME__ = _.merge(window.__LZ_ME__, {
-     *     userId: '5412133348822268',
-     *     adult: true,
-     *     email: '',
-     *     paidTime: 0,
-     *     paidCount: 0,
-     *     coin: { android: 0, ios: 0, web: 0 },
-     *     point:{ android: 0, ios: 0, web: 0 }
-     * });
-     * ...
-     * </script>
+     *     __LZ_ME__ = _.merge(window.__LZ_ME__, {
+     *         userId: '5412133348822268',
+     *         adult: true,
+     *         email: '',
+     *         paidTime: 0,
+     *         paidCount: 0,
+     *         coin: { android: 0, ios: 0, web: 0 },
+     *         point:{ android: 0, ios: 0, web: 0 }
+     *     });
+     *     ...
+     *     </script>
      * }</pre>
      *
      * @param arguments arguments required to login
@@ -113,7 +113,8 @@ public final class LoginHelper {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
         // Requests login page.
-        driver.get(URIs.HOME.value() + arguments.getLanguage() + URIs.LOGIN.value());
+        String loginUrl = URIs.LOGIN.get(arguments.getLanguage());
+        driver.get(loginUrl);
 
         // Waits for DOM to complete the rendering.
         WebElement loginForm = driver.findElementByXPath("//form[@id='login-form' and contains(@action, '/login') and @method='post']");
