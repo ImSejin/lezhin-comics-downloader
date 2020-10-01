@@ -53,10 +53,12 @@ public final class Crawler {
 
         // 언어/지역 설정 변경 페이지가 노출되면 다운로드할 수 없기에, 미리 API를 호출하여 설정을 변경한다.
         String locale = Languages.from(arguments.getLanguage()).getLocale();
-        driver.get(URIs.HOME.value() + arguments.getLanguage() + "/locale/" + locale + "?locale=" + locale);
+        String localeUrl = URIs.LOCALE.get(arguments.getLanguage(), locale);
+        driver.get(localeUrl);
 
         // 해당 웹툰 페이지로 이동한다.
-        driver.get(URIs.HOME.value() + arguments.getLanguage() + URIs.COMIC.value() + arguments.getComicName());
+        String comicUrl = URIs.COMIC.get(arguments.getLanguage(), arguments.getComicName());
+        driver.get(comicUrl);
 
         // Waits for DOM to complete the rendering.
         WebDriverWait wait = new WebDriverWait(driver, 15);
@@ -106,8 +108,9 @@ public final class Crawler {
     public static int getNumOfImagesInEpisode(Arguments arguments, Episode episode) {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
-        driver.get(URLFactory.oneEpisodeViewer(
-                arguments.getLanguage(), arguments.getComicName(), episode.getName()).toString());
+        String episodeUrl = URIs.EPISODE.get(
+                arguments.getLanguage(), arguments.getComicName(), episode.getName());
+        driver.get(episodeUrl);
 
         WebElement scrollList = driver.findElementById("scroll-list");
 

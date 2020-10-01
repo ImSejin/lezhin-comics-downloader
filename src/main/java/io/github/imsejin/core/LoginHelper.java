@@ -39,7 +39,7 @@ public final class LoginHelper {
             return null;
         }
 
-        System.out.println("\n    Success to login. -> " + URIs.HOME.value() + arguments.getLanguage() + URIs.LOGIN.value() + "\n");
+        System.out.println("\n    Success to login. -> " + URIs.LOGIN.get(arguments.getLanguage()) + "\n");
         return accessToken;
     }
 
@@ -113,7 +113,8 @@ public final class LoginHelper {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
         // Requests login page.
-        driver.get(URIs.HOME.value() + arguments.getLanguage() + URIs.LOGIN.value());
+        String loginUrl = URIs.LOGIN.get(arguments.getLanguage());
+        driver.get(loginUrl);
 
         // Waits for DOM to complete the rendering.
         WebElement loginForm = driver.findElementByXPath("//form[@id='login-form' and contains(@action, '/login') and @method='post']");
