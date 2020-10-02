@@ -1,26 +1,32 @@
-# Lezhin Comics Downloader
-
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/imsejin/lezhin-comics-downloader)
-![jdk](https://img.shields.io/badge/jdk-8-orange)
-![GitHub](https://img.shields.io/github/license/imsejin/lezhin-comics-downloader)
-![GitHub All Releases](https://img.shields.io/github/downloads/imsejin/lezhin-comics-downloader/total)
-![GitHub Releases](https://img.shields.io/github/downloads/imsejin/lezhin-comics-downloader/latest/total)
+<p align="center" width="40%">
+	<img alt="Lezhin Comics Downloader" src="./src/main/resources/lezhin-comics-downloader-main-image.png">
+</p>
 
 
+
+<p align="center">
+    <img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/imsejin/lezhin-comics-downloader?label=github">
+    <img alt="jdk8" src="https://img.shields.io/badge/jdk-8-orange">
+	<img alt="GitHub" src="https://img.shields.io/github/license/imsejin/lezhin-comics-downloader">
+	<img alt="GitHub All Releases" src="https://img.shields.io/github/downloads/imsejin/lezhin-comics-downloader/total">
+	<img alt="GitHub Releases" src="https://img.shields.io/github/downloads/imsejin/lezhin-comics-downloader/latest/total">
+</p>
 
 This is downloader that helps you to login and downloads the specified comic for all lezhin-comics even adults.
 
 ※ *The user is responsible for everything that happens using this program.*
 
-<br>
+<br><br>
 
-### Preview
+## Preview
 
 ![preview.gif](https://user-images.githubusercontent.com/46176032/93713243-81869080-fb95-11ea-8c70-031f26c8ebfc.gif)
 
-<br>
+<br><br>
 
-### Usage
+## Getting started
+
+### Pre-requirements
 
 1. Check if chrome browser was installed in your device or download it [here](https://www.google.com/chrome).
 
@@ -40,7 +46,9 @@ This is downloader that helps you to login and downloads the specified comic for
 
 8. Use the following command to run the downloader.
 
+<br><br>
 
+### Usage
 
 ```cmd
 java -jar {JAR filename} -l=<language> -n=<comic name> [-r=<episode range>]
@@ -57,13 +65,13 @@ java -jar {JAR filename} -l=<language> -n=<comic name> [-r=<episode range>]
 
 - *<ins>episode range</ins> (optional)*: range of episodes you want to download.
   - __skipped__ : all episodes
-  - __n~__ : from ep.N to the end of the episode
-  - __~n__ : from the beginning of the episode to ep.N
+  - __n~__ : from ep.N to the last episode
+  - __~n__ : from the first episode to ep.N
   - __m~n__ : from ep.M to ep.N
 
-<br>
+<br><br>
 
-### Command examples
+## Examples
 
 ```cmd
 java -jar lezhin-comics-downloader.jar -l=en -n=appetite
@@ -77,7 +85,7 @@ Downloads all episodes of the comic named appetite.
 java -jar lezhin-comics-downloader.jar -l=en -n=appetite -r=8~
 ```
 
-Downloads the episodes of the comic named appetite from ep.8 to the end.
+Downloads the episodes of the comic named appetite from ep.8 to the last.
 
 <br>
 
@@ -85,7 +93,7 @@ Downloads the episodes of the comic named appetite from ep.8 to the end.
 java -jar lezhin-comics-downloader.jar -l=en -n=appetite -r=~25
 ```
 
-Downloads the episodes of the comic named appetite from the beginning to ep.25.
+Downloads the episodes of the comic named appetite from the first to ep.25.
 
 <br>
 
@@ -95,9 +103,9 @@ java -jar lezhin-comics-downloader.jar -l=en -n=appetite -r=1~10
 
 Downloads the episodes of the comic named appetite from ep.1 to ep.10.
 
-<br>
+<br><br>
 
-### Dependencies
+## Dependencies
 
 - Lombok
 - Selenium
@@ -105,5 +113,3 @@ Downloads the episodes of the comic named appetite from ep.1 to ep.10.
 - Progress Bar
 - Ini4j
 - Apache Commons CLI
-
-
