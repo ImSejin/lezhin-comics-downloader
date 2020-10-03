@@ -1,6 +1,6 @@
-package io.github.imsejin.common.util;
+package io.github.imsejin.lzcodl.common.util;
 
-import io.github.imsejin.util.FilenameUtils;
+import io.github.imsejin.common.util.FilenameUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;

@@ -1,4 +1,4 @@
-package io.github.imsejin.core;
+package io.github.imsejin.lzcodl.core;
 
 import org.junit.Test;
 import org.openqa.selenium.chrome.ChromeDriver;

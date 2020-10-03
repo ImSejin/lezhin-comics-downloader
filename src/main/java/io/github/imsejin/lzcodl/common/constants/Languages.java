@@ -1,6 +1,6 @@
-package io.github.imsejin.common.constants;
+package io.github.imsejin.lzcodl.common.constants;
 
-import io.github.imsejin.constant.interfaces.KeyValue;
+import io.github.imsejin.common.constant.interfaces.KeyValue;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

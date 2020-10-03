@@ -1,4 +1,4 @@
-package io.github.imsejin.common.util;
+package io.github.imsejin.lzcodl.common.util;
 
 import org.apache.commons.cli.*;
 import org.junit.Test;

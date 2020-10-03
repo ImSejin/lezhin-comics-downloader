@@ -1,8 +1,8 @@
-package io.github.imsejin.common.util;
+package io.github.imsejin.lzcodl.common.util;
 
-import io.github.imsejin.util.IniUtils;
-import io.github.imsejin.util.PathnameUtils;
-import io.github.imsejin.util.StringUtils;
+import io.github.imsejin.common.util.IniUtils;
+import io.github.imsejin.common.util.PathnameUtils;
+import io.github.imsejin.common.util.StringUtils;
 import org.junit.Test;
 
 import java.io.File;

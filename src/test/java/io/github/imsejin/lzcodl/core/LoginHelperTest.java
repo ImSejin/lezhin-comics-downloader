@@ -1,6 +1,6 @@
-package io.github.imsejin.core;
+package io.github.imsejin.lzcodl.core;
 
-import io.github.imsejin.model.Arguments;
+import io.github.imsejin.lzcodl.model.Arguments;
 import org.junit.AfterClass;
 import org.junit.Test;
 import org.openqa.selenium.chrome.ChromeDriver;

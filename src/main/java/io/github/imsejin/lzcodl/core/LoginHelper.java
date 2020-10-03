@@ -1,8 +1,8 @@
-package io.github.imsejin.core;
+package io.github.imsejin.lzcodl.core;
 
-import io.github.imsejin.common.constants.URIs;
-import io.github.imsejin.model.Arguments;
-import io.github.imsejin.util.StringUtils;
+import io.github.imsejin.lzcodl.common.constants.URIs;
+import io.github.imsejin.common.util.StringUtils;
+import io.github.imsejin.lzcodl.model.Arguments;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;

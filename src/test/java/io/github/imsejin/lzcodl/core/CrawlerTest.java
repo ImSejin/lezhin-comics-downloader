@@ -1,6 +1,6 @@
-package io.github.imsejin.core;
+package io.github.imsejin.lzcodl.core;
 
-import io.github.imsejin.common.constants.URIs;
+import io.github.imsejin.lzcodl.common.constants.URIs;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;

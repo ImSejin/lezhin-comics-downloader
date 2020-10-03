@@ -112,7 +112,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>io.github.imsejin.LezhinComicsDownloaderApplication</mainClass>
+                            <mainClass>io.github.imsejin.lzcodl.Application</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
