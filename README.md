@@ -20,7 +20,7 @@ This is downloader that helps you to login and downloads the specified comic for
 
 ## Preview
 
-![preview.gif](https://user-images.githubusercontent.com/46176032/93713243-81869080-fb95-11ea-8c70-031f26c8ebfc.gif)
+<img alt="preview" src="./src/main/resources/preview.gif">
 
 <br><br>
 
@@ -61,7 +61,7 @@ java -jar {JAR filename} -l=<language> -n=<comic name> [-r=<episode range>]
   - **ja** : japanese
 - *<ins>comic name</ins> (required)*: webtoon name you want to download.
 
-<img width="350" alt="comic-name" src="https://user-images.githubusercontent.com/46176032/86545858-88c1d900-bf6c-11ea-9c14-64692abbee3a.png">
+<img alt="comic name" src="./src/main/resources/comic-name.png" width="350">
 
 - *<ins>episode range</ins> (optional)*: range of episodes you want to download.
   - __skipped__ : all episodes
