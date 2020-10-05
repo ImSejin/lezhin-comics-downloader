@@ -34,7 +34,7 @@ This is downloader that helps you to login and downloads the specified comic for
 
    (The first line is the version. e.g. 83.0.4103.116)
 
-3. Download the chrome driver that matches <ins>the version</ins> and your device OS [here](https://chromedriver.chromium.org/downloads) and decompress it.
+3. Download the chrome driver that matches <ins>its version</ins> and your device OS [here](https://chromedriver.chromium.org/downloads) and decompress it.
 
 4. Check if JRE(or JDK) version is greater than or equal to 8 or install it.
 
@@ -54,7 +54,6 @@ This is downloader that helps you to login and downloads the specified comic for
 java -jar {JAR filename} -l=<language> -n=<comic name> [-r=<episode range>]
 ```
 
-- *<ins>id</ins>, <ins>password</ins> (required)*: your lezhin comics account, not account of third party platform.
 - *<ins>language (required)</ins>*: language of lezhin platform you want to see.
   - **ko** : korean
   - **en** : english
@@ -103,13 +102,3 @@ java -jar lezhin-comics-downloader.jar -l=en -n=appetite -r=1~10
 
 Downloads the episodes of the comic named appetite from ep.1 to ep.10.
 
-<br><br>
-
-## Dependencies
-
-- Lombok
-- Selenium
-- Gson
-- Progress Bar
-- Ini4j
-- Apache Commons CLI
