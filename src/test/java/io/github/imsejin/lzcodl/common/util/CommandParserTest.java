@@ -3,7 +3,7 @@ package io.github.imsejin.lzcodl.common.util;
 import org.apache.commons.cli.*;
 import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.*;
 
 public class CommandParserTest {
 
@@ -36,7 +36,7 @@ public class CommandParserTest {
         CommandLine cmd = parser.parse(options, new String[]{"--language=ko", "-n=snail", "-r=8~"});
 
         // then
-        assertTrue(cmd.hasOption('l') == cmd.hasOption("name") == cmd.hasOption('r'));
+        assertThat(cmd.hasOption('l') == cmd.hasOption("name") == cmd.hasOption('r')).isTrue();
     }
 
 }

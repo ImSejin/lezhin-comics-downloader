@@ -10,8 +10,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.assertj.core.api.Assertions.*;
 
 public class IniUtilsTest {
 
@@ -27,7 +26,7 @@ public class IniUtilsTest {
         String actual = IniUtils.readValue(file, sectionName, name);
 
         // then
-        assertFalse(StringUtils.isNullOrBlank(actual));
+        assertThat(StringUtils.isNullOrBlank(actual)).isFalse();
     }
 
     @Test
@@ -39,8 +38,8 @@ public class IniUtilsTest {
         Map<String, String> map = IniUtils.readSection(file, sectionName);
 
         // then
-        assertFalse(StringUtils.isNullOrBlank(map.get("username")));
-        assertFalse(StringUtils.isNullOrBlank(map.get("password")));
+        assertThat(StringUtils.isNullOrBlank(map.get("username"))).isFalse();
+        assertThat(StringUtils.isNullOrBlank(map.get("password"))).isFalse();
     }
 
     @Test
@@ -52,7 +51,7 @@ public class IniUtilsTest {
         List<String> values = IniUtils.readValues(file, sectionName);
 
         // then
-        assertEquals(2, values.size());
+        assertThat(values).hasSize(2);
     }
 
 }

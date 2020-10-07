@@ -3,7 +3,7 @@ package io.github.imsejin.lzcodl.core;
 import org.junit.Test;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.*;
 
 public class ChromeBrowserTest {
 
@@ -19,7 +19,7 @@ public class ChromeBrowserTest {
         System.out.println(product);
 
         // then
-        assertTrue(product.startsWith("{\"display\":{\"title\":\""));
+        assertThat(product.startsWith("{\"display\":{\"title\":\"")).isTrue();
     }
 
     /*

@@ -8,7 +8,7 @@ import org.junit.runners.Parameterized;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Parameterized.class)
 public class FilenameUtilsTest {
@@ -34,7 +34,7 @@ public class FilenameUtilsTest {
         String actual = FilenameUtils.replaceUnallowables(filename);
 
         // then
-        assertEquals(expectedFilename, actual);
+        assertThat(actual).isEqualTo(expectedFilename);
     }
 
 }

@@ -7,7 +7,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.util.regex.Pattern;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.*;
 
 public class LoginHelperTest {
 
@@ -25,7 +25,7 @@ public class LoginHelperTest {
         String actual = LoginHelper.login(arguments);
 
         // then
-        assertTrue(Pattern.matches("^[\\w-]+$", actual));
+        assertThat(Pattern.matches("^[\\w-]+$", actual)).isTrue();
     }
 
     @AfterClass

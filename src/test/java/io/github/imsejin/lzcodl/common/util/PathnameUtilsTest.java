@@ -9,7 +9,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Parameterized.class)
 public class PathnameUtilsTest {
@@ -35,7 +35,7 @@ public class PathnameUtilsTest {
         String actual = pathname.replaceAll(separatorForRegex, "");
 
         // then
-        assertEquals(expectedPathname, actual);
+        assertThat(actual).isEqualTo(expectedPathname);
     }
 
     @Test
@@ -48,7 +48,7 @@ public class PathnameUtilsTest {
 
         // then
         System.out.println("testCorrect#actual: " + actual);
-        assertEquals("C:\\Program Files\\Java\\jdk8", actual);
+        assertThat(actual).isEqualTo("C:\\Program Files\\Java\\jdk8");
     }
 
     @Test
@@ -66,8 +66,8 @@ public class PathnameUtilsTest {
 
         // then
         System.out.println("testConcat#actual: " + actual);
-//        assertEquals("/users/data/java", actual);
-        assertEquals("C:\\Program Files\\Java\\jdk8", actual);
+//        assertThat(actual).isEqualTo("/users/data/java");
+        assertThat(actual).isEqualTo("C:\\Program Files\\Java\\jdk8");
     }
 
 }

@@ -10,7 +10,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class CrawlerTest {
 
@@ -36,7 +36,7 @@ public class CrawlerTest {
         int actual = images.size();
 
         // then
-        assertEquals(11, actual);
+        assertThat(actual).isEqualTo(11);
     }
 
 }
