@@ -5,7 +5,7 @@
 
 
 <p align="center">
-    <img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/imsejin/lezhin-comics-downloader?label=github">
+    <img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/imsejin/lezhin-comics-downloader">
     <img alt="jdk8" src="https://img.shields.io/badge/jdk-8-orange">
 	<img alt="GitHub" src="https://img.shields.io/github/license/imsejin/lezhin-comics-downloader">
 	<img alt="GitHub All Releases" src="https://img.shields.io/github/downloads/imsejin/lezhin-comics-downloader/total">
@@ -18,15 +18,15 @@ This is downloader that helps you to login and downloads the specified comic for
 
 <br><br>
 
-## Preview
+# Preview
 
 <img alt="preview" src="./src/main/resources/preview.gif">
 
 <br><br>
 
-## Getting started
+# Getting started
 
-### Pre-requirements
+## Pre-requirements
 
 1. Check if chrome browser was installed in your device or download it [here](https://www.google.com/chrome).
 
@@ -48,7 +48,7 @@ This is downloader that helps you to login and downloads the specified comic for
 
 <br><br>
 
-### Usage
+## Usage
 
 ```cmd
 java -jar {JAR filename} -l=<language> -n=<comic name> [-r=<episode range>]
@@ -70,7 +70,7 @@ java -jar {JAR filename} -l=<language> -n=<comic name> [-r=<episode range>]
 
 <br><br>
 
-## Examples
+# Examples
 
 ```cmd
 java -jar lezhin-comics-downloader.jar -l=en -n=appetite
