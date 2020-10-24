@@ -1,6 +1,6 @@
 package io.github.imsejin.lzcodl.core;
 
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import static org.assertj.core.api.Assertions.*;
@@ -21,13 +21,5 @@ public class ChromeBrowserTest {
         // then
         assertThat(product.startsWith("{\"display\":{\"title\":\"")).isTrue();
     }
-
-    /*
-    @AfterClass
-    public static void quitDriver() {
-        // ChromeDriver를 닫고 해당 프로세스를 종료한다.
-        ChromeBrowser.getDriver().quit();
-    }
-    */
 
 }
