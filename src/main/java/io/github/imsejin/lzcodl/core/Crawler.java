@@ -1,9 +1,9 @@
-package io.github.imsejin.core;
+package io.github.imsejin.lzcodl.core;
 
-import io.github.imsejin.common.constants.Languages;
-import io.github.imsejin.common.constants.URIs;
-import io.github.imsejin.model.Arguments;
-import io.github.imsejin.model.Episode;
+import io.github.imsejin.lzcodl.common.constants.Languages;
+import io.github.imsejin.lzcodl.common.constants.URIs;
+import io.github.imsejin.lzcodl.model.Arguments;
+import io.github.imsejin.lzcodl.model.Episode;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;

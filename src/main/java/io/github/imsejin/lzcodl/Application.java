@@ -22,21 +22,21 @@
  * SOFTWARE.
  */
 
-package io.github.imsejin;
+package io.github.imsejin.lzcodl;
 
-import io.github.imsejin.common.constants.EpisodeRange;
-import io.github.imsejin.core.ChromeBrowser;
-import io.github.imsejin.core.Crawler;
-import io.github.imsejin.core.Downloader;
-import io.github.imsejin.core.LoginHelper;
-import io.github.imsejin.model.Arguments;
-import io.github.imsejin.model.Artist;
-import io.github.imsejin.model.Episode;
-import io.github.imsejin.model.Product;
-import io.github.imsejin.util.FilenameUtils;
-import io.github.imsejin.util.JsonUtils;
-import io.github.imsejin.util.PathnameUtils;
-import io.github.imsejin.util.StringUtils;
+import io.github.imsejin.common.util.FilenameUtils;
+import io.github.imsejin.common.util.JsonUtils;
+import io.github.imsejin.common.util.PathnameUtils;
+import io.github.imsejin.common.util.StringUtils;
+import io.github.imsejin.lzcodl.common.constants.EpisodeRange;
+import io.github.imsejin.lzcodl.core.ChromeBrowser;
+import io.github.imsejin.lzcodl.core.Crawler;
+import io.github.imsejin.lzcodl.core.Downloader;
+import io.github.imsejin.lzcodl.core.LoginHelper;
+import io.github.imsejin.lzcodl.model.Arguments;
+import io.github.imsejin.lzcodl.model.Artist;
+import io.github.imsejin.lzcodl.model.Episode;
+import io.github.imsejin.lzcodl.model.Product;
 import org.apache.commons.cli.*;
 
 import java.io.File;
@@ -44,11 +44,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public final class LezhinComicsDownloaderApplication {
+public final class Application {
 
     private static final String SEPARATOR = EpisodeRange.SEPARATOR.value();
 
-    private LezhinComicsDownloaderApplication() {
+    private Application() {
     }
 
     public static void main(String[] args) {

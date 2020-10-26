@@ -1,4 +1,4 @@
-package io.github.imsejin.model;
+package io.github.imsejin.lzcodl.model;
 
 import lombok.Getter;
 import lombok.Setter;

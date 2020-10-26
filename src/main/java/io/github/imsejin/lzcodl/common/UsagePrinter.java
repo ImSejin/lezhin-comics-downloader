@@ -1,4 +1,4 @@
-package io.github.imsejin.common;
+package io.github.imsejin.lzcodl.common;
 
 public final class UsagePrinter {
 

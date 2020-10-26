@@ -1,6 +1,6 @@
-package io.github.imsejin.core;
+package io.github.imsejin.lzcodl.core;
 
-import io.github.imsejin.util.PathnameUtils;
+import io.github.imsejin.common.util.PathnameUtils;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 

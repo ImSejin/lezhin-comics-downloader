@@ -1,12 +1,12 @@
-package io.github.imsejin.model;
+package io.github.imsejin.lzcodl.model;
 
-import io.github.imsejin.common.UsagePrinter;
-import io.github.imsejin.common.constants.EpisodeRange;
-import io.github.imsejin.common.constants.Languages;
-import io.github.imsejin.core.ChromeBrowser;
-import io.github.imsejin.util.IniUtils;
-import io.github.imsejin.util.PathnameUtils;
-import io.github.imsejin.util.StringUtils;
+import io.github.imsejin.common.util.IniUtils;
+import io.github.imsejin.common.util.PathnameUtils;
+import io.github.imsejin.common.util.StringUtils;
+import io.github.imsejin.lzcodl.common.UsagePrinter;
+import io.github.imsejin.lzcodl.common.constants.EpisodeRange;
+import io.github.imsejin.lzcodl.common.constants.Languages;
+import io.github.imsejin.lzcodl.core.ChromeBrowser;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

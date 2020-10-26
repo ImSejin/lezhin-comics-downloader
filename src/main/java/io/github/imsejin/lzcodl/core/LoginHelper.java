@@ -1,8 +1,8 @@
-package io.github.imsejin.core;
+package io.github.imsejin.lzcodl.core;
 
-import io.github.imsejin.common.constants.URIs;
-import io.github.imsejin.model.Arguments;
-import io.github.imsejin.util.StringUtils;
+import io.github.imsejin.common.util.StringUtils;
+import io.github.imsejin.lzcodl.common.constants.URIs;
+import io.github.imsejin.lzcodl.model.Arguments;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -117,8 +117,9 @@ public final class LoginHelper {
         driver.get(loginUrl);
 
         // Waits for DOM to complete the rendering.
-        WebElement loginForm = driver.findElementByXPath("//form[@id='login-form' and contains(@action, '/login') and @method='post']");
         WebDriverWait waitLogin = new WebDriverWait(driver, 15);
+        WebElement loginForm = driver.findElementByXPath(
+                "//form[@id='email' and contains(@action, '/login') and @method='post']");
         waitLogin.until(ExpectedConditions.visibilityOfAllElements(loginForm));
 
         // Inputs account information into the element.

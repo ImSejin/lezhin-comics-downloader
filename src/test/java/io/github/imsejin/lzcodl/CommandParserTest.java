@@ -1,9 +1,10 @@
-package io.github.imsejin.common.util;
+package io.github.imsejin.lzcodl;
 
 import org.apache.commons.cli.*;
-import org.junit.Test;
+import org.assertj.core.api.Condition;
+import org.junit.jupiter.api.*;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.*;
 
 public class CommandParserTest {
 
@@ -36,7 +37,13 @@ public class CommandParserTest {
         CommandLine cmd = parser.parse(options, new String[]{"--language=ko", "-n=snail", "-r=8~"});
 
         // then
-        assertTrue(cmd.hasOption('l') == cmd.hasOption("name") == cmd.hasOption('r'));
+        assertThat(cmd)
+                .as("#1 CommandLine must have 'language' option")
+                .is(new Condition<>(it -> it.hasOption('l'), null))
+                .as("#2 CommandLine must have 'name' option")
+                .is(new Condition<>(it -> it.hasOption("name"), null))
+                .as("#3 CommandLine must have 'range' option")
+                .is(new Condition<>(it -> it.hasOption('r'), null));
     }
 
 }
