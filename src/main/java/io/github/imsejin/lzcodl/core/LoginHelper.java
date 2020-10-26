@@ -117,8 +117,9 @@ public final class LoginHelper {
         driver.get(loginUrl);
 
         // Waits for DOM to complete the rendering.
-        WebElement loginForm = driver.findElementByXPath("//form[@id='login-form' and contains(@action, '/login') and @method='post']");
         WebDriverWait waitLogin = new WebDriverWait(driver, 15);
+        WebElement loginForm = driver.findElementByXPath(
+                "//form[@id='email' and contains(@action, '/login') and @method='post']");
         waitLogin.until(ExpectedConditions.visibilityOfAllElements(loginForm));
 
         // Inputs account information into the element.
