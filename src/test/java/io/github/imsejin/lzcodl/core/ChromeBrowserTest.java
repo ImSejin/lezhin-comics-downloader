@@ -1,5 +1,7 @@
 package io.github.imsejin.lzcodl.core;
 
+import io.github.imsejin.common.util.JsonUtils;
+import io.github.imsejin.lzcodl.model.Product;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 
@@ -16,10 +18,15 @@ public class ChromeBrowserTest {
         driver.get("https://www.lezhin.com/ko/comic/snail");
         driver.executeScript("localStorage.setItem('product', JSON.stringify(window.__LZ_PRODUCT__.product));");
         String product = driver.getLocalStorage().getItem("product");
-        System.out.println(product);
 
         // then
-        assertThat(product.startsWith("{\"display\":{\"title\":\"")).isTrue();
+        assertThat(product)
+                .as("The item 'product' of local storage must be json string")
+                .startsWith("{\"display\":{\"title\":\"");
+        assertThat(JsonUtils.toObject(product, Product.class))
+                .as("The json string can be parsed to Product")
+                .isExactlyInstanceOf(Product.class);
+        System.out.println(product);
     }
 
 }
