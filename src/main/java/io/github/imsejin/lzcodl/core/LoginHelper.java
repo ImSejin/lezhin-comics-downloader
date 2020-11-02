@@ -39,7 +39,7 @@ public final class LoginHelper {
             return null;
         }
 
-        System.out.println("\n    Success to login. -> " + URIs.LOGIN.get(arguments.getLanguage()) + "\n");
+        System.out.printf("\n    Success to login. -> %s\n", URIs.LOGIN.get(arguments.getLanguage()));
         return accessToken;
     }
 
