@@ -4,6 +4,7 @@ import io.github.imsejin.common.constant.interfaces.KeyValue;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 
 @RequiredArgsConstructor
@@ -23,6 +24,7 @@ public enum Languages implements KeyValue {
                 .anyMatch(lang -> lang.value.equals(value));
     }
 
+    @Nullable
     public static Languages from(String value) {
         return Arrays.stream(values())
                 .filter(lang -> lang.value.equals(value))

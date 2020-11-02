@@ -11,6 +11,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -43,27 +44,54 @@ public final class Crawler {
      *     </script>
      * }</pre>
      *
-     * @param arguments arguments required to download episodes
+     * @param args arguments required to download episodes
      * @return webtoon information in the JSON format
      * @see ChromeBrowser
      * @see ChromeDriver#getLocalStorage()
      */
-    public static String getJson(Arguments arguments) {
+    @Nullable
+    public static String getJson(Arguments args) {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
         // 언어/지역 설정 변경 페이지가 노출되면 다운로드할 수 없기에, 미리 API를 호출하여 설정을 변경한다.
-        String locale = Languages.from(arguments.getLanguage()).getLocale();
-        String localeUrl = URIs.LOCALE.get(arguments.getLanguage(), locale);
+        String locale = Languages.from(args.getLanguage()).getLocale();
+        String localeUrl = URIs.LOCALE.get(args.getLanguage(), locale);
         driver.get(localeUrl);
 
         // 해당 웹툰 페이지로 이동한다.
-        String comicUrl = URIs.COMIC.get(arguments.getLanguage(), arguments.getComicName());
+        String comicUrl = URIs.COMIC.get(args.getLanguage(), args.getComicName());
         driver.get(comicUrl);
+
+        // 서비스 종료된 웹툰인지 확인한다.
+        if (driver.getCurrentUrl().equals(URIs.EXPIRED.get(args.getLanguage()))) {
+            System.err.println("\n    This comic is no longer available. -> Try to find it in 'My Library'\n");
+            return getJsonInMyLibrary(args);
+        }
 
         // Waits for DOM to complete the rendering.
         WebDriverWait wait = new WebDriverWait(driver, 15);
         wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.xpath("//main[@id='main' and @class='lzCntnr lzCntnr--episode']")));
+
+        // 웹툰의 정보가 window 객체의 필드로 정의되어 있어, 이를 가져오기 위해 로컬스토리지에 저장한다.
+        driver.executeScript("localStorage.setItem('product', JSON.stringify(window.__LZ_PRODUCT__.product));");
+
+        args.setExpiredComic(true);
+
+        // 웹툰의 정보를 로컬스토리지에서 가져와 JSON 형식의 문자열을 반환한다.
+        return driver.getLocalStorage().getItem("product");
+    }
+
+    private static String getJsonInMyLibrary(Arguments args) {
+        ChromeDriver driver = ChromeBrowser.getDriver();
+
+        String locale = Languages.from(args.getLanguage()).getLocale();
+        driver.get(URIs.LIB_COMIC.get(args.getLanguage(), locale, args.getComicName()));
+
+        // Waits for DOM to complete the rendering.
+        WebDriverWait wait = new WebDriverWait(driver, 15);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//ul[@id='library-episode-list' and @class='epsList']")));
 
         // 웹툰의 정보가 window 객체의 필드로 정의되어 있어, 이를 가져오기 위해 로컬스토리지에 저장한다.
         driver.executeScript("localStorage.setItem('product', JSON.stringify(window.__LZ_PRODUCT__.product));");
@@ -98,18 +126,21 @@ public final class Crawler {
      * The tag must have the class 'cut' but not 'cutLicense'
      * and the data-cut-type is 'cut' but not 'top' or 'bottom'.
      *
-     * @param arguments arguments required to find the number of images in episodes
-     * @param episode   episode
+     * @param args    arguments required to find the number of images in episodes
+     * @param episode episode
      * @return the number of images
      * @see ChromeBrowser
      * @see ChromeDriver
      * @see WebElement#findElements(By)
      */
-    public static int getNumOfImagesInEpisode(Arguments arguments, Episode episode) {
+    public static int getNumOfImagesInEpisode(Arguments args, Episode episode) {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
-        String episodeUrl = URIs.EPISODE.get(
-                arguments.getLanguage(), arguments.getComicName(), episode.getName());
+        // 서비스 종료된 웹툰이면 '내 서재'로 접근한다.
+        String episodeUrl = args.isExpiredComic()
+            ? URIs.EPISODE.get(args.getLanguage(), args.getComicName(), episode.getName())
+            : URIs.LIB_EPISODE.get(args.getLanguage(), Languages.from(args.getLanguage()).getLocale(), args.getComicName(), episode.getName());
+
         driver.get(episodeUrl);
 
         WebElement scrollList = driver.findElementById("scroll-list");
