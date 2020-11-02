@@ -32,6 +32,9 @@ public class Arguments {
     @Setter
     private String comicPathname;
 
+    @Setter
+    private boolean expiredComic;
+
     {
         final File file = new File(PathnameUtils.getCurrentPathname(), "config.ini");
 
