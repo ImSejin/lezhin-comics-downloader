@@ -147,7 +147,7 @@ public final class LoginHelper {
             return null;
         }
 
-        return StringUtils.match("token: '([\\w-]+)'", script.getAttribute("innerText"), 1);
+        return StringUtils.find(script.getAttribute("innerText"), "token: '([\\w-]+)'", 1);
     }
 
 }

@@ -50,7 +50,7 @@ public class Arguments {
         String password = section.get("password");
 
         // 유효하지 않은 계정 정보의 경우
-        if (StringUtils.anyNullOrBlank(username, password)) {
+        if (StringUtils.isNullOrBlank(username) || StringUtils.isNullOrBlank(password)) {
             UsagePrinter.printAndQuit("ID or password is not valid.");
         }
 

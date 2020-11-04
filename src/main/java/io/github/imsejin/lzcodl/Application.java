@@ -42,11 +42,11 @@ import org.apache.commons.cli.*;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public final class Application {
-
-    private static final String SEPARATOR = EpisodeRange.SEPARATOR.value();
 
     private Application() {
     }
@@ -151,25 +151,28 @@ public final class Application {
 
     private static void download(Arguments arguments) {
         final String episodeRange = arguments.getEpisodeRange();
+        final String separator = EpisodeRange.SEPARATOR.value();
 
+        String regex;
         if (StringUtils.isNullOrEmpty(episodeRange)) {
             // 모든 에피소드를 다운로드한다.
             Downloader.downloadAll(arguments);
 
-        } else if (episodeRange.matches("[0-9]+" + SEPARATOR)) {
+        } else if (episodeRange.matches(regex = "([0-9]+)" + separator)) {
             // 지정한 에피소드부터 끝까지 다운로드한다.
-            int from = Integer.parseInt(StringUtils.match("([0-9]+)" + SEPARATOR, episodeRange, 1));
+            int from = Integer.parseInt(StringUtils.find(episodeRange, regex, 1));
             Downloader.downloadFrom(arguments, from);
 
-        } else if (episodeRange.matches(SEPARATOR + "[0-9]+")) {
+        } else if (episodeRange.matches(regex = separator + "([0-9]+)")) {
             // 처음부터 지정한 에피소드까지 다운로드한다.
-            int to = Integer.parseInt(StringUtils.match(SEPARATOR + "([0-9]+)", episodeRange, 1));
+            int to = Integer.parseInt(StringUtils.find(episodeRange, regex, 1));
             Downloader.downloadTo(arguments, to);
 
-        } else if (episodeRange.matches("[0-9]+" + SEPARATOR + "[0-9]+")) {
+        } else if (episodeRange.matches(regex = "([0-9]+)" + separator + "([0-9]+)")) {
             // 지정한 에피소드들만 다운로드한다.
-            int from = Integer.parseInt(StringUtils.match("([0-9]+)" + SEPARATOR + "[0-9]+", episodeRange, 1));
-            int to = Integer.parseInt(StringUtils.match("[0-9]+" + SEPARATOR + "([0-9]+)", episodeRange, 1));
+            Map<Integer, String> map = StringUtils.find(episodeRange, regex, Pattern.MULTILINE, 1, 2);
+            int from = Integer.parseInt(map.get(1));
+            int to = Integer.parseInt(map.get(2));
             Downloader.downloadSome(arguments, from, to);
         }
     }
