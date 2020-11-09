@@ -48,7 +48,7 @@ public final class LoginHelper {
      *
      * <p> This is the first place to run a chrome driver.
      * First, {@link ChromeDriver} finds the root element that is
-     * {@code <form id="login-form" action="/login" method="post"></form>}.
+     * {@code <form id="email" action="/login" method="post"></form>}.
      * And then it finds the three element in the root.
      *     <ol>
      *         <li>{@code <input id="login-email">}</li>
