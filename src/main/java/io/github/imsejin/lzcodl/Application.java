@@ -51,41 +51,41 @@ public final class Application {
     private Application() {
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] arguments) {
         // Validates and parses options and arguments.
-        CommandLine cmd = validate(args);
+        CommandLine cmd = validate(arguments);
 
         // Sets up the arguments.
-        final Arguments arguments = Arguments.builder()
+        final Arguments args = Arguments.builder()
                 .language(cmd.getOptionValue('l'))
                 .comicName(cmd.getOptionValue('n'))
                 .episodeRange(cmd.getOptionValue('r', null))
                 .build();
 
         // Login with username and password and gets a token.
-        arguments.setAccessToken(LoginHelper.login(arguments));
+        args.setAccessToken(LoginHelper.login(args));
 
         // Crawls the webtoon page so that gets the information on the episode as JSON string.
-        String jsonText = Crawler.getJson(arguments);
+        String jsonText = Crawler.getJson(args);
 
         // Parses JSON string and converts it to object.
         Product product = JsonUtils.toObject(jsonText, Product.class);
-        arguments.setProduct(product);
+        args.setProduct(product);
 
         // To download, pre-processes the data and creates a directory to save episodes.
         preprocess(product);
-        File comicDir = makeDirectory(product);
-        arguments.setComicPathname(comicDir.getPath());
+        Path comicDir = createDirectory(product);
+        args.setComicPath(comicDir);
 
         // Downloads images.
-        download(arguments);
+        download(args);
 
         // Quits the downloader.
         ChromeBrowser.getDriver().quit();
         System.exit(0);
     }
 
-    private static CommandLine validate(String[] args) {
+    private static CommandLine validate(String[] arguments) {
         // Option: language
         Option lang = Option.builder("l")
                 .longOpt("lang")
@@ -114,7 +114,7 @@ public final class Application {
 
         try {
             // Parses options and arguments.
-            return new DefaultParser().parse(options, args);
+            return new DefaultParser().parse(options, arguments);
         } catch (ParseException e) {
             // Without required options or arguments, the program will exit.
             new HelpFormatter().printHelp(" ", null, options, "", true);
@@ -149,31 +149,31 @@ public final class Application {
         return comicDir;
     }
 
-    private static void download(Arguments arguments) {
-        final String episodeRange = arguments.getEpisodeRange();
+    private static void download(Arguments args) {
+        final String episodeRange = args.getEpisodeRange();
         final String separator = EpisodeRange.SEPARATOR.value();
 
         String regex;
         if (StringUtils.isNullOrEmpty(episodeRange)) {
             // 모든 에피소드를 다운로드한다.
-            Downloader.downloadAll(arguments);
+            Downloader.downloadAll(args);
 
         } else if (episodeRange.matches(regex = "([0-9]+)" + separator)) {
             // 지정한 에피소드부터 끝까지 다운로드한다.
             int from = Integer.parseInt(StringUtils.find(episodeRange, regex, 1));
-            Downloader.downloadFrom(arguments, from);
+            Downloader.downloadFrom(args, from);
 
         } else if (episodeRange.matches(regex = separator + "([0-9]+)")) {
             // 처음부터 지정한 에피소드까지 다운로드한다.
             int to = Integer.parseInt(StringUtils.find(episodeRange, regex, 1));
-            Downloader.downloadTo(arguments, to);
+            Downloader.downloadTo(args, to);
 
         } else if (episodeRange.matches(regex = "([0-9]+)" + separator + "([0-9]+)")) {
             // 지정한 에피소드들만 다운로드한다.
             Map<Integer, String> map = StringUtils.find(episodeRange, regex, Pattern.MULTILINE, 1, 2);
             int from = Integer.parseInt(map.get(1));
             int to = Integer.parseInt(map.get(2));
-            Downloader.downloadSome(arguments, from, to);
+            Downloader.downloadSome(args, from, to);
         }
     }
 
