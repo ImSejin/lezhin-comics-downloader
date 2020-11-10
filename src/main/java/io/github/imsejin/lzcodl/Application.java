@@ -39,7 +39,10 @@ import io.github.imsejin.lzcodl.model.Episode;
 import io.github.imsejin.lzcodl.model.Product;
 import org.apache.commons.cli.*;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -134,7 +137,7 @@ public final class Application {
                 FilenameUtils.replaceUnallowables(episode.getDisplay().getTitle())));
     }
 
-    private static File makeDirectory(Product product) {
+    private static Path createDirectory(Product product) {
         // 웹툰 이름으로 디렉터리를 생성한다.
         String comicTitle = FilenameUtils.replaceUnallowables(product.getDisplay().getTitle());
         String artists = product.getArtists().stream()
@@ -143,10 +146,14 @@ public final class Application {
                 .collect(Collectors.joining(", "));
         String dirName = "L_" + comicTitle + " - " + artists;
 
-        File comicDir = new File(PathnameUtils.getCurrentPathname(), dirName);
-        if (!comicDir.exists()) comicDir.mkdirs();
+        Path path = Paths.get(PathnameUtils.getCurrentPathname(), dirName);
+        try {
+            Files.createDirectories(path);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to create directory", e);
+        }
 
-        return comicDir;
+        return path;
     }
 
     private static void download(Arguments args) {

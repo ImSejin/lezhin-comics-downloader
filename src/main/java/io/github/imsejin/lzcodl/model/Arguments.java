@@ -12,6 +12,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Map;
 
 @Getter
@@ -30,7 +31,7 @@ public class Arguments {
     private Product product;
 
     @Setter
-    private String comicPathname;
+    private Path comicPath;
 
     @Setter
     private boolean expiredComic;
@@ -58,7 +59,7 @@ public class Arguments {
         this.password = password;
     }
 
-    private Arguments(String language, String comicName, String episodeRange, String accessToken, Product product, String comicPathname) {
+    private Arguments(String language, String comicName, String episodeRange, String accessToken, Product product, Path comicPath) {
         // 유효하지 않은 언어의 경우
         if (!Languages.contains(language)) {
             UsagePrinter.printAndQuit(
@@ -84,7 +85,7 @@ public class Arguments {
         this.episodeRange = episodeRange;
         this.accessToken = accessToken;
         this.product = product;
-        this.comicPathname = comicPathname;
+        this.comicPath = comicPath;
     }
 
     public static ArgumentsBuilder builder() {
@@ -108,13 +109,13 @@ public class Arguments {
         private String _episodeRange;
         private String _accessToken;
         private Product _product;
-        private String _comicPathname;
+        private Path _comicPath;
 
         private ArgumentsBuilder() {
         }
 
         public Arguments build() {
-            return new Arguments(_language, _comicName, _episodeRange, _accessToken, _product, _comicPathname);
+            return new Arguments(_language, _comicName, _episodeRange, _accessToken, _product, _comicPath);
         }
 
         public ArgumentsBuilder language(String language) {
@@ -142,8 +143,8 @@ public class Arguments {
             return this;
         }
 
-        public ArgumentsBuilder comicPathname(String comicPathname) {
-            this._comicPathname = comicPathname;
+        public ArgumentsBuilder comicPath(Path comicPath) {
+            this._comicPath = comicPath;
             return this;
         }
 

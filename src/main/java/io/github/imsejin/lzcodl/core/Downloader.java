@@ -18,6 +18,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -57,6 +60,7 @@ public final class Downloader {
         }
     }
 
+    @SneakyThrows
     public static void downloadOne(Arguments arguments, Episode episode, int num) {
         // 미리보기할 수 있는 유료회차의 경우, 다운로드할 수 없다.
         if (!episode.didTurnFree()) return;
@@ -73,8 +77,8 @@ public final class Downloader {
         String episodeDirName = StringUtils.padStart(4, String.valueOf(num), "0")
                 + " - "
                 + episode.getDisplay().getTitle();
-        File episodeDir = new File(arguments.getComicPathname(), episodeDirName);
-        if (!episodeDir.exists()) episodeDir.mkdirs();
+        Path episodeDir = Paths.get(arguments.getComicPath().toString(), episodeDirName);
+        Files.createDirectories(episodeDir);
 
         try (ProgressBar progressBar = new ProgressBar(
                 arguments.getProduct().getAlias() + " ep." + num, numOfImages,
@@ -92,7 +96,7 @@ public final class Downloader {
                         arguments.getAccessToken());
 
                 // 이미지를 다운로드한다.
-                File file = new File(episodeDir,
+                File file = new File(episodeDir.toFile(),
                         StringUtils.padStart(3, String.valueOf(i), "0")
                                 + IMG_FORMAT_EXTENSION);
                 int result = createImage(url, file);
