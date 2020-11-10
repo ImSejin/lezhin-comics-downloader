@@ -40,7 +40,7 @@ public class Episode {
     private long id;
 
     public boolean isFree() {
-        return this.freedAt > 0 && this.freedAt <= System.currentTimeMillis();
+        return this.freedAt <= System.currentTimeMillis();
     }
 
 }
