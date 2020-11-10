@@ -28,7 +28,7 @@ public class ChromeBrowserTest {
         // then
         assertThat(product)
                 .as("The item 'product' of local storage must be json string")
-                .startsWith("{\"display\":{\"title\":\"");
+                .matches("\\{\"\\w.*\":.+}");
         assertThat(JsonUtils.toObject(product, Product.class))
                 .as("The json string can be parsed to Product")
                 .isExactlyInstanceOf(Product.class);
