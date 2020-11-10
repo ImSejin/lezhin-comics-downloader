@@ -48,7 +48,7 @@ public final class LoginHelper {
      *
      * <p> This is the first place to run a chrome driver.
      * First, {@link ChromeDriver} finds the root element that is
-     * {@code <form id="login-form" action="/login" method="post"></form>}.
+     * {@code <form id="email" action="/login" method="post"></form>}.
      * And then it finds the three element in the root.
      *     <ol>
      *         <li>{@code <input id="login-email">}</li>
@@ -101,7 +101,7 @@ public final class LoginHelper {
      *     </script>
      * }</pre>
      *
-     * @param arguments arguments required to login
+     * @param args arguments required to login
      * @return access token
      * (e.g. 5be30a25-a044-410c-88b0-19a1da968a64) ... {@link UUID#randomUUID()}
      * @see ChromeBrowser
@@ -109,11 +109,11 @@ public final class LoginHelper {
      * @see WebElement#getAttribute(String)
      * @see java.util.regex.Matcher#group(int)
      */
-    private static String getAccessToken(Arguments arguments) {
+    private static String getAccessToken(Arguments args) {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
         // Requests login page.
-        String loginUrl = URIs.LOGIN.get(arguments.getLanguage());
+        String loginUrl = URIs.LOGIN.get(args.getLanguage());
         driver.get(loginUrl);
 
         // Waits for DOM to complete the rendering.
@@ -125,10 +125,10 @@ public final class LoginHelper {
         // Inputs account information into the element.
         WebElement usernameInput = loginForm.findElement(By.xpath(".//input[@id='login-email']"));
         usernameInput.clear();
-        usernameInput.sendKeys(arguments.getUsername());
+        usernameInput.sendKeys(args.getUsername());
         WebElement passwordInput = loginForm.findElement(By.xpath(".//input[@id='login-password']"));
         passwordInput.clear();
-        passwordInput.sendKeys(arguments.getPassword());
+        passwordInput.sendKeys(args.getPassword());
 
         // Does login.
         WebElement submitButton = loginForm.findElement(By.xpath(".//button[@type='submit']"));
@@ -147,7 +147,7 @@ public final class LoginHelper {
             return null;
         }
 
-        return StringUtils.match("token: '([\\w-]+)'", script.getAttribute("innerText"), 1);
+        return StringUtils.find(script.getAttribute("innerText"), "token: '([\\w-]+)'", 1);
     }
 
 }

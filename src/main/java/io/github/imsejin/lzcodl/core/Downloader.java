@@ -3,7 +3,6 @@ package io.github.imsejin.lzcodl.core;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import io.github.imsejin.common.util.JsonUtils;
-import io.github.imsejin.common.util.StringUtils;
 import io.github.imsejin.lzcodl.common.constants.Languages;
 import io.github.imsejin.lzcodl.model.Arguments;
 import io.github.imsejin.lzcodl.model.Episode;
@@ -18,12 +17,15 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.IntStream;
 
 public final class Downloader {
 
-    private static final String IMG_FORMAT_EXTENSION = ".webp"; // or ".jpg"
+    private static final String IMG_FORMAT_EXTENSION = "webp" ; // or jpg
 
     private Downloader() {
     }
@@ -57,48 +59,47 @@ public final class Downloader {
         }
     }
 
+    @SneakyThrows
     public static void downloadOne(Arguments arguments, Episode episode, int num) {
-        // 미리보기할 수 있는 유료회차의 경우, 다운로드할 수 없다.
-        if (!episode.didTurnFree()) return;
+        // Cannot download paid episode.
+        if (!episode.isFree()) return;
 
         // 한국이 아닌 다른 국가의 플랫폼은 에피소드 API를 찾을 수 없어, 직접 크롤링한다.
         final int numOfImages = arguments.getLanguage().equals(Languages.KOREAN.value())
                 ? getNumOfImagesInEpisode(arguments, episode)
                 : Crawler.getNumOfImagesInEpisode(arguments, episode);
 
-        // 에피소드의 이미지가 없으면 종료한다.
+        // If episode has no image, skips this episode.
         if (numOfImages < 1) return;
 
-        // 에피소드 이름으로 디렉터리를 생성한다.
-        String episodeDirName = StringUtils.padStart(4, String.valueOf(num), "0")
-                + " - "
-                + episode.getDisplay().getTitle();
-        File episodeDir = new File(arguments.getComicPathname(), episodeDirName);
-        if (!episodeDir.exists()) episodeDir.mkdirs();
+        // Creates directory with the name of episode.
+        String episodeDirName = String.format("%04d - %s", num, episode.getDisplay().getTitle());
+        Path episodeDir = Paths.get(arguments.getComicPath().toString(), episodeDirName);
+        Files.createDirectories(episodeDir);
 
         try (ProgressBar progressBar = new ProgressBar(
-                arguments.getProduct().getAlias() + " ep." + num, numOfImages,
+                String.format("%s ep.%d", arguments.getProduct().getAlias(), num), numOfImages,
                 250, System.err, ProgressBarStyle.ASCII, "", 1)) {
             // `ProgressBar.step()`이 step 1부터 시작하기 때문에 step 0로 초기화한다.
             progressBar.stepTo(0);
 
-            // 에피소드의 모든 이미지를 다운로드한다.
+            // Downloads all images of the episode.
             IntStream.rangeClosed(1, numOfImages).parallel().forEach(i -> {
-                // 이미지 URI를 생성한다.
-                URL url = URLFactory.image(
-                        arguments.getProduct().getId(),
-                        episode.getId(),
-                        i,
-                        arguments.getAccessToken());
+                String filename = String.format("%03d.%s", i, IMG_FORMAT_EXTENSION);
+                File file = new File(episodeDir.toFile(), filename);
 
-                // 이미지를 다운로드한다.
-                File file = new File(episodeDir,
-                        StringUtils.padStart(3, String.valueOf(i), "0")
-                                + IMG_FORMAT_EXTENSION);
+                // Tries to download high-resolution image for only paid users.
+                URL url = URLFactory.image(arguments, episode, i, true);
                 int result = createImage(url, file);
 
-                // 다운로드에 실패하면 해당 회차를 건너뛴다.
-                if (result == 0) return;
+                // Try to download low-resolution image for all users.
+                if (result == 0) {
+                    url = URLFactory.image(arguments, episode, i, false);
+                    result = createImage(url, file);
+
+                    // If failed to download, skips this image.
+                    if (result == 0) return;
+                }
 
                 progressBar.stepBy(1);
             });
@@ -126,10 +127,7 @@ public final class Downloader {
 
     @SneakyThrows(JsonSyntaxException.class)
     private static int getNumOfImagesInEpisode(Arguments arguments, Episode episode) {
-        URL url = URLFactory.oneEpisodeAPI(
-                arguments.getProduct().getAlias(),
-                episode.getName(),
-                arguments.getAccessToken());
+        URL url = URLFactory.oneEpisodeAPI(arguments, episode);
         JsonObject json = JsonUtils.readJsonFromUrl(url);
 
         return json.get("cut").getAsInt();

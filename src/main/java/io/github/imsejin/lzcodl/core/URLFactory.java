@@ -1,5 +1,7 @@
 package io.github.imsejin.lzcodl.core;
 
+import io.github.imsejin.lzcodl.model.Arguments;
+import io.github.imsejin.lzcodl.model.Episode;
 import lombok.SneakyThrows;
 
 import java.net.MalformedURLException;
@@ -55,7 +57,7 @@ public final class URLFactory {
      * }</pre>
      */
     @SneakyThrows(MalformedURLException.class)
-    public static synchronized URL image(long comicId, long episodeId, int filename, String accessToken) {
+    public static synchronized URL image(long comicId, long episodeId, int filename, String accessToken, boolean purchased) {
         init();
 
         sb.append(ImgUrl);
@@ -66,9 +68,14 @@ public final class URLFactory {
         sb.append(filename);
         sb.append(".webp?access_token=");
         sb.append(accessToken);
-        sb.append("&purchased=false"); // 구매한 유료 에피소드라면 true로 변경한다.
+        sb.append("&purchased=").append(purchased); // If not append though you paid this episode, width of image decreases. (1080px => 720px)
+        sb.append("&q=30"); // I don't know what this means, but if not append, width of image decreases. (1080px => 1024px)
 
         return new URL(sb.toString());
+    }
+
+    public static synchronized URL image(Arguments arguments, Episode episode, int filename, boolean purchased) {
+        return image(arguments.getProduct().getId(), episode.getId(), filename, arguments.getAccessToken(), purchased);
     }
 
     /**
@@ -88,6 +95,10 @@ public final class URLFactory {
         sb.append(accessToken);
 
         return new URL(sb.toString());
+    }
+
+    public static synchronized URL oneEpisodeAPI(Arguments arguments, Episode episode) {
+        return oneEpisodeAPI(arguments.getProduct().getAlias(), episode.getName(), arguments.getAccessToken());
     }
 
     /**

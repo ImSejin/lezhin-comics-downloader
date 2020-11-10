@@ -12,6 +12,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Map;
 
 @Getter
@@ -23,6 +24,7 @@ public class Arguments {
     private final String language;
     private final String comicName;
     private final String episodeRange;
+    private final boolean debugging;
 
     private String accessToken;
 
@@ -30,7 +32,7 @@ public class Arguments {
     private Product product;
 
     @Setter
-    private String comicPathname;
+    private Path comicPath;
 
     @Setter
     private boolean expiredComic;
@@ -50,7 +52,7 @@ public class Arguments {
         String password = section.get("password");
 
         // 유효하지 않은 계정 정보의 경우
-        if (StringUtils.anyNullOrBlank(username, password)) {
+        if (StringUtils.isNullOrBlank(username) || StringUtils.isNullOrBlank(password)) {
             UsagePrinter.printAndQuit("ID or password is not valid.");
         }
 
@@ -58,7 +60,7 @@ public class Arguments {
         this.password = password;
     }
 
-    private Arguments(String language, String comicName, String episodeRange, String accessToken, Product product, String comicPathname) {
+    private Arguments(String language, String comicName, String episodeRange, String accessToken, Product product, Path comicPath, boolean debugging) {
         // 유효하지 않은 언어의 경우
         if (!Languages.contains(language)) {
             UsagePrinter.printAndQuit(
@@ -84,7 +86,8 @@ public class Arguments {
         this.episodeRange = episodeRange;
         this.accessToken = accessToken;
         this.product = product;
-        this.comicPathname = comicPathname;
+        this.comicPath = comicPath;
+        this.debugging = debugging;
     }
 
     public static ArgumentsBuilder builder() {
@@ -108,13 +111,14 @@ public class Arguments {
         private String _episodeRange;
         private String _accessToken;
         private Product _product;
-        private String _comicPathname;
+        private Path _comicPath;
+        private boolean _debugging;
 
         private ArgumentsBuilder() {
         }
 
         public Arguments build() {
-            return new Arguments(_language, _comicName, _episodeRange, _accessToken, _product, _comicPathname);
+            return new Arguments(_language, _comicName, _episodeRange, _accessToken, _product, _comicPath, _debugging);
         }
 
         public ArgumentsBuilder language(String language) {
@@ -142,8 +146,13 @@ public class Arguments {
             return this;
         }
 
-        public ArgumentsBuilder comicPathname(String comicPathname) {
-            this._comicPathname = comicPathname;
+        public ArgumentsBuilder comicPath(Path comicPath) {
+            this._comicPath = comicPath;
+            return this;
+        }
+
+        public ArgumentsBuilder debugging(boolean debugging) {
+            this._debugging = debugging;
             return this;
         }
 

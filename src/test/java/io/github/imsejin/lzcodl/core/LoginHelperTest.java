@@ -1,12 +1,11 @@
 package io.github.imsejin.lzcodl.core;
 
 import io.github.imsejin.lzcodl.model.Arguments;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Test;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import java.util.regex.Pattern;
-
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class LoginHelperTest {
 
@@ -30,9 +29,7 @@ public class LoginHelperTest {
         String actual = LoginHelper.login(arguments);
 
         // then
-        assertThat(Pattern.matches("^[\\w-]+$", actual))
-                .as("")
-                .isTrue();
+        assertThat(actual).matches("^[\\w-]+$");
     }
 
 }
