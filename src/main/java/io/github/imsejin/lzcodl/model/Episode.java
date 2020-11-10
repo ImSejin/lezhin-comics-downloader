@@ -39,8 +39,8 @@ public class Episode {
     private long publishedAt;
     private long id;
 
-    public boolean didTurnFree() {
-        return this.freedAt <= System.currentTimeMillis();
+    public boolean isFree() {
+        return this.freedAt > 0 && this.freedAt <= System.currentTimeMillis();
     }
 
 }

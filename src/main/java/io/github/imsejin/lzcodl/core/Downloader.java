@@ -62,8 +62,8 @@ public final class Downloader {
 
     @SneakyThrows
     public static void downloadOne(Arguments arguments, Episode episode, int num) {
-        // 미리보기할 수 있는 유료회차의 경우, 다운로드할 수 없다.
-        if (!episode.didTurnFree()) return;
+        // 유료회차는 다운로드할 수 없다.
+        if (!episode.isFree()) return;
 
         // 한국이 아닌 다른 국가의 플랫폼은 에피소드 API를 찾을 수 없어, 직접 크롤링한다.
         final int numOfImages = arguments.getLanguage().equals(Languages.KOREAN.value())
