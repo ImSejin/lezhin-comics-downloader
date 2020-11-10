@@ -1,5 +1,7 @@
 package io.github.imsejin.lzcodl.core;
 
+import io.github.imsejin.lzcodl.model.Arguments;
+import io.github.imsejin.lzcodl.model.Episode;
 import lombok.SneakyThrows;
 
 import java.net.MalformedURLException;
@@ -71,6 +73,10 @@ public final class URLFactory {
         return new URL(sb.toString());
     }
 
+    public static synchronized URL image(Arguments arguments, Episode episode, int filename) {
+        return image(arguments.getProduct().getId(), episode.getId(), filename, arguments.getAccessToken());
+    }
+
     /**
      * <pre>{@code
      *     http://cdn.lezhin.com/episodes/snail/1.json?access_token=5be30a25-a044-410c-88b0-19a1da968a64
@@ -88,6 +94,10 @@ public final class URLFactory {
         sb.append(accessToken);
 
         return new URL(sb.toString());
+    }
+
+    public static synchronized URL oneEpisodeAPI(Arguments arguments, Episode episode) {
+        return oneEpisodeAPI(arguments.getProduct().getAlias(), episode.getName(), arguments.getAccessToken());
     }
 
     /**

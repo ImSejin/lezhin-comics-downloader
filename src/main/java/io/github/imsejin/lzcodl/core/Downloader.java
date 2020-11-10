@@ -89,11 +89,7 @@ public final class Downloader {
             // 에피소드의 모든 이미지를 다운로드한다.
             IntStream.rangeClosed(1, numOfImages).parallel().forEach(i -> {
                 // 이미지 URI를 생성한다.
-                URL url = URLFactory.image(
-                        arguments.getProduct().getId(),
-                        episode.getId(),
-                        i,
-                        arguments.getAccessToken());
+                URL url = URLFactory.image(arguments, episode, i);
 
                 // 이미지를 다운로드한다.
                 File file = new File(episodeDir.toFile(),
@@ -130,10 +126,7 @@ public final class Downloader {
 
     @SneakyThrows(JsonSyntaxException.class)
     private static int getNumOfImagesInEpisode(Arguments arguments, Episode episode) {
-        URL url = URLFactory.oneEpisodeAPI(
-                arguments.getProduct().getAlias(),
-                episode.getName(),
-                arguments.getAccessToken());
+        URL url = URLFactory.oneEpisodeAPI(arguments, episode);
         JsonObject json = JsonUtils.readJsonFromUrl(url);
 
         return json.get("cut").getAsInt();
