@@ -65,6 +65,9 @@ public final class Application {
                 .episodeRange(cmd.getOptionValue('r', null))
                 .build();
 
+        // Activates debug mode.
+        if (cmd.hasOption('d')) ChromeBrowser.debugging();
+
         // Login with username and password and gets a token.
         args.setAccessToken(LoginHelper.login(args));
 
@@ -112,8 +115,13 @@ public final class Application {
                 .hasArg()
                 .valueSeparator()
                 .build();
+        // Option: debugging
+        Option debug = Option.builder("d")
+                .longOpt("debug")
+                .desc("debug mode")
+                .build();
 
-        Options options = new Options().addOption(lang).addOption(name).addOption(range);
+        Options options = new Options().addOption(lang).addOption(name).addOption(range).addOption(debug);
 
         try {
             // Parses options and arguments.

@@ -24,6 +24,7 @@ public class Arguments {
     private final String language;
     private final String comicName;
     private final String episodeRange;
+    private final boolean debugging;
 
     private String accessToken;
 
@@ -59,7 +60,7 @@ public class Arguments {
         this.password = password;
     }
 
-    private Arguments(String language, String comicName, String episodeRange, String accessToken, Product product, Path comicPath) {
+    private Arguments(String language, String comicName, String episodeRange, String accessToken, Product product, Path comicPath, boolean debugging) {
         // 유효하지 않은 언어의 경우
         if (!Languages.contains(language)) {
             UsagePrinter.printAndQuit(
@@ -86,6 +87,7 @@ public class Arguments {
         this.accessToken = accessToken;
         this.product = product;
         this.comicPath = comicPath;
+        this.debugging = debugging;
     }
 
     public static ArgumentsBuilder builder() {
@@ -110,12 +112,13 @@ public class Arguments {
         private String _accessToken;
         private Product _product;
         private Path _comicPath;
+        private boolean _debugging;
 
         private ArgumentsBuilder() {
         }
 
         public Arguments build() {
-            return new Arguments(_language, _comicName, _episodeRange, _accessToken, _product, _comicPath);
+            return new Arguments(_language, _comicName, _episodeRange, _accessToken, _product, _comicPath, _debugging);
         }
 
         public ArgumentsBuilder language(String language) {
@@ -145,6 +148,11 @@ public class Arguments {
 
         public ArgumentsBuilder comicPath(Path comicPath) {
             this._comicPath = comicPath;
+            return this;
+        }
+
+        public ArgumentsBuilder debugging(boolean debugging) {
+            this._debugging = debugging;
             return this;
         }
 

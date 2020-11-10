@@ -30,11 +30,15 @@ public class CommandParserTest {
                 .hasArgs()
                 .valueSeparator()
                 .build();
-        Options options = new Options().addOption(lang).addOption(name).addOption(range);
+        Option debug = Option.builder("d")
+                .longOpt("debug")
+                .desc("debug mode")
+                .build();
+        Options options = new Options().addOption(lang).addOption(name).addOption(range).addOption(debug);
 
         // when
         DefaultParser parser = new DefaultParser();
-        CommandLine cmd = parser.parse(options, new String[]{"--language=ko", "-n=snail", "-r=8~"});
+        CommandLine cmd = parser.parse(options, new String[]{"--language=ko", "-n=snail", "-r=8~", "--debug"});
 
         // then
         assertThat(cmd)
@@ -43,7 +47,10 @@ public class CommandParserTest {
                 .as("#2 CommandLine must have 'name' option")
                 .is(new Condition<>(it -> it.hasOption("name"), null))
                 .as("#3 CommandLine must have 'range' option")
-                .is(new Condition<>(it -> it.hasOption('r'), null));
+                .is(new Condition<>(it -> it.hasOption('r'), null))
+                .as("#4 CommandLine must have 'debug' option")
+                .is(new Condition<>(it -> it.hasOption("debug"), null));
+        new HelpFormatter().printHelp(" ", null, options, "", true);
     }
 
 }
