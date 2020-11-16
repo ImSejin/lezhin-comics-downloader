@@ -3,7 +3,7 @@ package io.github.imsejin.lzcodl.core;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import io.github.imsejin.common.util.JsonUtils;
-import io.github.imsejin.lzcodl.common.constants.Languages;
+import io.github.imsejin.lzcodl.common.constant.Languages;
 import io.github.imsejin.lzcodl.model.Arguments;
 import io.github.imsejin.lzcodl.model.Episode;
 import lombok.SneakyThrows;

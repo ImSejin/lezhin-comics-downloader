@@ -28,7 +28,7 @@ import io.github.imsejin.common.util.FilenameUtils;
 import io.github.imsejin.common.util.JsonUtils;
 import io.github.imsejin.common.util.PathnameUtils;
 import io.github.imsejin.common.util.StringUtils;
-import io.github.imsejin.lzcodl.common.constants.EpisodeRange;
+import io.github.imsejin.lzcodl.common.constant.EpisodeRange;
 import io.github.imsejin.lzcodl.core.ChromeBrowser;
 import io.github.imsejin.lzcodl.core.Crawler;
 import io.github.imsejin.lzcodl.core.Downloader;

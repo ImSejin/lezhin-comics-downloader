@@ -1,7 +1,7 @@
 package io.github.imsejin.lzcodl.core;
 
-import io.github.imsejin.lzcodl.common.constants.Languages;
-import io.github.imsejin.lzcodl.common.constants.URIs;
+import io.github.imsejin.lzcodl.common.constant.Languages;
+import io.github.imsejin.lzcodl.common.constant.URIs;
 import io.github.imsejin.lzcodl.model.Arguments;
 import io.github.imsejin.lzcodl.model.Episode;
 import org.openqa.selenium.By;
