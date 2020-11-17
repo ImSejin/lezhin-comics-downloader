@@ -59,10 +59,11 @@ public final class Application {
                 .language(cmd.getOptionValue('l'))
                 .comicName(cmd.getOptionValue('n'))
                 .episodeRange(cmd.getOptionValue('r', null))
+                .debugging(cmd.hasOption('d'))
                 .build();
 
         // Activates debug mode.
-        if (cmd.hasOption('d')) ChromeBrowser.debugging();
+        if (args.isDebugging()) ChromeBrowser.debugging();
 
         // Login with username and password and gets a token.
         args.setAccessToken(LoginHelper.login(args));

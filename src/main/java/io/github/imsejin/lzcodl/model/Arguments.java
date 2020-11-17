@@ -56,7 +56,7 @@ public class Arguments {
     }
 
     @Builder
-    private Arguments(String language, String comicName, String episodeRange, String accessToken, Product product, Path comicPath, boolean debugging) {
+    private Arguments(String language, String comicName, String episodeRange, boolean debugging) {
         // 유효하지 않은 언어의 경우
         if (!Languages.contains(language)) {
             UsagePrinter.printAndQuit(
@@ -80,9 +80,6 @@ public class Arguments {
         this.language = language;
         this.comicName = comicName;
         this.episodeRange = episodeRange;
-        this.accessToken = accessToken;
-        this.product = product;
-        this.comicPath = comicPath;
         this.debugging = debugging;
     }
 
