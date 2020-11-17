@@ -41,6 +41,9 @@ public final class CommandParser {
         options = new Options().addOption(lang).addOption(name).addOption(range).addOption(debug);
     }
 
+    private CommandParser() {
+    }
+
     /**
      * Validates and parses options and arguments.
      *
