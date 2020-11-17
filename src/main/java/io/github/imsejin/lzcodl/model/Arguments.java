@@ -6,6 +6,7 @@ import io.github.imsejin.common.util.StringUtils;
 import io.github.imsejin.lzcodl.common.UsagePrinter;
 import io.github.imsejin.lzcodl.common.constant.EpisodeRange;
 import io.github.imsejin.lzcodl.common.constant.Languages;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -54,6 +55,7 @@ public class Arguments {
         this.password = password;
     }
 
+    @Builder
     private Arguments(String language, String comicName, String episodeRange, String accessToken, Product product, Path comicPath, boolean debugging) {
         // 유효하지 않은 언어의 경우
         if (!Languages.contains(language)) {
@@ -82,64 +84,6 @@ public class Arguments {
         this.product = product;
         this.comicPath = comicPath;
         this.debugging = debugging;
-    }
-
-    public static ArgumentsBuilder builder() {
-        return new ArgumentsBuilder();
-    }
-
-    public static class ArgumentsBuilder {
-
-        private String _language;
-        private String _comicName;
-        private String _episodeRange;
-        private String _accessToken;
-        private Product _product;
-        private Path _comicPath;
-        private boolean _debugging;
-
-        private ArgumentsBuilder() {
-        }
-
-        public Arguments build() {
-            return new Arguments(_language, _comicName, _episodeRange, _accessToken, _product, _comicPath, _debugging);
-        }
-
-        public ArgumentsBuilder language(String language) {
-            this._language = language;
-            return this;
-        }
-
-        public ArgumentsBuilder comicName(String comicName) {
-            this._comicName = comicName;
-            return this;
-        }
-
-        public ArgumentsBuilder episodeRange(String episodeRange) {
-            this._episodeRange = episodeRange;
-            return this;
-        }
-
-        public ArgumentsBuilder accessToken(String accessToken) {
-            this._accessToken = accessToken;
-            return this;
-        }
-
-        public ArgumentsBuilder product(Product product) {
-            this._product = product;
-            return this;
-        }
-
-        public ArgumentsBuilder comicPath(Path comicPath) {
-            this._comicPath = comicPath;
-            return this;
-        }
-
-        public ArgumentsBuilder debugging(boolean debugging) {
-            this._debugging = debugging;
-            return this;
-        }
-
     }
 
 }
