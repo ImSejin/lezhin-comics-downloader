@@ -6,7 +6,6 @@ import io.github.imsejin.common.util.StringUtils;
 import io.github.imsejin.lzcodl.common.UsagePrinter;
 import io.github.imsejin.lzcodl.common.constant.EpisodeRange;
 import io.github.imsejin.lzcodl.common.constant.Languages;
-import io.github.imsejin.lzcodl.core.ChromeBrowser;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,6 +15,7 @@ import java.nio.file.Path;
 import java.util.Map;
 
 @Getter
+@Setter
 @ToString
 public class Arguments {
 
@@ -27,14 +27,8 @@ public class Arguments {
     private final boolean debugging;
 
     private String accessToken;
-
-    @Setter
     private Product product;
-
-    @Setter
     private Path comicPath;
-
-    @Setter
     private boolean expiredComic;
 
     {
@@ -92,16 +86,6 @@ public class Arguments {
 
     public static ArgumentsBuilder builder() {
         return new ArgumentsBuilder();
-    }
-
-    public void setAccessToken(String accessToken) {
-        // 로그인에 실패하면, 프로그램을 종료한다.
-        if (accessToken == null) {
-            ChromeBrowser.getDriver().quit();
-            UsagePrinter.printAndQuit("Failed to login. Check your account information.");
-        }
-
-        this.accessToken = accessToken;
     }
 
     public static class ArgumentsBuilder {

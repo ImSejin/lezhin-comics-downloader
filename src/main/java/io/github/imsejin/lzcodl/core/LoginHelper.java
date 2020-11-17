@@ -2,9 +2,11 @@ package io.github.imsejin.lzcodl.core;
 
 import io.github.imsejin.common.util.StringUtils;
 import io.github.imsejin.lzcodl.common.constant.URIs;
+import io.github.imsejin.lzcodl.common.exception.LoginFailureException;
 import io.github.imsejin.lzcodl.model.Arguments;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -26,20 +28,14 @@ public final class LoginHelper {
     /**
      * Gets an access token after login.
      *
-     * @param arguments arguments required to login
+     * @param args arguments required to login
      * @return access token({@link UUID#randomUUID()})
      * (e.g. 5be30a25-a044-410c-88b0-19a1da968a64)
      */
-    public static String login(Arguments arguments) {
-        String accessToken = getAccessToken(arguments);
+    public static String login(Arguments args) {
+        String accessToken = getAccessToken(args);
 
-        // When the account information is not valid.
-        if (StringUtils.isNullOrEmpty(accessToken)) {
-            System.err.print("\n    The account does not exist.");
-            return null;
-        }
-
-        System.out.printf("\n    Success to login. -> %s\n", URIs.LOGIN.get(arguments.getLanguage()));
+        System.out.printf("\n    Success to login. -> %s\n", URIs.LOGIN.get(args.getLanguage()));
         return accessToken;
     }
 
@@ -134,20 +130,36 @@ public final class LoginHelper {
         WebElement submitButton = loginForm.findElement(By.xpath(".//button[@type='submit']"));
         submitButton.click();
 
-        // Waits for DOM to complete the rendering.
-        WebDriverWait wait = new WebDriverWait(driver, 15);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(
-                By.xpath("//main[@id='main' and @class='lzCntnr lzCntnr--home']")));
+        // Validates account information.
+        validate(args);
 
         // Finds the script tag that has access token.
         WebElement script;
         try {
             script = driver.findElementByXPath("//script[not(@src) and contains(text(), '__LZ_ME__')]");
         } catch (NoSuchElementException ex) {
-            return null;
+            throw new LoginFailureException();
         }
 
         return StringUtils.find(script.getAttribute("innerText"), "token: '([\\w-]+)'", 1);
+    }
+
+    private static void validate(Arguments args) {
+        ChromeDriver driver = ChromeBrowser.getDriver();
+
+        try {
+            // Waits for DOM to complete the rendering.
+            WebDriverWait wait = new WebDriverWait(driver, 10);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(
+                    By.xpath("//main[@id='main' and @class='lzCntnr lzCntnr--home']")));
+        } catch (TimeoutException e) {
+            if (!driver.getCurrentUrl().startsWith(URIs.LOGIN.get(args.getLanguage()))) throw e;
+
+            // When failed to login because of invalid account information.
+            driver.executeScript("localStorage.setItem('errorCode', window.__LZ_ERROR_CODE__);");
+            String errorCode = driver.getLocalStorage().getItem("errorCode");
+            throw new LoginFailureException(errorCode);
+        }
     }
 
 }
