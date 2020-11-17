@@ -71,9 +71,9 @@ public class Arguments {
         if (episodeRange != null && !episodeRange.contains(separator)) {
             UsagePrinter.printAndQuit(
                     "- HOW TO SETUP EPISODE RANGE?",
-                    "    case 1. skipped : all of episodes",
-                    String.format("    case 2. 8%s      : from ep.8 to the end of the episode", separator),
-                    String.format("    case 3. %s25     : from the beginning of the episode to ep.25", separator),
+                    "    case 1. skipped : all episodes",
+                    String.format("    case 2. 8%s      : from ep.8 to the last", separator),
+                    String.format("    case 3. %s25     : from the first to ep.25", separator),
                     String.format("    case 4. 1%s10    : from ep.1 to ep.10", separator));
         }
 

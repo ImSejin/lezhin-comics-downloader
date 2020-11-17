@@ -70,7 +70,7 @@ public final class Application {
         // Crawls the webtoon page so that gets the information on the episode as JSON string.
         String jsonText = Crawler.getJson(args);
 
-        // Parses JSON string and converts it to object.
+        // Converts JSON string to java object.
         Product product = JsonUtils.toObject(jsonText, Product.class);
         args.setProduct(product);
 
