@@ -20,6 +20,9 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -77,9 +80,7 @@ public final class Downloader {
         Path episodeDir = Paths.get(arguments.getComicPath().toString(), episodeDirName);
         Files.createDirectories(episodeDir);
 
-        try (ProgressBar progressBar = new ProgressBar(
-                String.format("%s ep.%d", arguments.getProduct().getAlias(), num), numOfImages,
-                250, System.err, ProgressBarStyle.ASCII, "", 1)) {
+        try (ProgressBar progressBar = getDefaultProgressBar(arguments.getProduct().getAlias(), num, numOfImages)) {
             // `ProgressBar.step()`이 step 1부터 시작하기 때문에 step 0로 초기화한다.
             progressBar.stepTo(0);
 
@@ -131,6 +132,27 @@ public final class Downloader {
         JsonObject json = JsonUtils.readJsonFromUrl(url);
 
         return json.get("cut").getAsInt();
+    }
+
+    /**
+     * Returns default progress bar.
+     *
+     * <pre>
+     *     i_have_a_baby ep.1 100% [=======] 80/80 imgs (0:00:03 / 0:00:00) | 26.7 imgs/s
+     *     i_have_a_baby ep.2 100% [=======] 70/70 imgs (0:00:02 / 0:00:00) | 35.0 imgs/s
+     *     i_have_a_baby ep.3 100% [=======] 56/56 imgs (0:00:01 / 0:00:00) | 56.0 imgs/s
+     * </pre>
+     *
+     * @param episodeName name of the episode
+     * @param episodeNo   order of the episode
+     * @param numOfImages number of images in the episode
+     * @return default progress bar
+     */
+    private static ProgressBar getDefaultProgressBar(String episodeName, int episodeNo, int numOfImages) {
+        String taskName = String.format("%s ep.%d", episodeName, episodeNo);
+        return new ProgressBar(taskName, numOfImages, 250, System.err, ProgressBarStyle.ASCII,
+                " imgs", 1, true, new DecimalFormat("| #.0"), ChronoUnit.SECONDS,
+                0L, Duration.ZERO);
     }
 
 }
