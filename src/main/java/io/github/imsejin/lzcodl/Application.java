@@ -29,12 +29,8 @@ import io.github.imsejin.common.util.JsonUtils;
 import io.github.imsejin.common.util.PathnameUtils;
 import io.github.imsejin.common.util.StringUtils;
 import io.github.imsejin.lzcodl.common.constant.EpisodeRange;
-import io.github.imsejin.lzcodl.core.ChromeBrowser;
-import io.github.imsejin.lzcodl.core.Crawler;
-import io.github.imsejin.lzcodl.core.Downloader;
-import io.github.imsejin.lzcodl.core.LoginHelper;
+import io.github.imsejin.lzcodl.core.*;
 import io.github.imsejin.lzcodl.model.Arguments;
-import io.github.imsejin.lzcodl.model.Artist;
 import io.github.imsejin.lzcodl.model.Episode;
 import io.github.imsejin.lzcodl.model.Product;
 import org.apache.commons.cli.*;
@@ -56,7 +52,7 @@ public final class Application {
 
     public static void main(String[] arguments) {
         // Validates and parses options and arguments.
-        CommandLine cmd = validate(arguments);
+        CommandLine cmd = CommandParser.parse(arguments);
 
         // Sets up the arguments.
         final Arguments args = Arguments.builder()
@@ -91,49 +87,6 @@ public final class Application {
         System.exit(0);
     }
 
-    private static CommandLine validate(String[] arguments) {
-        // Option: language
-        Option lang = Option.builder("l")
-                .longOpt("lang")
-                .desc("language of lezhin platform you want to see")
-                .valueSeparator()
-                .hasArg()
-                .required()
-                .build();
-        // Option: comicName
-        Option name = Option.builder("n")
-                .longOpt("name")
-                .desc("webtoon name you want to download")
-                .valueSeparator()
-                .hasArg()
-                .required()
-                .build();
-        // Option: episodeRange
-        Option range = Option.builder("r")
-                .longOpt("range")
-                .desc("range of episodes you want to download")
-                .hasArg()
-                .valueSeparator()
-                .build();
-        // Option: debugging
-        Option debug = Option.builder("d")
-                .longOpt("debug")
-                .desc("debug mode")
-                .build();
-
-        Options options = new Options().addOption(lang).addOption(name).addOption(range).addOption(debug);
-
-        try {
-            // Parses options and arguments.
-            return new DefaultParser().parse(options, arguments);
-        } catch (ParseException e) {
-            // Without required options or arguments, the program will exit.
-            new HelpFormatter().printHelp(" ", null, options, "", true);
-            System.exit(1);
-            return null;
-        }
-    }
-
     private static void preprocess(Product product) {
         List<Episode> episodes = product.getEpisodes();
 
@@ -141,16 +94,15 @@ public final class Application {
         Collections.reverse(episodes);
 
         // 에피소드 이름 중 디렉터리명에 허용되지 않는 문자열을 치환한다.
-        episodes.forEach(episode -> episode.getDisplay().setTitle(
-                FilenameUtils.replaceUnallowables(episode.getDisplay().getTitle())));
+        episodes.stream().map(Episode::getDisplay)
+                .forEach(it -> it.setTitle(FilenameUtils.replaceUnallowables(it.getTitle())));
     }
 
     private static Path createDirectory(Product product) {
         // 웹툰 이름으로 디렉터리를 생성한다.
         String comicTitle = FilenameUtils.replaceUnallowables(product.getDisplay().getTitle());
         String artists = product.getArtists().stream()
-                .map(Artist::getName)
-                .map(FilenameUtils::replaceUnallowables)
+                .map(it -> FilenameUtils.replaceUnallowables(it.getName()))
                 .collect(Collectors.joining(", "));
         String dirName = "L_" + comicTitle + " - " + artists;
 
