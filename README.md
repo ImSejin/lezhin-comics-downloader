@@ -6,11 +6,15 @@
 
 <p align="center">
     <a href="https://lgtm.com/projects/g/ImSejin/lezhin-comics-downloader/context:java"><img alt="Language grade: Java" src="https://img.shields.io/lgtm/grade/java/g/ImSejin/lezhin-comics-downloader.svg?logo=lgtm&logoWidth=18"/></a>
+    <a href="https://frontend.code-inspector.com/project/16360/dashboard"><img alt="Code Inspector" src="https://www.code-inspector.com/project/16360/score/svg"></a>
     <img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/imsejin/lezhin-comics-downloader">
+</p>
+
+<p align="center">
+    <img alt="GitHub All Releases" src="https://img.shields.io/github/downloads/imsejin/lezhin-comics-downloader/total">
+	<img alt="GitHub Releases" src="https://img.shields.io/github/downloads/imsejin/lezhin-comics-downloader/latest/total">
     <img alt="jdk8" src="https://img.shields.io/badge/jdk-8-orange">
 	<img alt="GitHub" src="https://img.shields.io/github/license/imsejin/lezhin-comics-downloader">
-	<img alt="GitHub All Releases" src="https://img.shields.io/github/downloads/imsejin/lezhin-comics-downloader/total">
-	<img alt="GitHub Releases" src="https://img.shields.io/github/downloads/imsejin/lezhin-comics-downloader/latest/total">
 </p>
 
 This is downloader that helps you to login and downloads the specified comic for all lezhin-comics even adults.
