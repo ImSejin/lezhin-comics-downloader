@@ -5,6 +5,7 @@
 
 
 <p align="center">
+    <a href="https://lgtm.com/projects/g/ImSejin/lezhin-comics-downloader/context:java"><img alt="Language grade: Java" src="https://img.shields.io/lgtm/grade/java/g/ImSejin/lezhin-comics-downloader.svg?logo=lgtm&logoWidth=18"/></a>
     <img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/imsejin/lezhin-comics-downloader">
     <img alt="jdk8" src="https://img.shields.io/badge/jdk-8-orange">
 	<img alt="GitHub" src="https://img.shields.io/github/license/imsejin/lezhin-comics-downloader">
