@@ -1,7 +1,6 @@
 package io.github.imsejin.lzcodl.core;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
 import io.github.imsejin.common.util.JsonUtils;
 import io.github.imsejin.lzcodl.common.constant.Languages;
 import io.github.imsejin.lzcodl.model.Arguments;
@@ -28,7 +27,7 @@ import java.util.stream.IntStream;
 
 public final class Downloader {
 
-    private static final String IMG_FORMAT_EXTENSION = "webp" ; // or jpg
+    private static final String IMG_FORMAT_EXTENSION = "webp"; // or jpg
 
     private Downloader() {
     }
@@ -126,7 +125,7 @@ public final class Downloader {
         }
     }
 
-    @SneakyThrows(JsonSyntaxException.class)
+    @SneakyThrows
     private static int getNumOfImagesInEpisode(Arguments arguments, Episode episode) {
         URL url = URLFactory.oneEpisodeAPI(arguments, episode);
         JsonObject json = JsonUtils.readJsonFromUrl(url);
@@ -150,7 +149,7 @@ public final class Downloader {
      */
     private static ProgressBar getDefaultProgressBar(String episodeName, int episodeNo, int numOfImages) {
         String taskName = String.format("%s ep.%d", episodeName, episodeNo);
-        return new ProgressBar(taskName, numOfImages, 250, System.err, ProgressBarStyle.ASCII,
+        return new ProgressBar(taskName, numOfImages, 250, System.out, ProgressBarStyle.ASCII,
                 " imgs", 1, true, new DecimalFormat("| #.0"), ChronoUnit.SECONDS,
                 0L, Duration.ZERO);
     }

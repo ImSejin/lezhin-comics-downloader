@@ -33,7 +33,7 @@ import io.github.imsejin.lzcodl.core.*;
 import io.github.imsejin.lzcodl.model.Arguments;
 import io.github.imsejin.lzcodl.model.Episode;
 import io.github.imsejin.lzcodl.model.Product;
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.CommandLine;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -121,6 +121,7 @@ public final class Application {
         final String episodeRange = args.getEpisodeRange();
         final String separator = EpisodeRange.SEPARATOR.value();
 
+        System.out.println();
         String regex;
         if (StringUtils.isNullOrEmpty(episodeRange)) {
             // 모든 에피소드를 다운로드한다.
