@@ -33,14 +33,21 @@ public final class LoginHelper {
      * (e.g. 5be30a25-a044-410c-88b0-19a1da968a64)
      */
     public static String login(Arguments args) {
-        String accessToken = getAccessToken(args);
+        // Does login.
+        tryLogin(args);
+
+        // Validates account information.
+        validate(args);
+
+        // Gets a token to access.
+        String accessToken = getAccessToken();
 
         System.out.printf("\n    Success to login. -> %s\n", URIs.LOGIN.get(args.getLanguage()));
         return accessToken;
     }
 
     /**
-     * Finds an access token after login.
+     * Tries to login.
      *
      * <p> This is the first place to run a chrome driver.
      * First, {@link ChromeDriver} finds the root element that is
@@ -56,6 +63,64 @@ public final class LoginHelper {
      * and does password to the second element.
      * When input tags are filled by username and password,
      * it clicks the third element so that login.
+     *
+     * @param args arguments required to login
+     */
+    private static void tryLogin(Arguments args) {
+        ChromeDriver driver = ChromeBrowser.getDriver();
+
+        // Requests login page.
+        String loginUrl = URIs.LOGIN.get(args.getLanguage());
+        driver.get(loginUrl);
+
+        // Waits for DOM to complete the rendering.
+        WebDriverWait waitLogin = new WebDriverWait(driver, 15);
+        WebElement loginForm = driver.findElementByXPath(
+                "//form[@id='email' and contains(@action, '/login') and @method='post']");
+        waitLogin.until(ExpectedConditions.visibilityOfAllElements(loginForm));
+
+        // Inputs account information into the element.
+        WebElement usernameInput = loginForm.findElement(By.xpath(".//input[@id='login-email']"));
+        usernameInput.clear();
+        usernameInput.sendKeys(args.getUsername());
+        WebElement passwordInput = loginForm.findElement(By.xpath(".//input[@id='login-password']"));
+        passwordInput.clear();
+        passwordInput.sendKeys(args.getPassword());
+
+        // Does login.
+        WebElement submitButton = loginForm.findElement(By.xpath(".//button[@type='submit']"));
+        submitButton.click();
+    }
+
+    /**
+     * Validates that login is successfully done.
+     *
+     * @param args arguments required to login
+     * @throws LoginFailureException if failed to login because of invalid account info
+     * @throws TimeoutException      if failed to login because of the other
+     *                               or to move to main page
+     */
+    private static void validate(Arguments args) {
+        ChromeDriver driver = ChromeBrowser.getDriver();
+
+        try {
+            // Waits for DOM to complete the rendering.
+            WebDriverWait wait = new WebDriverWait(driver, 10);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(
+                    By.xpath("//main[@id='main' and @class='lzCntnr lzCntnr--home']")));
+        } catch (TimeoutException e) {
+            // When failed to login because of other problems.
+            if (!driver.getCurrentUrl().startsWith(URIs.LOGIN.get(args.getLanguage()))) throw e;
+
+            // When failed to login because of invalid account information.
+            driver.executeScript("localStorage.setItem('errorCode', window.__LZ_ERROR_CODE__);");
+            String errorCode = driver.getLocalStorage().getItem("errorCode");
+            throw new LoginFailureException(errorCode);
+        }
+    }
+
+    /**
+     * Finds an access token after login.
      *
      * <p> If {@link LoginHelper} successes to login,
      * lezhin generates user's configurations that has an access token into script tag.
@@ -97,7 +162,6 @@ public final class LoginHelper {
      *     </script>
      * }</pre>
      *
-     * @param args arguments required to login
      * @return access token
      * (e.g. 5be30a25-a044-410c-88b0-19a1da968a64) ... {@link UUID#randomUUID()}
      * @see ChromeBrowser
@@ -105,33 +169,8 @@ public final class LoginHelper {
      * @see WebElement#getAttribute(String)
      * @see java.util.regex.Matcher#group(int)
      */
-    private static String getAccessToken(Arguments args) {
+    private static String getAccessToken() {
         ChromeDriver driver = ChromeBrowser.getDriver();
-
-        // Requests login page.
-        String loginUrl = URIs.LOGIN.get(args.getLanguage());
-        driver.get(loginUrl);
-
-        // Waits for DOM to complete the rendering.
-        WebDriverWait waitLogin = new WebDriverWait(driver, 15);
-        WebElement loginForm = driver.findElementByXPath(
-                "//form[@id='email' and contains(@action, '/login') and @method='post']");
-        waitLogin.until(ExpectedConditions.visibilityOfAllElements(loginForm));
-
-        // Inputs account information into the element.
-        WebElement usernameInput = loginForm.findElement(By.xpath(".//input[@id='login-email']"));
-        usernameInput.clear();
-        usernameInput.sendKeys(args.getUsername());
-        WebElement passwordInput = loginForm.findElement(By.xpath(".//input[@id='login-password']"));
-        passwordInput.clear();
-        passwordInput.sendKeys(args.getPassword());
-
-        // Does login.
-        WebElement submitButton = loginForm.findElement(By.xpath(".//button[@type='submit']"));
-        submitButton.click();
-
-        // Validates account information.
-        validate(args);
 
         // Finds the script tag that has access token.
         WebElement script;
@@ -142,24 +181,6 @@ public final class LoginHelper {
         }
 
         return StringUtils.find(script.getAttribute("innerText"), "token: '([\\w-]+)'", 1);
-    }
-
-    private static void validate(Arguments args) {
-        ChromeDriver driver = ChromeBrowser.getDriver();
-
-        try {
-            // Waits for DOM to complete the rendering.
-            WebDriverWait wait = new WebDriverWait(driver, 10);
-            wait.until(ExpectedConditions.visibilityOfElementLocated(
-                    By.xpath("//main[@id='main' and @class='lzCntnr lzCntnr--home']")));
-        } catch (TimeoutException e) {
-            if (!driver.getCurrentUrl().startsWith(URIs.LOGIN.get(args.getLanguage()))) throw e;
-
-            // When failed to login because of invalid account information.
-            driver.executeScript("localStorage.setItem('errorCode', window.__LZ_ERROR_CODE__);");
-            String errorCode = driver.getLocalStorage().getItem("errorCode");
-            throw new LoginFailureException(errorCode);
-        }
     }
 
 }
