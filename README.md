@@ -35,7 +35,7 @@ This is downloader that helps you to login and downloads the specified comic for
 
 1. Check if chrome browser was installed in your device or download it [here](https://www.google.com/chrome).
 
-2. Check your <ins>chrome browser version</ins> with this URI [chrome://version](chrome://version).
+2. Check your <ins>chrome browser version</ins> with this URI `chrome://version`.
 
    (The first line is the version. e.g. 83.0.4103.116)
 
