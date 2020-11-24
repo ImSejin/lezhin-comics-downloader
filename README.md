@@ -39,13 +39,13 @@ This is downloader that helps you to login and downloads the specified comic for
 
    (The first line is the version. e.g. 83.0.4103.116)
 
-3. Download the chrome driver that matches <ins>its version</ins> and your device OS [here](https://chromedriver.chromium.org/downloads) and decompress it.
+3. Download the `chrome driver` that matches <ins>its version</ins> and your device OS [here](https://chromedriver.chromium.org/downloads) and decompress it.
 
 4. Check if JRE(or JDK) version is greater than or equal to 8 or install it.
 
-5. Download the latest released lezhin-comics-downloader [here](https://github.com/ImSejin/lezhin-comics-downloader/releases).
+5. Download the latest released `lezhin-comics-downloader.jar` [here](https://github.com/ImSejin/lezhin-comics-downloader/releases).
 
-6. Download config.ini [here](https://raw.githubusercontent.com/ImSejin/lezhin-comics-downloader/master/config.ini) and write your account in the file.
+6. Download `config.ini` [here](https://raw.githubusercontent.com/ImSejin/lezhin-comics-downloader/master/config.ini) and write your account in the file.
 
 7. Place three files in the same path.
 
