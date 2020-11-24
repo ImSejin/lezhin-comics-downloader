@@ -125,24 +125,24 @@ public final class Application {
         String regex;
         if (StringUtils.isNullOrEmpty(episodeRange)) {
             // 모든 에피소드를 다운로드한다.
-            Downloader.downloadAll(args);
+            Downloader.all(args);
 
         } else if (episodeRange.matches(regex = "([0-9]+)" + separator)) {
             // 지정한 에피소드부터 끝까지 다운로드한다.
             int from = Integer.parseInt(StringUtils.find(episodeRange, regex, 1));
-            Downloader.downloadFrom(args, from);
+            Downloader.startTo(args, from);
 
         } else if (episodeRange.matches(regex = separator + "([0-9]+)")) {
             // 처음부터 지정한 에피소드까지 다운로드한다.
             int to = Integer.parseInt(StringUtils.find(episodeRange, regex, 1));
-            Downloader.downloadTo(args, to);
+            Downloader.endTo(args, to);
 
         } else if (episodeRange.matches(regex = "([0-9]+)" + separator + "([0-9]+)")) {
             // 지정한 에피소드들만 다운로드한다.
             Map<Integer, String> map = StringUtils.find(episodeRange, regex, Pattern.MULTILINE, 1, 2);
             int from = Integer.parseInt(map.get(1));
             int to = Integer.parseInt(map.get(2));
-            Downloader.downloadSome(args, from, to);
+            Downloader.some(args, from, to);
         }
     }
 

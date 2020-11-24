@@ -32,21 +32,21 @@ public final class Downloader {
     private Downloader() {
     }
 
-    public static void downloadAll(Arguments arguments) {
+    public static void all(Arguments arguments) {
         int to = arguments.getProduct().getEpisodes().size();
-        downloadSome(arguments, 1, to);
+        some(arguments, 1, to);
     }
 
-    public static void downloadFrom(Arguments arguments, int from) {
+    public static void startTo(Arguments arguments, int from) {
         int to = arguments.getProduct().getEpisodes().size();
-        downloadSome(arguments, from, to);
+        some(arguments, from, to);
     }
 
-    public static void downloadTo(Arguments arguments, int to) {
-        downloadSome(arguments, 1, to);
+    public static void endTo(Arguments arguments, int to) {
+        some(arguments, 1, to);
     }
 
-    public static void downloadSome(Arguments arguments, int from, int to) {
+    public static void some(Arguments arguments, int from, int to) {
         List<Episode> episodes = arguments.getProduct().getEpisodes();
 
         // 에피소드 번호를 인덱스에 맞게 변경한다.
@@ -57,12 +57,12 @@ public final class Downloader {
 
         for (int i = from; i < to; i++) {
             Episode episode = episodes.get(i);
-            downloadOne(arguments, episode, i + 1);
+            one(arguments, episode, i + 1);
         }
     }
 
     @SneakyThrows
-    public static void downloadOne(Arguments arguments, Episode episode, int num) {
+    public static void one(Arguments arguments, Episode episode, int num) {
         // Cannot download paid episode.
         if (!episode.isFree()) return;
 
