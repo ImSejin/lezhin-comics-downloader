@@ -110,9 +110,9 @@ public final class Downloader {
      * 이미지 URL로 이미지 파일을 생성한다. 성공하면 1을, 실패하면 0을 반환한다.<br>
      * Creates a image file with the image URL. Returns 1 if success, 0 else.
      */
-    private static int createImage(URL url, File file) {
+    private static int createImage(URL url, File dest) {
         try (InputStream in = url.openStream();
-             FileOutputStream out = new FileOutputStream(file)) {
+             FileOutputStream out = new FileOutputStream(dest)) {
             // Creates a image file.
             ReadableByteChannel readChannel = Channels.newChannel(in);
             out.getChannel().transferFrom(readChannel, 0, Long.MAX_VALUE);
