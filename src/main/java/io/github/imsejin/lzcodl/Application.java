@@ -111,7 +111,7 @@ public final class Application {
         try {
             Files.createDirectories(path);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to create directory", e);
+            throw new RuntimeException("Failed to create directory: " + path, e);
         }
 
         return path;

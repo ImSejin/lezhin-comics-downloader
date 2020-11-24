@@ -64,7 +64,7 @@ public final class Crawler {
 
         // 서비스 종료된 웹툰인지 확인한다.
         if (driver.getCurrentUrl().equals(URIs.EXPIRED.get(args.getLanguage()))) {
-            System.err.println("\n    This comic is expired. -> Try to find it in 'My Library'\n");
+            System.err.println("    This comic is expired. -> Try to find it in 'My Library'");
             args.setExpiredComic(true);
             return getJsonInMyLibrary(args);
         }
