@@ -59,13 +59,17 @@ This is downloader that helps you to login and downloads the specified comic for
 java -jar {JAR filename} -l=<language> -n=<comic name> [-r=<episode range>]
 ```
 
-- *<ins>language (required)</ins>*: language of lezhin platform you want to see.
+- *<ins>language</ins> (required)*: language of lezhin platform you want to see.
+  
   - **ko** : korean
   - **en** : english
   - **ja** : japanese
+  
 - *<ins>comic name</ins> (required)*: webtoon name you want to download.
 
-<img alt="comic name" src="./src/main/resources/comic-name.png" width="350">
+<p>
+    <img alt="comic name" src="./src/main/resources/comic-name.png">
+</p>
 
 - *<ins>episode range</ins> (optional)*: range of episodes you want to download.
   - __skipped__ : all episodes
