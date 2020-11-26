@@ -9,8 +9,19 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public enum Languages implements KeyValue {
 
+    /**
+     * Korean.
+     */
     KOREAN("ko", "ko-KR"),
+
+    /**
+     * English.
+     */
     ENGLISH("en", "en-US"),
+
+    /**
+     * Japanese.
+     */
     JAPANESE("ja", "ja-JP");
 
     private final String value;
@@ -18,11 +29,24 @@ public enum Languages implements KeyValue {
     @Getter
     private final String locale;
 
+    /**
+     * Checks if {@link Languages} that has the value exists.
+     *
+     * @param value {@link #value()}
+     * @return {@link Languages}
+     */
     public static boolean contains(String value) {
         return Arrays.stream(values())
                 .anyMatch(lang -> lang.value.equals(value));
     }
 
+    /**
+     * Returns constant of {@link Languages} whose value is equal to the parameter.
+     *
+     * @param value {@link #value()}
+     * @return constant of {@link Languages}
+     * @throws IllegalArgumentException if {@link Languages} that has the parameter doesn't exist
+     */
     public static Languages from(String value) {
         Languages languages = Arrays.stream(values())
                 .filter(lang -> lang.value.equals(value))

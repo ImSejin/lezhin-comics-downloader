@@ -16,6 +16,12 @@ public enum EpisodeRange implements KeyValue {
 
     private final String value;
 
+    /**
+     * Checks if {@link EpisodeRange} that has the value exists.
+     *
+     * @param value {@link #value()}
+     * @return {@link EpisodeRange}
+     */
     public static boolean contains(String value) {
         return Arrays.stream(EpisodeRange.values())
                 .anyMatch(range -> range.value.equals(value));

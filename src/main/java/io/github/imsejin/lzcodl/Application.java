@@ -100,6 +100,14 @@ public final class Application {
                 .forEach(it -> it.setTitle(FilenameUtils.replaceUnallowables(it.getTitle())));
     }
 
+    /**
+     * Creates a directory and returns its path.
+     *
+     * <p> Make a directory named after the comic title.
+     *
+     * @param product product
+     * @return path of comic directory
+     */
     private static Path createDirectory(Product product) {
         // 웹툰 이름으로 디렉터리를 생성한다.
         String comicTitle = FilenameUtils.replaceUnallowables(product.getDisplay().getTitle());
