@@ -109,18 +109,17 @@ public final class Application {
      * @return path of comic directory
      */
     private static Path createDirectory(Product product) {
-        // 웹툰 이름으로 디렉터리를 생성한다.
         String comicTitle = FilenameUtils.replaceUnallowables(product.getDisplay().getTitle());
         String artists = product.getArtists().stream()
                 .map(it -> FilenameUtils.replaceUnallowables(it.getName()))
                 .collect(Collectors.joining(", "));
-        String dirName = "L_" + comicTitle + " - " + artists;
+        String dirName = String.format("L_%s - %s", comicTitle, artists);
 
         Path path = Paths.get(PathnameUtils.getCurrentPathname(), dirName);
         try {
             Files.createDirectories(path);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to create directory: " + path, e);
+            throw new RuntimeException("Failed to create a directory: " + path, e);
         }
 
         return path;
