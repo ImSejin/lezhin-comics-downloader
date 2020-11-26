@@ -1,4 +1,4 @@
-package io.github.imsejin.lzcodl.core;
+package io.github.imsejin.lzcodl.common;
 
 import org.apache.commons.cli.*;
 

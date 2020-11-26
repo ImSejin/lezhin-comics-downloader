@@ -1,10 +1,11 @@
-package io.github.imsejin.lzcodl.core;
+package io.github.imsejin.lzcodl.common;
 
 import lombok.SneakyThrows;
 import org.apache.commons.cli.CommandLine;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class CommandParserTest {
 

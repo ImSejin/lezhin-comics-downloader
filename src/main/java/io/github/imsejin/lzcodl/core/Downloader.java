@@ -2,6 +2,7 @@ package io.github.imsejin.lzcodl.core;
 
 import com.google.gson.JsonObject;
 import io.github.imsejin.common.util.JsonUtils;
+import io.github.imsejin.lzcodl.common.URLFactory;
 import io.github.imsejin.lzcodl.common.constant.Languages;
 import io.github.imsejin.lzcodl.model.Arguments;
 import io.github.imsejin.lzcodl.model.Episode;

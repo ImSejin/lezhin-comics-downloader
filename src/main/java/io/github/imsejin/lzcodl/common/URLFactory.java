@@ -1,4 +1,4 @@
-package io.github.imsejin.lzcodl.core;
+package io.github.imsejin.lzcodl.common;
 
 import io.github.imsejin.lzcodl.model.Arguments;
 import io.github.imsejin.lzcodl.model.Episode;
@@ -13,7 +13,7 @@ public final class URLFactory {
      * CDN 서버의 origin URL
      *
      * <pre>{@code
-     *     http://cdn.lezhin.com/
+     *     http://cdn.lezhin.com
      * }</pre>
      */
     private static final String cdnUrl = "http://cdn.lezhin.com";
