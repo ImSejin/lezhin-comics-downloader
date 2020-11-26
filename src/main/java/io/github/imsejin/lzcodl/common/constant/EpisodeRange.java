@@ -23,8 +23,8 @@ public enum EpisodeRange implements KeyValue {
      * @return {@link EpisodeRange}
      */
     public static boolean contains(String value) {
-        return Arrays.stream(EpisodeRange.values())
-                .anyMatch(range -> range.value.equals(value));
+        if (value == null) return false;
+        return Arrays.stream(values()).map(range -> range.value).anyMatch(value::equals);
     }
 
     @Override

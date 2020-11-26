@@ -36,8 +36,8 @@ public enum Languages implements KeyValue {
      * @return {@link Languages}
      */
     public static boolean contains(String value) {
-        return Arrays.stream(values())
-                .anyMatch(lang -> lang.value.equals(value));
+        if (value == null) return false;
+        return Arrays.stream(values()).map(lang -> lang.value).anyMatch(value::equals);
     }
 
     /**
@@ -48,10 +48,8 @@ public enum Languages implements KeyValue {
      * @throws IllegalArgumentException if {@link Languages} that has the parameter doesn't exist
      */
     public static Languages from(String value) {
-        Languages languages = Arrays.stream(values())
-                .filter(lang -> lang.value.equals(value))
-                .findAny()
-                .orElse(null);
+        Languages languages = Arrays.stream(values()).filter(lang -> lang.value.equals(value))
+                .findAny().orElse(null);
 
         if (languages == null) throw new IllegalArgumentException("Invalid value for languages: " + value);
         return languages;

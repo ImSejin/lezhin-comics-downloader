@@ -64,8 +64,8 @@ public enum URIs implements KeyValue {
      * @return {@link URIs}
      */
     public static boolean contains(String value) {
-        return Arrays.stream(URIs.values())
-                .anyMatch(uri -> uri.value.equals(value));
+        if (value == null) return false;
+        return Arrays.stream(values()).map(uri -> uri.value).anyMatch(value::equals);
     }
 
     @Override
