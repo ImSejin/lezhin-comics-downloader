@@ -29,13 +29,18 @@ import io.github.imsejin.common.util.JsonUtils;
 import io.github.imsejin.common.util.PathnameUtils;
 import io.github.imsejin.common.util.StringUtils;
 import io.github.imsejin.lzcodl.common.CommandParser;
+import io.github.imsejin.lzcodl.common.Loggers;
 import io.github.imsejin.lzcodl.common.constant.EpisodeRange;
-import io.github.imsejin.lzcodl.core.*;
+import io.github.imsejin.lzcodl.core.ChromeBrowser;
+import io.github.imsejin.lzcodl.core.Crawler;
+import io.github.imsejin.lzcodl.core.Downloader;
+import io.github.imsejin.lzcodl.core.LoginHelper;
 import io.github.imsejin.lzcodl.model.Arguments;
 import io.github.imsejin.lzcodl.model.Episode;
 import io.github.imsejin.lzcodl.model.Product;
 import org.apache.commons.cli.CommandLine;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -64,7 +69,10 @@ public final class Application {
                 .build();
 
         // Activates debug mode.
-        if (args.isDebugging()) ChromeBrowser.debugging();
+        if (args.isDebugging()) {
+            Loggers.debugging();
+            ChromeBrowser.debugging();
+        }
 
         // Login with username and password and gets a token.
         args.setAccessToken(LoginHelper.login(args));
@@ -116,10 +124,15 @@ public final class Application {
         String dirName = String.format("L_%s - %s", comicTitle, artists);
 
         Path path = Paths.get(PathnameUtils.getCurrentPathname(), dirName);
+        File dir = path.toFile();
+        if (dir.exists() && dir.isDirectory()) return path;
+
         try {
+            Loggers.getLogger().debug("Create directory: {}", path);
             Files.createDirectories(path);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to create a directory: " + path, e);
+            Loggers.getLogger().error("Failed to create directory: " + path, e);
+            throw new RuntimeException("Failed to create directory: " + path, e);
         }
 
         return path;
@@ -129,7 +142,6 @@ public final class Application {
         final String episodeRange = args.getEpisodeRange();
         final String separator = EpisodeRange.SEPARATOR.value();
 
-        System.out.println();
         String regex;
         if (StringUtils.isNullOrEmpty(episodeRange)) {
             // 모든 에피소드를 다운로드한다.

@@ -1,6 +1,7 @@
 package io.github.imsejin.lzcodl.core;
 
 import io.github.imsejin.common.util.StringUtils;
+import io.github.imsejin.lzcodl.common.Loggers;
 import io.github.imsejin.lzcodl.common.constant.URIs;
 import io.github.imsejin.lzcodl.common.exception.LoginFailureException;
 import io.github.imsejin.lzcodl.model.Arguments;
@@ -40,10 +41,7 @@ public final class LoginHelper {
         validate(args);
 
         // Gets a token to access.
-        String accessToken = getAccessToken();
-
-        System.out.printf("\n    Success to login. -> %s\n", URIs.LOGIN.get(args.getLanguage()));
-        return accessToken;
+        return getAccessToken();
     }
 
     /**
@@ -71,23 +69,32 @@ public final class LoginHelper {
 
         // Requests login page.
         String loginUrl = URIs.LOGIN.get(args.getLanguage());
+        Loggers.getLogger().info("Request login page: {}", loginUrl);
         driver.get(loginUrl);
 
         // Waits for DOM to complete the rendering.
-        WebDriverWait waitLogin = new WebDriverWait(driver, 15);
+        final int timeout = 15;
+        Loggers.getLogger().debug("Wait up to {} sec for login element to be rendered", timeout);
+        WebDriverWait waitLogin = new WebDriverWait(driver, timeout);
         WebElement loginForm = driver.findElementByXPath(
                 "//form[@id='email' and contains(@action, '/login') and @method='post']");
         waitLogin.until(ExpectedConditions.visibilityOfAllElements(loginForm));
 
-        // Inputs account information into the element.
+        // Inputs username into the element.
+        Loggers.getLogger().debug("Send username: {}", args.getUsername());
         WebElement usernameInput = loginForm.findElement(By.xpath(".//input[@id='login-email']"));
         usernameInput.clear();
         usernameInput.sendKeys(args.getUsername());
+
+        // Inputs password into the element.
+        String maskedPassword = args.getPassword().charAt(0) + StringUtils.repeat('*', args.getPassword().length() - 1);
+        Loggers.getLogger().debug("Send password: {}", maskedPassword);
         WebElement passwordInput = loginForm.findElement(By.xpath(".//input[@id='login-password']"));
         passwordInput.clear();
         passwordInput.sendKeys(args.getPassword());
 
         // Does login.
+        Loggers.getLogger().debug("Try to login");
         WebElement submitButton = loginForm.findElement(By.xpath(".//button[@type='submit']"));
         submitButton.click();
     }
@@ -102,19 +109,24 @@ public final class LoginHelper {
      */
     private static void validate(Arguments args) {
         ChromeDriver driver = ChromeBrowser.getDriver();
+        final int timeout = 10;
 
         try {
             // Waits for DOM to complete the rendering.
-            WebDriverWait wait = new WebDriverWait(driver, 10);
+            Loggers.getLogger().debug("Wait up to {} sec for main page to be rendered", timeout);
+            WebDriverWait wait = new WebDriverWait(driver, timeout);
             wait.until(ExpectedConditions.visibilityOfElementLocated(
                     By.xpath("//main[@id='main' and @class='lzCntnr lzCntnr--home']")));
         } catch (TimeoutException e) {
+            Loggers.getLogger().error("Failed to login", e);
+
             // When failed to login because of other problems.
             if (!driver.getCurrentUrl().startsWith(URIs.LOGIN.get(args.getLanguage()))) throw e;
 
             // When failed to login because of invalid account information.
             driver.executeScript("localStorage.setItem('errorCode', window.__LZ_ERROR_CODE__);");
             String errorCode = driver.getLocalStorage().getItem("errorCode");
+
             throw new LoginFailureException(errorCode);
         }
     }
@@ -177,10 +189,13 @@ public final class LoginHelper {
         try {
             script = driver.findElementByXPath("//script[not(@src) and contains(text(), '__LZ_ME__')]");
         } catch (NoSuchElementException ex) {
+            Loggers.getLogger().error("Cannot find access token", ex);
             throw new LoginFailureException();
         }
 
-        return StringUtils.find(script.getAttribute("innerText"), "token: '([\\w-]+)'", 1);
+        String accessToken = StringUtils.find(script.getAttribute("innerText"), "token: '([\\w-]+)'", 1);
+        Loggers.getLogger().info("Successfully logged in: access token({})", accessToken);
+        return accessToken;
     }
 
 }
