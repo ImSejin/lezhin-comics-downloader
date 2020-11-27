@@ -5,18 +5,22 @@ import org.slf4j.LoggerFactory;
 
 public final class Loggers {
 
-    private static final Logger logger = LoggerFactory.getLogger("NormalLogger");
-
-    private static final Logger debugger = LoggerFactory.getLogger("DebugLogger");
-
-    private static boolean debugging;
+    private static String loggerName = "NormalLogger";
 
     public static void debugging() {
-        debugging = true;
+        loggerName = "DebugLogger";
     }
 
     public static Logger getLogger() {
-        return debugging ? debugger : logger;
+        return SingletonLazyHolder.LOGGER;
+    }
+
+    private static class SingletonLazyHolder {
+        private static final Logger LOGGER;
+
+        static {
+            LOGGER = LoggerFactory.getLogger(loggerName);
+        }
     }
 
 }
