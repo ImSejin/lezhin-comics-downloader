@@ -1,4 +1,4 @@
-package io.github.imsejin.lzcodl.common.constants;
+package io.github.imsejin.lzcodl.common.constant;
 
 import io.github.imsejin.common.constant.interfaces.KeyValue;
 import lombok.RequiredArgsConstructor;
@@ -11,8 +11,7 @@ import java.util.regex.Pattern;
 public enum URIs implements KeyValue {
 
     /**
-     * 로그인 URI<br>
-     * the URI for login
+     * Login page.
      *
      * <pre>{@code
      *     https://www.lezhin.com/ko/login
@@ -21,6 +20,8 @@ public enum URIs implements KeyValue {
     LOGIN("https://www.lezhin.com/{language}/login"),
 
     /**
+     * Page to choose your locale.
+     *
      * <pre>{@code
      *     https://www.lezhin.com/ko/locale/ko-KR?locale=ko-KR
      * }</pre>
@@ -28,8 +29,7 @@ public enum URIs implements KeyValue {
     LOCALE("https://www.lezhin.com/{language}/locale/{locale}?locale={locale}"),
 
     /**
-     * 각 회차의 아이디를 얻을 수 있는 URI의 접두사<br>
-     * The prefix of URI obtain ID for each episode
+     * Comic page that shows its episodes.
      *
      * <pre>{@code
      *     https://www.lezhin.com/ko/comic/redhood
@@ -38,6 +38,8 @@ public enum URIs implements KeyValue {
     COMIC("https://www.lezhin.com/{language}/comic/{comicName}"),
 
     /**
+     * Episode page that shows its cuts(images).
+     *
      * <pre>{@code
      *     https://www.lezhin.com/ko/comic/redhood/9
      *     https://www.lezhin.com/ko/comic/redhood/e1
@@ -55,9 +57,15 @@ public enum URIs implements KeyValue {
 
     private final String value;
 
+    /**
+     * Checks if {@link URIs} that has the value exists.
+     *
+     * @param value {@link #value()}
+     * @return {@link URIs}
+     */
     public static boolean contains(String value) {
-        return Arrays.stream(URIs.values())
-                .anyMatch(uri -> uri.value.equals(value));
+        if (value == null) return false;
+        return Arrays.stream(values()).map(uri -> uri.value).anyMatch(value::equals);
     }
 
     @Override
@@ -70,6 +78,12 @@ public enum URIs implements KeyValue {
         return this.value;
     }
 
+    /**
+     * Returns URI.
+     *
+     * @param params parameters
+     * @return URI string
+     */
     public String get(String... params) {
         if (params == null || params.length == 0) return this.value;
 

@@ -1,4 +1,4 @@
-package io.github.imsejin.lzcodl.common.constants;
+package io.github.imsejin.lzcodl.common.constant;
 
 import io.github.imsejin.common.constant.interfaces.KeyValue;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +16,15 @@ public enum EpisodeRange implements KeyValue {
 
     private final String value;
 
+    /**
+     * Checks if {@link EpisodeRange} that has the value exists.
+     *
+     * @param value {@link #value()}
+     * @return {@link EpisodeRange}
+     */
     public static boolean contains(String value) {
-        return Arrays.stream(EpisodeRange.values())
-                .anyMatch(range -> range.value.equals(value));
+        if (value == null) return false;
+        return Arrays.stream(values()).map(range -> range.value).anyMatch(value::equals);
     }
 
     @Override

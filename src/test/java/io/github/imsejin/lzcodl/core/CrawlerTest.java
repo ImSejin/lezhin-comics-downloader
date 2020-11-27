@@ -1,6 +1,6 @@
 package io.github.imsejin.lzcodl.core;
 
-import io.github.imsejin.lzcodl.common.constants.URIs;
+import io.github.imsejin.lzcodl.common.constant.URIs;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;

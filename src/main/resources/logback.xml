@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="false" scanPeriod="30 seconds">
+    <appender name="NormalAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>\t%msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="DebugAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight([%-5level]) %magenta(%-3line) --- [%thread{10}] %cyan(%class{20}#%method) : %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="NormalLogger" level="info" additivity="false">
+        <appender-ref ref="NormalAppender"/>
+    </logger>
+    <logger name="DebugLogger" level="debug" additivity="false">
+        <appender-ref ref="DebugAppender"/>
+    </logger>
+</configuration>

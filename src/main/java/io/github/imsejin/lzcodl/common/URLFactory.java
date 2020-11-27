@@ -1,4 +1,4 @@
-package io.github.imsejin.lzcodl.core;
+package io.github.imsejin.lzcodl.common;
 
 import io.github.imsejin.lzcodl.model.Arguments;
 import io.github.imsejin.lzcodl.model.Episode;
@@ -9,13 +9,11 @@ import java.net.URL;
 
 public final class URLFactory {
 
-    private static final StringBuilder sb = new StringBuilder();
-
     /**
      * CDN 서버의 origin URL
      *
      * <pre>{@code
-     *     http://cdn.lezhin.com/
+     *     http://cdn.lezhin.com
      * }</pre>
      */
     private static final String cdnUrl = "http://cdn.lezhin.com";
@@ -38,17 +36,9 @@ public final class URLFactory {
      *     http://cdn.lezhin.com/v2/comics/
      * }</pre>
      */
-    private static final String ImgUrl = cdnUrl + "/v2/comics/";
+    private static final String imgUrl = cdnUrl + "/v2/comics/";
 
     private URLFactory() {
-    }
-
-    /**
-     * StringBuilder의 버퍼를 지운다.<br>
-     * Clears the buffer of StringBuilder.
-     */
-    private static void init() {
-        sb.setLength(0);
     }
 
     /**
@@ -58,9 +48,9 @@ public final class URLFactory {
      */
     @SneakyThrows(MalformedURLException.class)
     public static synchronized URL image(long comicId, long episodeId, int filename, String accessToken, boolean purchased) {
-        init();
+        StringBuilder sb = new StringBuilder();
 
-        sb.append(ImgUrl);
+        sb.append(imgUrl);
         sb.append(comicId);
         sb.append("/episodes/");
         sb.append(episodeId);
@@ -74,8 +64,8 @@ public final class URLFactory {
         return new URL(sb.toString());
     }
 
-    public static synchronized URL image(Arguments arguments, Episode episode, int filename, boolean purchased) {
-        return image(arguments.getProduct().getId(), episode.getId(), filename, arguments.getAccessToken(), purchased);
+    public static URL image(Arguments args, Episode episode, int filename, boolean purchased) {
+        return image(args.getProduct().getId(), episode.getId(), filename, args.getAccessToken(), purchased);
     }
 
     /**
@@ -84,8 +74,8 @@ public final class URLFactory {
      * }</pre>
      */
     @SneakyThrows(MalformedURLException.class)
-    public static synchronized URL oneEpisodeAPI(String comicName, String episodeName, String accessToken) {
-        init();
+    public static URL oneEpisodeAPI(String comicName, String episodeName, String accessToken) {
+        StringBuilder sb = new StringBuilder();
 
         sb.append(episodeInfoUrl);
         sb.append(comicName);
@@ -97,8 +87,8 @@ public final class URLFactory {
         return new URL(sb.toString());
     }
 
-    public static synchronized URL oneEpisodeAPI(Arguments arguments, Episode episode) {
-        return oneEpisodeAPI(arguments.getProduct().getAlias(), episode.getName(), arguments.getAccessToken());
+    public static URL oneEpisodeAPI(Arguments args, Episode episode) {
+        return oneEpisodeAPI(args.getProduct().getAlias(), episode.getName(), args.getAccessToken());
     }
 
     /**
@@ -107,8 +97,8 @@ public final class URLFactory {
      * }</pre>
      */
     @SneakyThrows(MalformedURLException.class)
-    public static synchronized URL allEpisodeAPI(String comicName, String accessToken) {
-        init();
+    public static URL allEpisodeAPI(String comicName, String accessToken) {
+        StringBuilder sb = new StringBuilder();
 
         sb.append(episodeInfoUrl);
         sb.append(comicName);

@@ -28,17 +28,19 @@ import io.github.imsejin.common.util.FilenameUtils;
 import io.github.imsejin.common.util.JsonUtils;
 import io.github.imsejin.common.util.PathnameUtils;
 import io.github.imsejin.common.util.StringUtils;
-import io.github.imsejin.lzcodl.common.constants.EpisodeRange;
+import io.github.imsejin.lzcodl.common.CommandParser;
+import io.github.imsejin.lzcodl.common.Loggers;
+import io.github.imsejin.lzcodl.common.constant.EpisodeRange;
 import io.github.imsejin.lzcodl.core.ChromeBrowser;
 import io.github.imsejin.lzcodl.core.Crawler;
 import io.github.imsejin.lzcodl.core.Downloader;
 import io.github.imsejin.lzcodl.core.LoginHelper;
 import io.github.imsejin.lzcodl.model.Arguments;
-import io.github.imsejin.lzcodl.model.Artist;
 import io.github.imsejin.lzcodl.model.Episode;
 import io.github.imsejin.lzcodl.model.Product;
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.CommandLine;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -56,17 +58,21 @@ public final class Application {
 
     public static void main(String[] arguments) {
         // Validates and parses options and arguments.
-        CommandLine cmd = validate(arguments);
+        CommandLine cmd = CommandParser.parse(arguments);
 
         // Sets up the arguments.
         final Arguments args = Arguments.builder()
                 .language(cmd.getOptionValue('l'))
                 .comicName(cmd.getOptionValue('n'))
                 .episodeRange(cmd.getOptionValue('r', null))
+                .debugging(cmd.hasOption('d'))
                 .build();
 
         // Activates debug mode.
-        if (cmd.hasOption('d')) ChromeBrowser.debugging();
+        if (args.isDebugging()) {
+            Loggers.debugging();
+            ChromeBrowser.debugging();
+        }
 
         // Login with username and password and gets a token.
         args.setAccessToken(LoginHelper.login(args));
@@ -74,7 +80,7 @@ public final class Application {
         // Crawls the webtoon page so that gets the information on the episode as JSON string.
         String jsonText = Crawler.getJson(args);
 
-        // Parses JSON string and converts it to object.
+        // Converts JSON string to java object.
         Product product = JsonUtils.toObject(jsonText, Product.class);
         args.setProduct(product);
 
@@ -91,49 +97,6 @@ public final class Application {
         System.exit(0);
     }
 
-    private static CommandLine validate(String[] arguments) {
-        // Option: language
-        Option lang = Option.builder("l")
-                .longOpt("lang")
-                .desc("language of lezhin platform you want to see")
-                .valueSeparator()
-                .hasArg()
-                .required()
-                .build();
-        // Option: comicName
-        Option name = Option.builder("n")
-                .longOpt("name")
-                .desc("webtoon name you want to download")
-                .valueSeparator()
-                .hasArg()
-                .required()
-                .build();
-        // Option: episodeRange
-        Option range = Option.builder("r")
-                .longOpt("range")
-                .desc("range of episodes you want to download")
-                .hasArg()
-                .valueSeparator()
-                .build();
-        // Option: debugging
-        Option debug = Option.builder("d")
-                .longOpt("debug")
-                .desc("debug mode")
-                .build();
-
-        Options options = new Options().addOption(lang).addOption(name).addOption(range).addOption(debug);
-
-        try {
-            // Parses options and arguments.
-            return new DefaultParser().parse(options, arguments);
-        } catch (ParseException e) {
-            // Without required options or arguments, the program will exit.
-            new HelpFormatter().printHelp(" ", null, options, "", true);
-            System.exit(1);
-            return null;
-        }
-    }
-
     private static void preprocess(Product product) {
         List<Episode> episodes = product.getEpisodes();
 
@@ -141,24 +104,35 @@ public final class Application {
         Collections.reverse(episodes);
 
         // 에피소드 이름 중 디렉터리명에 허용되지 않는 문자열을 치환한다.
-        episodes.forEach(episode -> episode.getDisplay().setTitle(
-                FilenameUtils.replaceUnallowables(episode.getDisplay().getTitle())));
+        episodes.stream().map(Episode::getDisplay)
+                .forEach(it -> it.setTitle(FilenameUtils.replaceUnallowables(it.getTitle())));
     }
 
+    /**
+     * Creates a directory and returns its path.
+     *
+     * <p> Make a directory named after the comic title.
+     *
+     * @param product product
+     * @return path of comic directory
+     */
     private static Path createDirectory(Product product) {
-        // 웹툰 이름으로 디렉터리를 생성한다.
         String comicTitle = FilenameUtils.replaceUnallowables(product.getDisplay().getTitle());
         String artists = product.getArtists().stream()
-                .map(Artist::getName)
-                .map(FilenameUtils::replaceUnallowables)
+                .map(it -> FilenameUtils.replaceUnallowables(it.getName()))
                 .collect(Collectors.joining(", "));
-        String dirName = "L_" + comicTitle + " - " + artists;
+        String dirName = String.format("L_%s - %s", comicTitle, artists);
 
         Path path = Paths.get(PathnameUtils.getCurrentPathname(), dirName);
+        File dir = path.toFile();
+        if (dir.exists() && dir.isDirectory()) return path;
+
         try {
+            Loggers.getLogger().debug("Create directory: {}", path);
             Files.createDirectories(path);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to create directory", e);
+            Loggers.getLogger().error("Failed to create directory: " + path, e);
+            throw new RuntimeException("Failed to create directory: " + path, e);
         }
 
         return path;
@@ -171,24 +145,24 @@ public final class Application {
         String regex;
         if (StringUtils.isNullOrEmpty(episodeRange)) {
             // 모든 에피소드를 다운로드한다.
-            Downloader.downloadAll(args);
+            Downloader.all(args);
 
         } else if (episodeRange.matches(regex = "([0-9]+)" + separator)) {
             // 지정한 에피소드부터 끝까지 다운로드한다.
             int from = Integer.parseInt(StringUtils.find(episodeRange, regex, 1));
-            Downloader.downloadFrom(args, from);
+            Downloader.startTo(args, from);
 
         } else if (episodeRange.matches(regex = separator + "([0-9]+)")) {
             // 처음부터 지정한 에피소드까지 다운로드한다.
             int to = Integer.parseInt(StringUtils.find(episodeRange, regex, 1));
-            Downloader.downloadTo(args, to);
+            Downloader.endTo(args, to);
 
         } else if (episodeRange.matches(regex = "([0-9]+)" + separator + "([0-9]+)")) {
             // 지정한 에피소드들만 다운로드한다.
             Map<Integer, String> map = StringUtils.find(episodeRange, regex, Pattern.MULTILINE, 1, 2);
             int from = Integer.parseInt(map.get(1));
             int to = Integer.parseInt(map.get(2));
-            Downloader.downloadSome(args, from, to);
+            Downloader.some(args, from, to);
         }
     }
 
