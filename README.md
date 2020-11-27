@@ -56,7 +56,7 @@ This is downloader that helps you to login and downloads the specified comic for
 ## Usage
 
 ```cmd
-java -jar {JAR filename} -l=<language> -n=<comic name> [-r=<episode range>]
+java -jar {JAR filename} -l=<language> -n=<comic name> [-r=<episode range> -d]
 ```
 
 - *<ins>language</ins> (required)*: language of lezhin platform you want to see.
@@ -76,6 +76,7 @@ java -jar {JAR filename} -l=<language> -n=<comic name> [-r=<episode range>]
   - __n~__ : from ep.N to the last episode
   - __~n__ : from the first episode to ep.N
   - __m~n__ : from ep.M to ep.N
+- <ins>debug</ins> (optional): enables debugging mode.
 
 <br><br>
 
