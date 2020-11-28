@@ -34,8 +34,8 @@ public final class ChromeBrowser {
     }
 
     public static void debugging() {
-        List<String> arguments = ChromeOption.getArguments().stream()
-                .filter(it -> !it.equals(ChromeOption.HEADLESS.argument)).collect(toList());
+        List<String> arguments = ChromeOption.getArguments();
+        arguments.remove(ChromeOption.HEADLESS.argument);
         options = new ChromeOptions().addArguments(arguments);
     }
 

@@ -118,8 +118,6 @@ public final class LoginHelper {
             wait.until(ExpectedConditions.visibilityOfElementLocated(
                     By.xpath("//main[@id='main' and @class='lzCntnr lzCntnr--home']")));
         } catch (TimeoutException e) {
-            Loggers.getLogger().error("Failed to login", e);
-
             // When failed to login because of other problems.
             if (!driver.getCurrentUrl().startsWith(URIs.LOGIN.get(args.getLanguage()))) throw e;
 
@@ -188,9 +186,8 @@ public final class LoginHelper {
         WebElement script;
         try {
             script = driver.findElementByXPath("//script[not(@src) and contains(text(), '__LZ_ME__')]");
-        } catch (NoSuchElementException ex) {
-            Loggers.getLogger().error("Cannot find access token", ex);
-            throw new LoginFailureException();
+        } catch (NoSuchElementException e) {
+            throw new RuntimeException("Cannot find access token", e);
         }
 
         String accessToken = StringUtils.find(script.getAttribute("innerText"), "token: '([\\w-]+)'", 1);

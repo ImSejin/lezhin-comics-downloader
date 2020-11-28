@@ -74,27 +74,33 @@ public final class Application {
             ChromeBrowser.debugging();
         }
 
-        // Login with username and password and gets a token.
-        args.setAccessToken(LoginHelper.login(args));
+        try {
+            // Login with username and password and gets a token.
+            args.setAccessToken(LoginHelper.login(args));
 
-        // Crawls the webtoon page so that gets the information on the episode as JSON string.
-        String jsonText = Crawler.getJson(args);
+            // Crawls the webtoon page so that gets the information on the episode as JSON string.
+            String jsonText = Crawler.getJson(args);
 
-        // Converts JSON string to java object.
-        Product product = JsonUtils.toObject(jsonText, Product.class);
-        args.setProduct(product);
+            // Converts JSON string to java object.
+            Product product = JsonUtils.toObject(jsonText, Product.class);
+            args.setProduct(product);
 
-        // To download, pre-processes the data and creates a directory to save episodes.
-        preprocess(product);
-        Path comicDir = createDirectory(product);
-        args.setComicPath(comicDir);
+            // To download, pre-processes the data and creates a directory to save episodes.
+            preprocess(product);
+            Path comicDir = createDirectory(product);
+            args.setComicPath(comicDir);
 
-        // Downloads images.
-        download(args);
+            // Downloads images.
+            download(args);
 
-        // Quits the downloader.
-        ChromeBrowser.getDriver().quit();
-        System.exit(0);
+            // Terminates the application.
+            ChromeBrowser.getDriver().quit();
+            System.exit(0);
+        } catch (Exception e) {
+            ChromeBrowser.getDriver().quit();
+            Loggers.getLogger().error("Exception has occurred", e);
+            System.exit(1);
+        }
     }
 
     private static void preprocess(Product product) {
@@ -131,7 +137,6 @@ public final class Application {
             Loggers.getLogger().debug("Create directory: {}", path);
             Files.createDirectories(path);
         } catch (IOException e) {
-            Loggers.getLogger().error("Failed to create directory: " + path, e);
             throw new RuntimeException("Failed to create directory: " + path, e);
         }
 
