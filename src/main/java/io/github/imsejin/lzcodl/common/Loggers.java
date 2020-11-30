@@ -7,6 +7,9 @@ public final class Loggers {
 
     private static String loggerName = "NormalLogger";
 
+    private Loggers() {
+    }
+
     public static void debugging() {
         loggerName = "DebugLogger";
     }
