@@ -15,7 +15,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <build.sourceEncoding>UTF-8</build.sourceEncoding>
         <reporting.outputEncoding>UTF-8</reporting.outputEncoding>
-        <common.utils.version>0.3.2</common.utils.version>
+        <common.utils.version>0.3.3</common.utils.version>
         <lombok.version>1.18.14</lombok.version>
     </properties>
 
