@@ -36,6 +36,7 @@ import io.github.imsejin.lzcodl.core.Crawler;
 import io.github.imsejin.lzcodl.core.Downloader;
 import io.github.imsejin.lzcodl.core.LoginHelper;
 import io.github.imsejin.lzcodl.model.Arguments;
+import io.github.imsejin.lzcodl.model.Artist;
 import io.github.imsejin.lzcodl.model.Episode;
 import io.github.imsejin.lzcodl.model.Product;
 import org.apache.commons.cli.CommandLine;
@@ -46,10 +47,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.joining;
 
 public final class Application {
 
@@ -104,14 +105,18 @@ public final class Application {
     }
 
     private static void preprocess(Product product) {
-        List<Episode> episodes = product.getEpisodes();
+        // 웹툰 이름 중 디렉터리명에 허용되지 않는 문자열을 치환한다.
+        product.getDisplay().setTitle(FilenameUtils.replaceUnallowables(product.getDisplay().getTitle()));
 
-        // 해당 웹툰의 에피소드; 순서가 거꾸로 되어 있어 정렬한다.
-        Collections.reverse(episodes);
+        // 작가 이름 중 디렉터리명에 허용되지 않는 문자열을 치환한다.
+        product.getArtists().forEach(it -> it.setName(FilenameUtils.replaceUnallowables(it.getName())));
 
         // 에피소드 이름 중 디렉터리명에 허용되지 않는 문자열을 치환한다.
-        episodes.stream().map(Episode::getDisplay)
+        product.getEpisodes().stream().map(Episode::getDisplay)
                 .forEach(it -> it.setTitle(FilenameUtils.replaceUnallowables(it.getTitle())));
+
+        // 해당 웹툰의 에피소드; 순서가 거꾸로 되어 있어 정렬한다.
+        Collections.reverse(product.getEpisodes());
     }
 
     /**
@@ -123,10 +128,9 @@ public final class Application {
      * @return path of comic directory
      */
     private static Path createDirectory(Product product) {
-        String comicTitle = FilenameUtils.replaceUnallowables(product.getDisplay().getTitle());
-        String artists = product.getArtists().stream()
-                .map(it -> FilenameUtils.replaceUnallowables(it.getName()))
-                .collect(Collectors.joining(", "));
+        String comicTitle = product.getDisplay().getTitle();
+        String artists = product.getArtists().stream().map(Artist::getName)
+                .collect(joining(", "));
         String dirName = String.format("L_%s - %s", comicTitle, artists);
 
         Path path = Paths.get(PathnameUtils.getCurrentPathname(), dirName);
