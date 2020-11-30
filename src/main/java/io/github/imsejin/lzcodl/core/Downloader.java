@@ -1,6 +1,7 @@
 package io.github.imsejin.lzcodl.core;
 
 import com.google.gson.JsonObject;
+import io.github.imsejin.common.util.FileUtils;
 import io.github.imsejin.common.util.JsonUtils;
 import io.github.imsejin.lzcodl.common.URLFactory;
 import io.github.imsejin.lzcodl.common.constant.Languages;
@@ -11,15 +12,10 @@ import me.tongfei.progressbar.ProgressBar;
 import me.tongfei.progressbar.ProgressBarStyle;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
@@ -77,7 +73,7 @@ public final class Downloader {
 
         // Creates directory with the name of episode.
         String episodeDirName = String.format("%04d - %s", num, episode.getDisplay().getTitle());
-        Path episodeDir = Paths.get(arguments.getComicPath().toString(), episodeDirName);
+        Path episodeDir = arguments.getComicPath().resolve(episodeDirName);
         Files.createDirectories(episodeDir);
 
         try (ProgressBar progressBar = getDefaultProgressBar(arguments.getProduct().getAlias(), num, numOfImages)) {
@@ -91,15 +87,15 @@ public final class Downloader {
 
                 // Tries to download high-resolution image for only paid users.
                 URL url = URLFactory.image(arguments, episode, i, true);
-                int result = createImage(url, file);
+                boolean success = downloadImage(url, file);
 
                 // Try to download low-resolution image for all users.
-                if (result == 0) {
+                if (!success) {
                     url = URLFactory.image(arguments, episode, i, false);
-                    result = createImage(url, file);
+                    success = downloadImage(url, file);
 
                     // If failed to download, skips this image.
-                    if (result == 0) return;
+                    if (!success) return;
                 }
 
                 progressBar.stepBy(1);
@@ -108,21 +104,13 @@ public final class Downloader {
     }
 
     /**
-     * 이미지 URL로 이미지 파일을 생성한다. 성공하면 1을, 실패하면 0을 반환한다.<br>
-     * Creates a image file with the image URL. Returns 1 if success, 0 else.
+     * Creates a image file with the image URL. Returns {@code true} if success or {@code false}.
      */
-    private static int createImage(URL url, File dest) {
-        try (InputStream in = url.openStream();
-             FileOutputStream out = new FileOutputStream(dest)) {
-            // Creates a image file.
-            ReadableByteChannel readChannel = Channels.newChannel(in);
-            out.getChannel().transferFrom(readChannel, 0, Long.MAX_VALUE);
-
-            // Success
-            return 1;
-        } catch (IOException ex) {
-            // Fail
-            return 0;
+    private static boolean downloadImage(URL url, File dest) {
+        try {
+            return FileUtils.download(url.openStream(), dest);
+        } catch (IOException e) {
+            return false;
         }
     }
 
