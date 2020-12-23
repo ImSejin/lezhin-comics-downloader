@@ -134,6 +134,8 @@ public class CrawlerTest {
             Path dir = Paths.get("/data", comicDirName, episodeName);
             Files.createDirectories(dir);
 
+            Loggers.getLogger().info("path: {}, numOfImages: {}", dir, sources.size());
+
             // Downloads the images.
             IntStream.range(0, sources.size()).parallel().forEach(j -> {
                 String src = sources.get(j);
