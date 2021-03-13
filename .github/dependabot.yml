@@ -16,3 +16,5 @@ updates:
     allow:
       # Allows direct updates for all explicitly defined dependencies.
       - dependency-type: "direct"
+    # Allows up to 10 open pull requests.
+    open-pull-requests-limit: 10
