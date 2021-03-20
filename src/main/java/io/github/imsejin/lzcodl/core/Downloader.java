@@ -24,7 +24,9 @@ import io.github.imsejin.lzcodl.common.constant.Languages;
 import io.github.imsejin.lzcodl.model.Arguments;
 import io.github.imsejin.lzcodl.model.Episode;
 import lombok.SneakyThrows;
+import me.tongfei.progressbar.ConsoleProgressBarConsumer;
 import me.tongfei.progressbar.ProgressBar;
+import me.tongfei.progressbar.ProgressBarBuilder;
 import me.tongfei.progressbar.ProgressBarStyle;
 
 import java.io.File;
@@ -93,9 +95,6 @@ public final class Downloader {
         Files.createDirectories(episodeDir);
 
         try (ProgressBar progressBar = getDefaultProgressBar(arguments.getProduct().getAlias(), num, numOfImages)) {
-            // `ProgressBar.step()`이 step 1부터 시작하기 때문에 step 0로 초기화한다.
-            progressBar.stepTo(0);
-
             // Downloads all images of the episode.
             IntStream.rangeClosed(1, numOfImages).parallel().forEach(i -> {
                 String filename = String.format("%03d.%s", i, IMG_FORMAT_EXTENSION);
@@ -154,9 +153,19 @@ public final class Downloader {
      */
     private static ProgressBar getDefaultProgressBar(String episodeName, int episodeNo, int numOfImages) {
         String taskName = String.format("%s ep.%d", episodeName, episodeNo);
-        return new ProgressBar(taskName, numOfImages, 250, System.out, ProgressBarStyle.ASCII,
-                " imgs", 1, true, new DecimalFormat("| #.0"), ChronoUnit.SECONDS,
-                0L, Duration.ZERO);
+
+        ProgressBarBuilder builder = new ProgressBarBuilder();
+        builder.setTaskName(taskName);
+        builder.setInitialMax(numOfImages);
+        builder.setUpdateIntervalMillis(250);
+        builder.setConsumer(new ConsoleProgressBarConsumer(System.out));
+        builder.setStyle(ProgressBarStyle.ASCII);
+        builder.setUnit(" imgs", 1);
+        builder.showSpeed(new DecimalFormat("| #.0"));
+        builder.setSpeedUnit(ChronoUnit.SECONDS);
+        builder.startsFrom(0L, Duration.ZERO);
+
+        return builder.build();
     }
 
 }
