@@ -98,11 +98,12 @@
     </dependencies>
 
     <build>
-        <finalName>${artifactId}-${version}</finalName>
+        <finalName>${project.artifactId}-${project.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -117,6 +118,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.1.2</version>
                 <executions>
                     <execution>
                         <id>copy</id>
@@ -154,7 +156,8 @@
             <!--
                 Assembler for third-party libraries
 
-                This assembles own code and dependencies in a jar file with goal 'assembly:assembly'.
+                THIS PLUGIN ASSEMBLES OWN CODE AND DEPENDENCIES IN A JAR FILE BY THE FOLLOWING COMMAND.
+                    mvn assembly:assembly
                 DO NOT UPGRADE THIS PLUGIN. THE GOAL IS NOT AVAILABLE SINCE '3.X.X'.
             -->
             <plugin>
