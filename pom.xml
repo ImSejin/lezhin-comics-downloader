@@ -12,8 +12,8 @@
     <properties>
         <!-- General properties -->
         <java.version>1.8</java.version>
-        <build.sourceEncoding>UTF-8</build.sourceEncoding>
-        <reporting.outputEncoding>UTF-8</reporting.outputEncoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <common.utils.version>0.3.3</common.utils.version>
         <lombok.version>1.18.18</lombok.version>
