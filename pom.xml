@@ -56,6 +56,13 @@
             <version>1.4</version>
         </dependency>
 
+        <!-- Reader for Maven pom.xml -->
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-model</artifactId>
+            <version>3.6.3</version>
+        </dependency>
+
         <!-- Junit 5 -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
