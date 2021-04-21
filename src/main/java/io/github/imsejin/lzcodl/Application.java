@@ -32,8 +32,11 @@ import io.github.imsejin.lzcodl.model.Artist;
 import io.github.imsejin.lzcodl.model.Episode;
 import io.github.imsejin.lzcodl.model.Product;
 import org.apache.commons.cli.CommandLine;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -68,6 +71,12 @@ public final class Application {
         }
 
         try {
+            // Notices.
+            MavenXpp3Reader mavenReader = new MavenXpp3Reader();
+            Model pom = mavenReader.read(new FileReader("./pom.xml"));
+            Loggers.getLogger().info("{} v{}", pom.getName(), pom.getVersion());
+            Loggers.getLogger().info("If you have any questions, contact me by '{}/issues'", pom.getUrl());
+
             // Login with username and password and gets a token.
             args.setAccessToken(LoginHelper.login(args));
 
