@@ -83,7 +83,7 @@ public class Arguments {
         }
 
         // 유효하지 않은 에피소드 범위의 경우
-        final String separator = EpisodeRange.SEPARATOR.value();
+        final String separator = EpisodeRange.SEPARATOR;
         if (episodeRange != null && !episodeRange.contains(separator)) {
             UsagePrinter.printAndQuit(
                     "- HOW TO SETUP EPISODE RANGE?",

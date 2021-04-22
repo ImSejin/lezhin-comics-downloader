@@ -19,10 +19,8 @@ package io.github.imsejin.lzcodl;
 import io.github.imsejin.common.util.FilenameUtils;
 import io.github.imsejin.common.util.JsonUtils;
 import io.github.imsejin.common.util.PathnameUtils;
-import io.github.imsejin.common.util.StringUtils;
 import io.github.imsejin.lzcodl.common.CommandParser;
 import io.github.imsejin.lzcodl.common.Loggers;
-import io.github.imsejin.lzcodl.common.constant.EpisodeRange;
 import io.github.imsejin.lzcodl.core.ChromeBrowser;
 import io.github.imsejin.lzcodl.core.Crawler;
 import io.github.imsejin.lzcodl.core.Downloader;
@@ -42,8 +40,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
-import java.util.Map;
-import java.util.regex.Pattern;
 
 import static java.util.stream.Collectors.joining;
 
@@ -93,7 +89,7 @@ public final class Application {
             args.setComicPath(comicDir);
 
             // Downloads images.
-            download(args);
+            Downloader.download(args);
 
             // Terminates the application.
             ChromeBrowser.getDriver().quit();
@@ -146,34 +142,6 @@ public final class Application {
         }
 
         return path;
-    }
-
-    private static void download(Arguments args) {
-        final String episodeRange = args.getEpisodeRange();
-        final String separator = EpisodeRange.SEPARATOR.value();
-
-        String regex;
-        if (StringUtils.isNullOrEmpty(episodeRange)) {
-            // 모든 에피소드를 다운로드한다.
-            Downloader.all(args);
-
-        } else if (episodeRange.matches(regex = "([0-9]+)" + separator)) {
-            // 지정한 에피소드부터 끝까지 다운로드한다.
-            int from = Integer.parseInt(StringUtils.find(episodeRange, regex, 1));
-            Downloader.startTo(args, from);
-
-        } else if (episodeRange.matches(regex = separator + "([0-9]+)")) {
-            // 처음부터 지정한 에피소드까지 다운로드한다.
-            int to = Integer.parseInt(StringUtils.find(episodeRange, regex, 1));
-            Downloader.endTo(args, to);
-
-        } else if (episodeRange.matches(regex = "([0-9]+)" + separator + "([0-9]+)")) {
-            // 지정한 에피소드들만 다운로드한다.
-            Map<Integer, String> map = StringUtils.find(episodeRange, regex, Pattern.MULTILINE, 1, 2);
-            int from = Integer.parseInt(map.get(1));
-            int to = Integer.parseInt(map.get(2));
-            Downloader.some(args, from, to);
-        }
     }
 
 }

@@ -20,10 +20,10 @@ import com.google.gson.JsonObject;
 import io.github.imsejin.common.util.FileUtils;
 import io.github.imsejin.common.util.JsonUtils;
 import io.github.imsejin.lzcodl.common.URLFactory;
+import io.github.imsejin.lzcodl.common.constant.EpisodeRange;
 import io.github.imsejin.lzcodl.common.constant.Languages;
 import io.github.imsejin.lzcodl.model.Arguments;
 import io.github.imsejin.lzcodl.model.Episode;
-import lombok.SneakyThrows;
 import me.tongfei.progressbar.ConsoleProgressBarConsumer;
 import me.tongfei.progressbar.ProgressBar;
 import me.tongfei.progressbar.ProgressBarBuilder;
@@ -47,37 +47,17 @@ public final class Downloader {
     private Downloader() {
     }
 
-    public static void all(Arguments arguments) {
-        int to = arguments.getProduct().getEpisodes().size();
-        some(arguments, 1, to);
-    }
+    public static void download(Arguments args) throws IOException {
+        EpisodeRange episodeRange = EpisodeRange.of(args.getEpisodeRange());
 
-    public static void startTo(Arguments arguments, int from) {
-        int to = arguments.getProduct().getEpisodes().size();
-        some(arguments, from, to);
-    }
-
-    public static void endTo(Arguments arguments, int to) {
-        some(arguments, 1, to);
-    }
-
-    public static void some(Arguments arguments, int from, int to) {
-        List<Episode> episodes = arguments.getProduct().getEpisodes();
-
-        // 에피소드 번호를 인덱스에 맞게 변경한다.
-        from = from <= 0 ? 0 : from - 1;
-
-        // 해당 웹툰의 마지막 에피소드 번호를 초과하는 에피소드 번호를 지정하면, 마지막 에피소드까지 다운로드하는 것으로 변경한다.
-        to = Math.min(to, episodes.size());
-
-        for (int i = from; i < to; i++) {
+        List<Episode> episodes = args.getProduct().getEpisodes();
+        for (int i : episodeRange.getArray(args)) {
             Episode episode = episodes.get(i);
-            one(arguments, episode, i + 1);
+            downloadEpisode(args, episode, i + 1);
         }
     }
 
-    @SneakyThrows
-    public static void one(Arguments arguments, Episode episode, int num) {
+    private static void downloadEpisode(Arguments arguments, Episode episode, int num) throws IOException {
         // Cannot download paid episode.
         if (!episode.isFree()) return;
 
@@ -129,7 +109,6 @@ public final class Downloader {
         }
     }
 
-    @SneakyThrows
     private static int getNumOfImagesInEpisode(Arguments arguments, Episode episode) {
         URL url = URLFactory.oneEpisodeAPI(arguments, episode);
         JsonObject json = JsonUtils.readJsonFromUrl(url);
