@@ -1,17 +1,15 @@
 package io.github.imsejin.lzcodl.common;
 
-import lombok.SneakyThrows;
 import org.apache.commons.cli.CommandLine;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class CommandParserTest {
+class CommandParserTest {
 
     @Test
-    @SneakyThrows
-    public void parse() {
+    void succeed() {
         // given
         String[] arguments = {"--lang=ko", "-n=snail", "-r=8~", "--debug"};
 
@@ -31,8 +29,7 @@ public class CommandParserTest {
     }
 
     @Test
-    @SneakyThrows
-    public void parseError() {
+    void fail() {
         // given
         String[] arguments = {"--language=ko", "-n=snail", "-r=8~", "--debug"};
 
