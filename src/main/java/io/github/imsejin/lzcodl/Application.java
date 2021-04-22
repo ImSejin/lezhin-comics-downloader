@@ -66,10 +66,10 @@ public final class Application {
             ChromeBrowser.debugging();
         }
 
-        try {
+        try (FileReader reader = new FileReader("./pom.xml")) {
             // Notices.
             MavenXpp3Reader mavenReader = new MavenXpp3Reader();
-            Model pom = mavenReader.read(new FileReader("./pom.xml"));
+            Model pom = mavenReader.read(reader);
             Loggers.getLogger().info("{} v{}", pom.getName(), pom.getVersion());
             Loggers.getLogger().info("If you have any questions, contact me by '{}/issues'", pom.getUrl());
 
