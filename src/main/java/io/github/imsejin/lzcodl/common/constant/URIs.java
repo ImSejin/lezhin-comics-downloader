@@ -16,15 +16,16 @@
 
 package io.github.imsejin.lzcodl.common.constant;
 
-import io.github.imsejin.common.constant.interfaces.KeyValue;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Getter
 @RequiredArgsConstructor
-public enum URIs implements KeyValue {
+public enum URIs {
 
     /**
      * Login page.
@@ -76,22 +77,12 @@ public enum URIs implements KeyValue {
     /**
      * Checks if {@link URIs} that has the value exists.
      *
-     * @param value {@link #value()}
+     * @param value {@link #getValue()}
      * @return {@link URIs}
      */
     public static boolean contains(String value) {
         if (value == null) return false;
         return Arrays.stream(values()).map(uri -> uri.value).anyMatch(value::equals);
-    }
-
-    @Override
-    public String key() {
-        return this.name();
-    }
-
-    @Override
-    public String value() {
-        return this.value;
     }
 
     /**

@@ -16,14 +16,14 @@
 
 package io.github.imsejin.lzcodl.common.constant;
 
-import io.github.imsejin.common.constant.interfaces.KeyValue;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
 
+@Getter
 @RequiredArgsConstructor
-public enum Languages implements KeyValue {
+public enum Languages {
 
     /**
      * Korean.
@@ -42,13 +42,12 @@ public enum Languages implements KeyValue {
 
     private final String value;
 
-    @Getter
     private final String locale;
 
     /**
      * Checks if {@link Languages} that has the value exists.
      *
-     * @param value {@link #value()}
+     * @param value {@link #getValue()}
      * @return {@link Languages}
      */
     public static boolean contains(String value) {
@@ -59,7 +58,7 @@ public enum Languages implements KeyValue {
     /**
      * Returns constant of {@link Languages} whose value is equal to the parameter.
      *
-     * @param value {@link #value()}
+     * @param value {@link #getValue()}
      * @return constant of {@link Languages}
      * @throws IllegalArgumentException if {@link Languages} that has the parameter doesn't exist
      */
@@ -69,16 +68,6 @@ public enum Languages implements KeyValue {
 
         if (languages == null) throw new IllegalArgumentException("Invalid value for languages: " + value);
         return languages;
-    }
-
-    @Override
-    public String key() {
-        return name();
-    }
-
-    @Override
-    public String value() {
-        return this.value;
     }
 
 }
