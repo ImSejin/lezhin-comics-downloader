@@ -19,6 +19,9 @@ package io.github.imsejin.lzcodl.common;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @since 2.7.0
+ */
 public final class Loggers {
 
     private static String loggerName = "NormalLogger";

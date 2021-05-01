@@ -37,6 +37,7 @@ import java.util.UUID;
  *
  * @see ChromeBrowser
  * @see ChromeDriver
+ * @since 2.0.0
  */
 public final class LoginHelper {
 
@@ -80,6 +81,7 @@ public final class LoginHelper {
      * it clicks the third element so that login.
      *
      * @param args arguments required to login
+     * @since 2.7.0
      */
     private static void tryLogin(Arguments args) {
         ChromeDriver driver = ChromeBrowser.getDriver();
@@ -123,6 +125,7 @@ public final class LoginHelper {
      * @throws LoginFailureException if failed to login because of invalid account info
      * @throws TimeoutException      if failed to login because of the other
      *                               or to move to main page
+     * @since 2.7.0
      */
     private static void validate(Arguments args) {
         ChromeDriver driver = ChromeBrowser.getDriver();

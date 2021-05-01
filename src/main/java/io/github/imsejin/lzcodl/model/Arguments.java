@@ -31,6 +31,9 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.Map;
 
+/**
+ * @since 2.1.2
+ */
 @Getter
 @Setter
 @ToString
@@ -41,11 +44,19 @@ public class Arguments {
     private final String language;
     private final String comicName;
     private final String episodeRange;
+
+    /**
+     * @since 2.6.2
+     */
     private final boolean debugging;
 
     private String accessToken;
     private Product product;
     private Path comicPath;
+
+    /**
+     * @since 2.6.0
+     */
     private boolean expiredComic;
 
     {

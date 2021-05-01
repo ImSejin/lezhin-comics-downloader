@@ -20,6 +20,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * @since 1.0.0
+ */
 @Getter
 @Setter
 @ToString

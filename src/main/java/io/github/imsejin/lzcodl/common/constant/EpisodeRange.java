@@ -25,6 +25,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
+/**
+ * @since 2.7.1
+ */
 @ToString
 @RequiredArgsConstructor
 public enum EpisodeRange {
@@ -95,6 +98,11 @@ public enum EpisodeRange {
         return new String[]{start, end};
     }
 
+    /**
+     * @param range stringified episode range
+     * @return episode range
+     * @throws IllegalArgumentException if range is invalid
+     */
     public static EpisodeRange of(String range) {
         if (StringUtils.isNullOrBlank(range)) return ALL;
 
@@ -113,6 +121,11 @@ public enum EpisodeRange {
         }
     }
 
+    /**
+     * @param args arguments
+     * @return range array
+     * @throws IllegalArgumentException if range is invalid
+     */
     public abstract int[] getArray(Arguments args);
 
 }

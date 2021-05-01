@@ -18,6 +18,9 @@ package io.github.imsejin.lzcodl.common.exception;
 
 import javax.annotation.Nullable;
 
+/**
+ * @since 2.7.0
+ */
 public class LoginFailureException extends RuntimeException {
 
     public LoginFailureException() {

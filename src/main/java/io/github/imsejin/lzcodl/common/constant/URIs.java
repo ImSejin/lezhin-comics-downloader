@@ -24,6 +24,9 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * @since 2.5.0
+ */
 @Getter
 @RequiredArgsConstructor
 public enum URIs {

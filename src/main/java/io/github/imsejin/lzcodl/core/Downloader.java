@@ -40,6 +40,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.IntStream;
 
+/**
+ * @since 1.0.0
+ */
 public final class Downloader {
 
     private static final String IMG_FORMAT_EXTENSION = "webp"; // or jpg

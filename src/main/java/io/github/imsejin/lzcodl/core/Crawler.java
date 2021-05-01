@@ -34,6 +34,8 @@ import java.util.List;
 
 /**
  * DOM Crawler
+ *
+ * @since 2.0.0
  */
 public final class Crawler {
 
@@ -103,6 +105,9 @@ public final class Crawler {
         return driver.getLocalStorage().getItem("product");
     }
 
+    /**
+     * @since 2.6.0
+     */
     private static String getJsonInMyLibrary(Arguments args) {
         ChromeDriver driver = ChromeBrowser.getDriver();
 

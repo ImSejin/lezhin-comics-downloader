@@ -21,22 +21,31 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
 
+/**
+ * @since 2.1.2
+ */
 @Getter
 @RequiredArgsConstructor
 public enum Languages {
 
     /**
      * Korean.
+     *
+     * @see java.util.Locale#KOREA
      */
     KOREAN("ko", "ko-KR"),
 
     /**
      * English.
+     *
+     * @see java.util.Locale#US
      */
     ENGLISH("en", "en-US"),
 
     /**
      * Japanese.
+     *
+     * @see java.util.Locale#JAPAN
      */
     JAPANESE("ja", "ja-JP");
 

@@ -22,6 +22,9 @@ import lombok.ToString;
 
 import java.util.List;
 
+/**
+ * @since 1.0.0
+ */
 @Getter
 @Setter
 @ToString

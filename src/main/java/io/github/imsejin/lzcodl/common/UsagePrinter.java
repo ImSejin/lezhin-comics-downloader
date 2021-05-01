@@ -16,6 +16,9 @@
 
 package io.github.imsejin.lzcodl.common;
 
+/**
+ * @since 2.2.0
+ */
 public final class UsagePrinter {
 
     private UsagePrinter() {

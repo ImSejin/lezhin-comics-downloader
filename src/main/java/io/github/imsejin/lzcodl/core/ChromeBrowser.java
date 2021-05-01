@@ -29,6 +29,9 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
+/**
+ * @since 2.0.0
+ */
 public final class ChromeBrowser {
 
     private static final String CHROME_DRIVER_PATHNAME;
@@ -49,6 +52,9 @@ public final class ChromeBrowser {
     private ChromeBrowser() {
     }
 
+    /**
+     * @since 2.6.2
+     */
     public static void debugging() {
         List<String> arguments = ChromeOption.getArguments();
         arguments.remove(ChromeOption.HEADLESS.argument);
@@ -63,6 +69,9 @@ public final class ChromeBrowser {
         private static final ChromeDriver DRIVER = new ChromeDriver(options);
     }
 
+    /**
+     * @since 2.6.2
+     */
     @Getter
     @RequiredArgsConstructor
     public enum ChromeOption {

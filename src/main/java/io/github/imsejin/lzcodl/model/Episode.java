@@ -20,6 +20,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * @since 1.0.0
+ */
 @Getter
 @Setter
 @ToString
@@ -55,6 +58,9 @@ public class Episode {
     private long publishedAt;
     private long id;
 
+    /**
+     * @since 2.6.0
+     */
     public boolean isFree() {
         return this.freedAt <= System.currentTimeMillis();
     }

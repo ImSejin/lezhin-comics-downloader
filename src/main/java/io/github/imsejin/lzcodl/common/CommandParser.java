@@ -20,6 +20,9 @@ import org.apache.commons.cli.*;
 
 import javax.annotation.Nonnull;
 
+/**
+ * @since 2.7.0
+ */
 public final class CommandParser {
 
     private static final Options options;

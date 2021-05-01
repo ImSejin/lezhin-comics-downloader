@@ -23,6 +23,9 @@ import lombok.SneakyThrows;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+/**
+ * @since 2.0.0
+ */
 public final class URLFactory {
 
     /**
@@ -80,6 +83,9 @@ public final class URLFactory {
         return new URL(sb.toString());
     }
 
+    /**
+     * @since 2.6.2
+     */
     public static URL image(Arguments args, Episode episode, int filename, boolean purchased) {
         return image(args.getProduct().getId(), episode.getId(), filename, args.getAccessToken(), purchased);
     }
@@ -103,6 +109,9 @@ public final class URLFactory {
         return new URL(sb.toString());
     }
 
+    /**
+     * @since 2.6.2
+     */
     public static URL oneEpisodeAPI(Arguments args, Episode episode) {
         return oneEpisodeAPI(args.getProduct().getAlias(), episode.getName(), args.getAccessToken());
     }
