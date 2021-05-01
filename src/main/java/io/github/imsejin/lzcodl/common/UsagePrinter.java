@@ -18,10 +18,13 @@ package io.github.imsejin.lzcodl.common;
 
 import io.github.imsejin.lzcodl.common.constant.Languages;
 
+import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.stream.Stream;
+import java.util.List;
 
 import static io.github.imsejin.lzcodl.common.constant.EpisodeRange.SEPARATOR;
+import static java.util.stream.Collectors.toList;
 
 /**
  * @since 2.2.0
@@ -50,23 +53,45 @@ public final class UsagePrinter {
      * @since 2.7.1
      */
     public static void printLanguageAndQuit() {
-        String[] messages = Stream.concat(Stream.of("- WHAT LANGUAGES DOES THE DOWNLOADER SUPPORT?"),
-                Arrays.stream(Languages.values())
-                        .map(it -> String.format("    %s : %s", it.getValue(), it.name().toLowerCase())))
-                .toArray(String[]::new);
-        printAndQuit(messages);
+        printLanguageAndQuit(null);
+    }
+
+    /**
+     * @since 2.7.1
+     */
+    public static void printLanguageAndQuit(@Nullable String format, Object... args) {
+        List<String> languageExamples = Arrays.stream(Languages.values())
+                .map(it -> String.format("    %s : %s", it.getValue(), it.name().toLowerCase()))
+                .collect(toList());
+
+        List<String> messages = new ArrayList<>();
+        if (format != null) messages.add(String.format(format + "%n", args));
+        messages.add("- WHAT LANGUAGES DOES THE DOWNLOADER SUPPORT?");
+        messages.addAll(languageExamples);
+
+        printAndQuit(messages.toArray(new String[0]));
     }
 
     /**
      * @since 2.7.1
      */
     public static void printEpisodeRangeAndQuit() {
-        printAndQuit(
-                "- HOW TO SETUP EPISODE RANGE?",
-                "    case 1. skipped : all episodes",
-                String.format("    case 2. 8%s   : from ep.8 to the last", SEPARATOR),
-                String.format("    case 3. %s25  : from the first to ep.25", SEPARATOR),
-                String.format("    case 4. 1%s10 : from ep.1 to ep.10", SEPARATOR));
+        printEpisodeRangeAndQuit(null);
+    }
+
+    /**
+     * @since 2.7.1
+     */
+    public static void printEpisodeRangeAndQuit(@Nullable String format, Object... args) {
+        List<String> messages = new ArrayList<>();
+        if (format != null) messages.add(String.format(format + "%n", args));
+        messages.add("- HOW TO SETUP EPISODE RANGE?");
+        messages.add("    case 1. skipped : all episodes");
+        messages.add(String.format("    case 2. 8%s   : from ep.8 to the last", SEPARATOR));
+        messages.add(String.format("    case 3. %s25  : from the first to ep.25", SEPARATOR));
+        messages.add(String.format("    case 4. 1%s10 : from ep.1 to ep.10", SEPARATOR));
+
+        printAndQuit(messages.toArray(new String[0]));
     }
 
 }
