@@ -16,6 +16,13 @@
 
 package io.github.imsejin.lzcodl.common;
 
+import io.github.imsejin.lzcodl.common.constant.Languages;
+
+import java.util.Arrays;
+import java.util.stream.Stream;
+
+import static io.github.imsejin.lzcodl.common.constant.EpisodeRange.SEPARATOR;
+
 /**
  * @since 2.2.0
  */
@@ -33,10 +40,33 @@ public final class UsagePrinter {
         System.exit(1);
     }
 
-    private static void print(String... messages) {
+    public static void print(String... messages) {
         for (String message : messages) {
             System.err.println("    " + message);
         }
+    }
+
+    /**
+     * @since 2.7.1
+     */
+    public static void printLanguageAndQuit() {
+        String[] messages = Stream.concat(Stream.of("- WHAT LANGUAGES DOES THE DOWNLOADER SUPPORT?"),
+                Arrays.stream(Languages.values())
+                        .map(it -> String.format("    %s : %s", it.getValue(), it.name().toLowerCase())))
+                .toArray(String[]::new);
+        printAndQuit(messages);
+    }
+
+    /**
+     * @since 2.7.1
+     */
+    public static void printEpisodeRangeAndQuit() {
+        printAndQuit(
+                "- HOW TO SETUP EPISODE RANGE?",
+                "    case 1. skipped : all episodes",
+                String.format("    case 2. 8%s   : from ep.8 to the last", SEPARATOR),
+                String.format("    case 3. %s25  : from the first to ep.25", SEPARATOR),
+                String.format("    case 4. 1%s10 : from ep.1 to ep.10", SEPARATOR));
     }
 
 }

@@ -17,6 +17,7 @@
 package io.github.imsejin.lzcodl.common.constant;
 
 import io.github.imsejin.common.util.StringUtils;
+import io.github.imsejin.lzcodl.common.UsagePrinter;
 import io.github.imsejin.lzcodl.model.Arguments;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -90,7 +91,7 @@ public enum EpisodeRange {
 
     private static String[] getMatched(String range) {
         Matcher matcher = pattern.matcher(range);
-        if (!matcher.find()) throw new IllegalStateException("No matched episode range");
+        if (!matcher.find()) UsagePrinter.printEpisodeRangeAndQuit();
 
         String start = matcher.group(1);
         String end = matcher.group(2);
@@ -101,7 +102,6 @@ public enum EpisodeRange {
     /**
      * @param range stringified episode range
      * @return episode range
-     * @throws IllegalArgumentException if range is invalid
      */
     public static EpisodeRange of(String range) {
         if (StringUtils.isNullOrBlank(range)) return ALL;

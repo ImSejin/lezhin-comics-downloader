@@ -86,22 +86,12 @@ public class Arguments {
     private Arguments(String language, String comicName, String episodeRange, boolean debugging) {
         // 유효하지 않은 언어의 경우
         if (!Languages.contains(language)) {
-            UsagePrinter.printAndQuit(
-                    "- WHAT LANGUAGES DOES THE DOWNLOADER SUPPORT?",
-                    "    ko : korean",
-                    "    en : english",
-                    "    ja : japanese");
+            UsagePrinter.printLanguageAndQuit();
         }
 
         // 유효하지 않은 에피소드 범위의 경우
-        final String separator = EpisodeRange.SEPARATOR;
-        if (episodeRange != null && !episodeRange.contains(separator)) {
-            UsagePrinter.printAndQuit(
-                    "- HOW TO SETUP EPISODE RANGE?",
-                    "    case 1. skipped : all episodes",
-                    String.format("    case 2. 8%s      : from ep.8 to the last", separator),
-                    String.format("    case 3. %s25     : from the first to ep.25", separator),
-                    String.format("    case 4. 1%s10    : from ep.1 to ep.10", separator));
+        if (episodeRange != null && !episodeRange.contains(EpisodeRange.SEPARATOR)) {
+            UsagePrinter.printEpisodeRangeAndQuit();
         }
 
         this.language = language;
