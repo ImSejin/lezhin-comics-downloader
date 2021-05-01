@@ -70,7 +70,7 @@ public class CrawlerTest {
     void downloadDaumWebtoon() {
         // Sets up the arguments.
         final Arguments args = Arguments.builder()
-                .debugging(true).comicName("HeavenToHell").build();
+                .language("ko").debugging(true).comicName("NormalLikeThis").build();
 
         // Activates debug mode.
         if (args.isDebugging()) {
@@ -101,16 +101,18 @@ public class CrawlerTest {
         List<Map<String, String>> list = new ArrayList<>();
         for (int i = 0; i < items.getLength(); i++) {
             Node node = items.item(i);
-            Map<String, String> map = new HashMap<>();
+            NodeList children = node.getChildNodes();
 
-            Node title = node.getChildNodes().item(1);
-            map.put("title", title.getTextContent());
-            Node link = node.getChildNodes().item(3);
-            map.put("link", link.getTextContent());
+            Node title = children.item(1);
+            Node link = children.item(3);
+
+            Map<String, String> map = new HashMap<>();
+            map.put("title", title.getTextContent().trim());
+            map.put("link", link.getTextContent().trim());
             list.add(map);
         }
 
-//        list = list.subList(0, 40);
+        list = list.subList(3, 4);
 
         for (int i = 0; i < list.size(); i++) {
             Map<String, String> map = list.get(i);
