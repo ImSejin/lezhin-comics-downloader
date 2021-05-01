@@ -22,6 +22,8 @@ import io.github.imsejin.common.util.StringUtils;
 import io.github.imsejin.lzcodl.common.UsagePrinter;
 import io.github.imsejin.lzcodl.common.constant.EpisodeRange;
 import io.github.imsejin.lzcodl.common.constant.Languages;
+import io.github.imsejin.lzcodl.common.exception.EpisodeRangeParseException;
+import io.github.imsejin.lzcodl.common.exception.InvalidLanguageException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -86,12 +88,12 @@ public class Arguments {
     private Arguments(String language, String comicName, String episodeRange, boolean debugging) {
         // 유효하지 않은 언어의 경우
         if (!Languages.contains(language)) {
-            UsagePrinter.printLanguageAndQuit();
+            throw new InvalidLanguageException("Invalid language: '%s'", language);
         }
 
         // 유효하지 않은 에피소드 범위의 경우
-        if (episodeRange != null && !episodeRange.contains(EpisodeRange.SEPARATOR)) {
-            UsagePrinter.printEpisodeRangeAndQuit();
+        if (EpisodeRange.invalidate(episodeRange)) {
+            throw new EpisodeRangeParseException("Invalid episode range: '%s'", episodeRange);
         }
 
         this.language = language;

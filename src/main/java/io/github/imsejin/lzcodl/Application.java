@@ -21,6 +21,9 @@ import io.github.imsejin.common.util.JsonUtils;
 import io.github.imsejin.common.util.PathnameUtils;
 import io.github.imsejin.lzcodl.common.CommandParser;
 import io.github.imsejin.lzcodl.common.Loggers;
+import io.github.imsejin.lzcodl.common.UsagePrinter;
+import io.github.imsejin.lzcodl.common.exception.EpisodeRangeParseException;
+import io.github.imsejin.lzcodl.common.exception.InvalidLanguageException;
 import io.github.imsejin.lzcodl.core.ChromeBrowser;
 import io.github.imsejin.lzcodl.core.Crawler;
 import io.github.imsejin.lzcodl.core.Downloader;
@@ -94,6 +97,17 @@ public final class Application {
             // Terminates the application.
             ChromeBrowser.getDriver().quit();
             System.exit(0);
+
+        } catch (InvalidLanguageException e) {
+            ChromeBrowser.getDriver().quit();
+            Loggers.getLogger().error("InvalidLanguageException has occurred", e);
+            UsagePrinter.printLanguageAndQuit();
+
+        } catch (EpisodeRangeParseException e) {
+            ChromeBrowser.getDriver().quit();
+            Loggers.getLogger().error("EpisodeRangeParseException has occurred", e);
+            UsagePrinter.printEpisodeRangeAndQuit();
+
         } catch (Exception e) {
             ChromeBrowser.getDriver().quit();
             Loggers.getLogger().error("Exception has occurred", e);

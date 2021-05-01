@@ -16,6 +16,7 @@
 
 package io.github.imsejin.lzcodl.common.constant;
 
+import io.github.imsejin.lzcodl.common.exception.InvalidLanguageException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -69,13 +70,13 @@ public enum Languages {
      *
      * @param value {@link #getValue()}
      * @return constant of {@link Languages}
-     * @throws IllegalArgumentException if {@link Languages} that has the parameter doesn't exist
+     * @throws InvalidLanguageException if {@link Languages} that has the parameter doesn't exist
      */
     public static Languages from(String value) {
         Languages languages = Arrays.stream(values()).filter(lang -> lang.value.equals(value))
                 .findAny().orElse(null);
 
-        if (languages == null) throw new IllegalArgumentException("Invalid value for languages: " + value);
+        if (languages == null) throw new InvalidLanguageException("Invalid language: '%s'", value);
         return languages;
     }
 
