@@ -19,6 +19,7 @@ package io.github.imsejin.lzcodl.common.constant;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -91,8 +92,8 @@ public enum URIs {
      * @param params parameters
      * @return URI string
      */
-    public String get(String... params) {
-        if (params == null || params.length == 0) return this.value;
+    public URI get(String... params) {
+        if (params == null || params.length == 0) return URI.create(this.value);
 
         Matcher matcher = pattern.matcher(this.value);
 
@@ -105,7 +106,7 @@ public enum URIs {
         // Validates all variables in URI are converted to parameters.
         if (pattern.matcher(uri).find()) throw new RuntimeException("Template URI has not matched variable(s)");
 
-        return uri;
+        return URI.create(uri);
     }
 
 }

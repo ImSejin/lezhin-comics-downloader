@@ -21,6 +21,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -43,11 +44,11 @@ public class CrawlerTest {
         String language = "ja";
         String comicName = "jisoo";
         String episodeName = "1";
-        String episodeUrl = URIs.EPISODE.get(language, comicName, episodeName);
+        URI episodeUrl = URIs.EPISODE.get(language, comicName, episodeName);
 
         // when
         ChromeDriver driver = ChromeBrowser.getDriver();
-        driver.get(episodeUrl);
+        driver.get(episodeUrl.toString());
 
         WebElement scrollList = driver.findElementById("scroll-list");
 

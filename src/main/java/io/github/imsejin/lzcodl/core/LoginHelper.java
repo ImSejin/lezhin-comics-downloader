@@ -29,6 +29,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.net.URI;
 import java.util.UUID;
 
 /**
@@ -84,9 +85,9 @@ public final class LoginHelper {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
         // Requests login page.
-        String loginUrl = URIs.LOGIN.get(args.getLanguage());
+        URI loginUrl = URIs.LOGIN.get(args.getLanguage());
         Loggers.getLogger().info("Request login page: {}", loginUrl);
-        driver.get(loginUrl);
+        driver.get(loginUrl.toString());
 
         // Waits for DOM to complete the rendering.
         final int timeout = 15;
@@ -135,7 +136,7 @@ public final class LoginHelper {
                     By.xpath("//main[@id='main' and @class='lzCntnr lzCntnr--home']")));
         } catch (TimeoutException e) {
             // When failed to login because of other problems.
-            if (!driver.getCurrentUrl().startsWith(URIs.LOGIN.get(args.getLanguage()))) throw e;
+            if (!URI.create(driver.getCurrentUrl()).getPath().equals(URIs.LOGIN.get(args.getLanguage()).getPath())) throw e;
 
             // When failed to login because of invalid account information.
             driver.executeScript("localStorage.setItem('errorCode', window.__LZ_ERROR_CODE__);");

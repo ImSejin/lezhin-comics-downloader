@@ -21,7 +21,7 @@ public class ChromeBrowserTest {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
         // when
-        driver.get(URIs.COMIC.get("ko", "snail"));
+        driver.get(URIs.COMIC.get("ko", "snail").toString());
         driver.executeScript("localStorage.setItem('product', JSON.stringify(window.__LZ_PRODUCT__.product));");
         String product = driver.getLocalStorage().getItem("product");
 
