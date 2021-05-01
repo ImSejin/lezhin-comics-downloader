@@ -139,7 +139,8 @@ public final class LoginHelper {
                     By.xpath("//main[@id='main' and @class='lzCntnr lzCntnr--home']")));
         } catch (TimeoutException e) {
             // When failed to login because of other problems.
-            if (!URI.create(driver.getCurrentUrl()).getPath().equals(URIs.LOGIN.get(args.getLanguage()).getPath())) throw e;
+            if (!URI.create(driver.getCurrentUrl()).getPath().equals(URIs.LOGIN.get(args.getLanguage()).getPath()))
+                throw e;
 
             // When failed to login because of invalid account information.
             driver.executeScript("localStorage.setItem('errorCode', window.__LZ_ERROR_CODE__);");

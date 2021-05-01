@@ -168,8 +168,8 @@ public final class Crawler {
 
         // 서비스 종료된 웹툰이면 '내 서재'로 접근한다.
         URI episodeUrl = args.isExpiredComic()
-            ? URIs.LIB_EPISODE.get(args.getLanguage(), Languages.from(args.getLanguage()).getLocale(), args.getComicName(), episode.getName())
-            : URIs.EPISODE.get(args.getLanguage(), args.getComicName(), episode.getName());
+                ? URIs.LIB_EPISODE.get(args.getLanguage(), Languages.from(args.getLanguage()).getLocale(), args.getComicName(), episode.getName())
+                : URIs.EPISODE.get(args.getLanguage(), args.getComicName(), episode.getName());
 
         Loggers.getLogger().debug("Request episode page: {}", episodeUrl);
         driver.get(episodeUrl.toString());
