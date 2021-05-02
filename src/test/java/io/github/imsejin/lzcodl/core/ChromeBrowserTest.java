@@ -9,14 +9,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import java.lang.reflect.Method;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ChromeBrowserTest {
+class ChromeBrowserTest {
 
     @Test
     @Order(1)
-    public void getJson() {
+    void getJson() {
         // given
         ChromeDriver driver = ChromeBrowser.getDriver();
 
@@ -33,6 +35,28 @@ public class ChromeBrowserTest {
                 .as("The json string can be parsed to Product")
                 .isExactlyInstanceOf(Product.class);
         System.out.println(product);
+    }
+
+    @Test
+    void findLoadedClass() throws Exception {
+        // given
+        Method findLoadedClass = ClassLoader.class.getDeclaredMethod("findLoadedClass", String.class);
+        findLoadedClass.setAccessible(true);
+        String className = ChromeBrowser.class.getName() + "$SingletonLazyHolder";
+        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+
+        // when: 1
+        Class<?> clazz = (Class<?>) findLoadedClass.invoke(classLoader, className);
+        // then: 1
+        assertThat(clazz).isNull();
+
+        // when: 2
+        ChromeBrowser.getDriver().quit();
+        Class<?> loadedClass = (Class<?>) findLoadedClass.invoke(classLoader, className);
+        // then: 2
+        assertThat(loadedClass)
+                .isNotNull()
+                .isEqualTo(Class.forName(className));
     }
 
 }
