@@ -35,17 +35,14 @@ public final class UsagePrinter {
     }
 
     public static void printAndQuit(String... messages) {
-        System.out.println();
-
         print(messages);
-
-        System.out.println();
         System.exit(1);
     }
 
     public static void print(String... messages) {
+        System.out.println();
         for (String message : messages) {
-            System.err.println("    " + message);
+            Loggers.getLogger().warn(message);
         }
     }
 

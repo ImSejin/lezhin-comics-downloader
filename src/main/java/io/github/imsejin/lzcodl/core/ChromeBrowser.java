@@ -38,6 +38,8 @@ public final class ChromeBrowser {
 
     private static ChromeOptions options = new ChromeOptions().addArguments(ChromeOption.getArguments());
 
+    private static boolean initialized;
+
     static {
         // Assigns chrome driver pathname.
         final String currentPathname = PathnameUtils.getCurrentPathname();
@@ -50,6 +52,10 @@ public final class ChromeBrowser {
     }
 
     private ChromeBrowser() {
+    }
+
+    public static boolean isRunning() {
+        return initialized;
     }
 
     /**
@@ -65,7 +71,15 @@ public final class ChromeBrowser {
         return SingletonLazyHolder.DRIVER;
     }
 
+    public static void softQuit() {
+        if (initialized) SingletonLazyHolder.DRIVER.quit();
+    }
+
     private static class SingletonLazyHolder {
+        static {
+            ChromeBrowser.initialized = true;
+        }
+
         private static final ChromeDriver DRIVER = new ChromeDriver(options);
     }
 

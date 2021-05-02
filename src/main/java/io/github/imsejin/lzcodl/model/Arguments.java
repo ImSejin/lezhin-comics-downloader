@@ -19,9 +19,9 @@ package io.github.imsejin.lzcodl.model;
 import io.github.imsejin.common.util.IniUtils;
 import io.github.imsejin.common.util.PathnameUtils;
 import io.github.imsejin.common.util.StringUtils;
-import io.github.imsejin.lzcodl.common.UsagePrinter;
 import io.github.imsejin.lzcodl.common.constant.EpisodeRange;
 import io.github.imsejin.lzcodl.common.constant.Languages;
+import io.github.imsejin.lzcodl.common.exception.ConfigParseException;
 import io.github.imsejin.lzcodl.common.exception.EpisodeRangeParseException;
 import io.github.imsejin.lzcodl.common.exception.InvalidLanguageException;
 import lombok.Builder;
@@ -64,12 +64,12 @@ public class Arguments {
     {
         final File file = new File(PathnameUtils.getCurrentPathname(), "config.ini");
 
-        Map<String, String> section = null;
+        Map<String, String> section;
         try {
             section = IniUtils.readSection(file, "account");
-        } catch (Exception ex) {
+        } catch (Exception e) {
             // 'config.ini' 파일이 없거나, 'account' 섹션이 없는 경우
-            UsagePrinter.printAndQuit("The file 'config.ini' or the section 'account' does not exist.");
+            throw new ConfigParseException("File 'config.ini' or section 'account' does not exist.", e);
         }
 
         String username = section.get("username");
@@ -77,7 +77,7 @@ public class Arguments {
 
         // 유효하지 않은 계정 정보의 경우
         if (StringUtils.isNullOrBlank(username) || StringUtils.isNullOrBlank(password)) {
-            UsagePrinter.printAndQuit("ID or password is not valid.");
+            throw new ConfigParseException("ID or password is not valid.");
         }
 
         this.username = username;

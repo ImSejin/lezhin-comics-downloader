@@ -22,6 +22,7 @@ import io.github.imsejin.common.util.PathnameUtils;
 import io.github.imsejin.lzcodl.common.CommandParser;
 import io.github.imsejin.lzcodl.common.Loggers;
 import io.github.imsejin.lzcodl.common.UsagePrinter;
+import io.github.imsejin.lzcodl.common.exception.ConfigParseException;
 import io.github.imsejin.lzcodl.common.exception.EpisodeRangeParseException;
 import io.github.imsejin.lzcodl.common.exception.InvalidLanguageException;
 import io.github.imsejin.lzcodl.core.ChromeBrowser;
@@ -52,24 +53,24 @@ public final class Application {
     }
 
     public static void main(String[] arguments) {
-        // Validates and parses options and arguments.
-        CommandLine cmd = CommandParser.parse(arguments);
-
-        // Sets up the arguments.
-        final Arguments args = Arguments.builder()
-                .language(cmd.getOptionValue('l'))
-                .comicName(cmd.getOptionValue('n'))
-                .episodeRange(cmd.getOptionValue('r', null))
-                .debugging(cmd.hasOption('d'))
-                .build();
-
-        // Activates debug mode.
-        if (args.isDebugging()) {
-            Loggers.debugging();
-            ChromeBrowser.debugging();
-        }
-
         try (FileReader reader = new FileReader("./pom.xml")) {
+            // Validates and parses options and arguments.
+            CommandLine cmd = CommandParser.parse(arguments);
+
+            // Sets up the arguments.
+            final Arguments args = Arguments.builder()
+                    .language(cmd.getOptionValue('l'))
+                    .comicName(cmd.getOptionValue('n'))
+                    .episodeRange(cmd.getOptionValue('r', null))
+                    .debugging(cmd.hasOption('d'))
+                    .build();
+
+            // Activates debug mode.
+            if (args.isDebugging()) {
+                Loggers.debugging();
+                ChromeBrowser.debugging();
+            }
+
             // Notices.
             MavenXpp3Reader mavenReader = new MavenXpp3Reader();
             Model pom = mavenReader.read(reader);
@@ -98,19 +99,24 @@ public final class Application {
             ChromeBrowser.getDriver().quit();
             System.exit(0);
 
+        } catch (ConfigParseException e) {
+            ChromeBrowser.softQuit();
+            Loggers.getLogger().error("ConfigParseException occurs", e);
+            System.exit(1);
+
         } catch (InvalidLanguageException e) {
-            ChromeBrowser.getDriver().quit();
-            Loggers.getLogger().error("InvalidLanguageException has occurred", e);
+            ChromeBrowser.softQuit();
+            Loggers.getLogger().error("InvalidLanguageException occurs", e);
             UsagePrinter.printLanguageAndQuit();
 
         } catch (EpisodeRangeParseException e) {
-            ChromeBrowser.getDriver().quit();
-            Loggers.getLogger().error("EpisodeRangeParseException has occurred", e);
+            ChromeBrowser.softQuit();
+            Loggers.getLogger().error("EpisodeRangeParseException occurs", e);
             UsagePrinter.printEpisodeRangeAndQuit();
 
         } catch (Exception e) {
-            ChromeBrowser.getDriver().quit();
-            Loggers.getLogger().error("Exception has occurred", e);
+            ChromeBrowser.softQuit();
+            Loggers.getLogger().error("Exception occurs", e);
             System.exit(1);
         }
     }
