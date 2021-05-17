@@ -1,5 +1,5 @@
 <p align="center">
-	<img alt="Lezhin Comics Downloader" src="./src/main/resources/assets/lezhin-comics-downloader-logo.png" width="20%">
+    <img alt="Lezhin Comics Downloader" src="./src/main/resources/assets/lezhin-comics-downloader-logo.png" width="20%">
 </p>
 
 <h1 align="center">Lezhin Comics Downloader</h1>
