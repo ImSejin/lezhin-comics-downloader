@@ -1,14 +1,35 @@
+/*
+ * Copyright 2020 Sejin Im
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.github.imsejin.lzcodl.common.constant;
 
-import io.github.imsejin.common.constant.interfaces.KeyValue;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * @since 2.5.0
+ */
+@Getter
 @RequiredArgsConstructor
-public enum URIs implements KeyValue {
+public enum URIs {
 
     /**
      * Login page.
@@ -60,22 +81,12 @@ public enum URIs implements KeyValue {
     /**
      * Checks if {@link URIs} that has the value exists.
      *
-     * @param value {@link #value()}
+     * @param value {@link #getValue()}
      * @return {@link URIs}
      */
     public static boolean contains(String value) {
         if (value == null) return false;
         return Arrays.stream(values()).map(uri -> uri.value).anyMatch(value::equals);
-    }
-
-    @Override
-    public String key() {
-        return this.name();
-    }
-
-    @Override
-    public String value() {
-        return this.value;
     }
 
     /**
@@ -84,8 +95,8 @@ public enum URIs implements KeyValue {
      * @param params parameters
      * @return URI string
      */
-    public String get(String... params) {
-        if (params == null || params.length == 0) return this.value;
+    public URI get(String... params) {
+        if (params == null || params.length == 0) return URI.create(this.value);
 
         Matcher matcher = pattern.matcher(this.value);
 
@@ -98,7 +109,7 @@ public enum URIs implements KeyValue {
         // Validates all variables in URI are converted to parameters.
         if (pattern.matcher(uri).find()) throw new RuntimeException("Template URI has not matched variable(s)");
 
-        return uri;
+        return URI.create(uri);
     }
 
 }

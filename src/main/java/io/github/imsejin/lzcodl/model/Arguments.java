@@ -1,11 +1,29 @@
+/*
+ * Copyright 2020 Sejin Im
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.github.imsejin.lzcodl.model;
 
 import io.github.imsejin.common.util.IniUtils;
 import io.github.imsejin.common.util.PathnameUtils;
 import io.github.imsejin.common.util.StringUtils;
-import io.github.imsejin.lzcodl.common.UsagePrinter;
 import io.github.imsejin.lzcodl.common.constant.EpisodeRange;
 import io.github.imsejin.lzcodl.common.constant.Languages;
+import io.github.imsejin.lzcodl.common.exception.ConfigParseException;
+import io.github.imsejin.lzcodl.common.exception.EpisodeRangeParseException;
+import io.github.imsejin.lzcodl.common.exception.InvalidLanguageException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,6 +33,9 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.Map;
 
+/**
+ * @since 2.1.2
+ */
 @Getter
 @Setter
 @ToString
@@ -25,22 +46,30 @@ public class Arguments {
     private final String language;
     private final String comicName;
     private final String episodeRange;
+
+    /**
+     * @since 2.6.2
+     */
     private final boolean debugging;
 
     private String accessToken;
     private Product product;
     private Path comicPath;
+
+    /**
+     * @since 2.6.0
+     */
     private boolean expiredComic;
 
     {
         final File file = new File(PathnameUtils.getCurrentPathname(), "config.ini");
 
-        Map<String, String> section = null;
+        Map<String, String> section;
         try {
             section = IniUtils.readSection(file, "account");
-        } catch (Exception ex) {
+        } catch (Exception e) {
             // 'config.ini' 파일이 없거나, 'account' 섹션이 없는 경우
-            UsagePrinter.printAndQuit("The file 'config.ini' or the section 'account' does not exist.");
+            throw new ConfigParseException("File 'config.ini' or section 'account' does not exist.", e);
         }
 
         String username = section.get("username");
@@ -48,7 +77,7 @@ public class Arguments {
 
         // 유효하지 않은 계정 정보의 경우
         if (StringUtils.isNullOrBlank(username) || StringUtils.isNullOrBlank(password)) {
-            UsagePrinter.printAndQuit("ID or password is not valid.");
+            throw new ConfigParseException("ID or password is not valid.");
         }
 
         this.username = username;
@@ -59,22 +88,12 @@ public class Arguments {
     private Arguments(String language, String comicName, String episodeRange, boolean debugging) {
         // 유효하지 않은 언어의 경우
         if (!Languages.contains(language)) {
-            UsagePrinter.printAndQuit(
-                    "- WHAT LANGUAGES DOES THE DOWNLOADER SUPPORT?",
-                    "    ko : korean",
-                    "    en : english",
-                    "    ja : japanese");
+            throw new InvalidLanguageException("Invalid language: '%s'", language);
         }
 
         // 유효하지 않은 에피소드 범위의 경우
-        final String separator = EpisodeRange.SEPARATOR.value();
-        if (episodeRange != null && !episodeRange.contains(separator)) {
-            UsagePrinter.printAndQuit(
-                    "- HOW TO SETUP EPISODE RANGE?",
-                    "    case 1. skipped : all episodes",
-                    String.format("    case 2. 8%s      : from ep.8 to the last", separator),
-                    String.format("    case 3. %s25     : from the first to ep.25", separator),
-                    String.format("    case 4. 1%s10    : from ep.1 to ep.10", separator));
+        if (EpisodeRange.invalidate(episodeRange)) {
+            throw new EpisodeRangeParseException("Invalid episode range: '%s'", episodeRange);
         }
 
         this.language = language;

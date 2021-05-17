@@ -1,38 +1,63 @@
+/*
+ * Copyright 2020 Sejin Im
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.github.imsejin.lzcodl.common.constant;
 
-import io.github.imsejin.common.constant.interfaces.KeyValue;
+import io.github.imsejin.lzcodl.common.exception.InvalidLanguageException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
 
+/**
+ * @since 2.1.2
+ */
+@Getter
 @RequiredArgsConstructor
-public enum Languages implements KeyValue {
+public enum Languages {
 
     /**
      * Korean.
+     *
+     * @see java.util.Locale#KOREA
      */
     KOREAN("ko", "ko-KR"),
 
     /**
      * English.
+     *
+     * @see java.util.Locale#US
      */
     ENGLISH("en", "en-US"),
 
     /**
      * Japanese.
+     *
+     * @see java.util.Locale#JAPAN
      */
     JAPANESE("ja", "ja-JP");
 
     private final String value;
 
-    @Getter
     private final String locale;
 
     /**
      * Checks if {@link Languages} that has the value exists.
      *
-     * @param value {@link #value()}
+     * @param value {@link #getValue()}
      * @return {@link Languages}
      */
     public static boolean contains(String value) {
@@ -43,26 +68,16 @@ public enum Languages implements KeyValue {
     /**
      * Returns constant of {@link Languages} whose value is equal to the parameter.
      *
-     * @param value {@link #value()}
+     * @param value {@link #getValue()}
      * @return constant of {@link Languages}
-     * @throws IllegalArgumentException if {@link Languages} that has the parameter doesn't exist
+     * @throws InvalidLanguageException if {@link Languages} that has the parameter doesn't exist
      */
     public static Languages from(String value) {
         Languages languages = Arrays.stream(values()).filter(lang -> lang.value.equals(value))
                 .findAny().orElse(null);
 
-        if (languages == null) throw new IllegalArgumentException("Invalid value for languages: " + value);
+        if (languages == null) throw new InvalidLanguageException("Invalid language: '%s'", value);
         return languages;
-    }
-
-    @Override
-    public String key() {
-        return name();
-    }
-
-    @Override
-    public String value() {
-        return this.value;
     }
 
 }

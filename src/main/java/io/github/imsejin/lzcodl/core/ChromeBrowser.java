@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 Sejin Im
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.github.imsejin.lzcodl.core;
 
 import io.github.imsejin.common.util.PathnameUtils;
@@ -13,11 +29,16 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
+/**
+ * @since 2.0.0
+ */
 public final class ChromeBrowser {
 
     private static final String CHROME_DRIVER_PATHNAME;
 
     private static ChromeOptions options = new ChromeOptions().addArguments(ChromeOption.getArguments());
+
+    private static boolean initialized;
 
     static {
         // Assigns chrome driver pathname.
@@ -33,9 +54,16 @@ public final class ChromeBrowser {
     private ChromeBrowser() {
     }
 
+    public static boolean isRunning() {
+        return initialized;
+    }
+
+    /**
+     * @since 2.6.2
+     */
     public static void debugging() {
-        List<String> arguments = ChromeOption.getArguments().stream()
-                .filter(it -> !it.equals(ChromeOption.HEADLESS.argument)).collect(toList());
+        List<String> arguments = ChromeOption.getArguments();
+        arguments.remove(ChromeOption.HEADLESS.argument);
         options = new ChromeOptions().addArguments(arguments);
     }
 
@@ -43,10 +71,21 @@ public final class ChromeBrowser {
         return SingletonLazyHolder.DRIVER;
     }
 
+    public static void softQuit() {
+        if (initialized) SingletonLazyHolder.DRIVER.quit();
+    }
+
     private static class SingletonLazyHolder {
+        static {
+            ChromeBrowser.initialized = true;
+        }
+
         private static final ChromeDriver DRIVER = new ChromeDriver(options);
     }
 
+    /**
+     * @since 2.6.2
+     */
     @Getter
     @RequiredArgsConstructor
     public enum ChromeOption {

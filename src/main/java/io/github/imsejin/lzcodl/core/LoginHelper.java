@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 Sejin Im
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.github.imsejin.lzcodl.core;
 
 import io.github.imsejin.common.util.StringUtils;
@@ -13,6 +29,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.net.URI;
 import java.util.UUID;
 
 /**
@@ -20,6 +37,7 @@ import java.util.UUID;
  *
  * @see ChromeBrowser
  * @see ChromeDriver
+ * @since 2.0.0
  */
 public final class LoginHelper {
 
@@ -63,14 +81,15 @@ public final class LoginHelper {
      * it clicks the third element so that login.
      *
      * @param args arguments required to login
+     * @since 2.7.0
      */
     private static void tryLogin(Arguments args) {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
         // Requests login page.
-        String loginUrl = URIs.LOGIN.get(args.getLanguage());
+        URI loginUrl = URIs.LOGIN.get(args.getLanguage());
         Loggers.getLogger().info("Request login page: {}", loginUrl);
-        driver.get(loginUrl);
+        driver.get(loginUrl.toString());
 
         // Waits for DOM to complete the rendering.
         final int timeout = 15;
@@ -106,6 +125,7 @@ public final class LoginHelper {
      * @throws LoginFailureException if failed to login because of invalid account info
      * @throws TimeoutException      if failed to login because of the other
      *                               or to move to main page
+     * @since 2.7.0
      */
     private static void validate(Arguments args) {
         ChromeDriver driver = ChromeBrowser.getDriver();
@@ -118,10 +138,9 @@ public final class LoginHelper {
             wait.until(ExpectedConditions.visibilityOfElementLocated(
                     By.xpath("//main[@id='main' and @class='lzCntnr lzCntnr--home']")));
         } catch (TimeoutException e) {
-            Loggers.getLogger().error("Failed to login", e);
-
             // When failed to login because of other problems.
-            if (!driver.getCurrentUrl().startsWith(URIs.LOGIN.get(args.getLanguage()))) throw e;
+            if (!URI.create(driver.getCurrentUrl()).getPath().equals(URIs.LOGIN.get(args.getLanguage()).getPath()))
+                throw e;
 
             // When failed to login because of invalid account information.
             driver.executeScript("localStorage.setItem('errorCode', window.__LZ_ERROR_CODE__);");
@@ -188,9 +207,8 @@ public final class LoginHelper {
         WebElement script;
         try {
             script = driver.findElementByXPath("//script[not(@src) and contains(text(), '__LZ_ME__')]");
-        } catch (NoSuchElementException ex) {
-            Loggers.getLogger().error("Cannot find access token", ex);
-            throw new LoginFailureException();
+        } catch (NoSuchElementException e) {
+            throw new RuntimeException("Cannot find access token", e);
         }
 
         String accessToken = StringUtils.find(script.getAttribute("innerText"), "token: '([\\w-]+)'", 1);

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 Sejin Im
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.github.imsejin.lzcodl.core;
 
 import io.github.imsejin.lzcodl.common.Loggers;
@@ -13,10 +29,13 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import javax.annotation.Nullable;
+import java.net.URI;
 import java.util.List;
 
 /**
  * DOM Crawler
+ *
+ * @since 2.0.0
  */
 public final class Crawler {
 
@@ -56,17 +75,17 @@ public final class Crawler {
 
         // 언어/지역 설정 변경 페이지가 노출되면 다운로드할 수 없기에, 미리 API를 호출하여 설정을 변경한다.
         String locale = Languages.from(args.getLanguage()).getLocale();
-        String localeUrl = URIs.LOCALE.get(args.getLanguage(), locale);
+        URI localeUrl = URIs.LOCALE.get(args.getLanguage(), locale);
         Loggers.getLogger().debug("Change locale setting: {}", localeUrl);
-        driver.get(localeUrl);
+        driver.get(localeUrl.toString());
 
         // 해당 웹툰 페이지로 이동한다.
-        String comicUrl = URIs.COMIC.get(args.getLanguage(), args.getComicName());
+        URI comicUrl = URIs.COMIC.get(args.getLanguage(), args.getComicName());
         Loggers.getLogger().info("Request comic page: {}", comicUrl);
-        driver.get(comicUrl);
+        driver.get(comicUrl.toString());
 
         // 서비스 종료된 웹툰인지 확인한다.
-        if (driver.getCurrentUrl().equals(URIs.EXPIRED.get(args.getLanguage()))) {
+        if (URI.create(driver.getCurrentUrl()).getPath().equals(URIs.EXPIRED.get(args.getLanguage()).getPath())) {
             Loggers.getLogger().info("Comic is expired -> try to find it in 'My Library'");
             args.setExpiredComic(true);
             return getJsonInMyLibrary(args);
@@ -86,13 +105,16 @@ public final class Crawler {
         return driver.getLocalStorage().getItem("product");
     }
 
+    /**
+     * @since 2.6.0
+     */
     private static String getJsonInMyLibrary(Arguments args) {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
         String locale = Languages.from(args.getLanguage()).getLocale();
-        String libComicUrl = URIs.LIB_COMIC.get(args.getLanguage(), locale, args.getComicName());
+        URI libComicUrl = URIs.LIB_COMIC.get(args.getLanguage(), locale, args.getComicName());
         Loggers.getLogger().debug("Request comic page in 'My Library': {}", libComicUrl);
-        driver.get(libComicUrl);
+        driver.get(libComicUrl.toString());
 
         // Waits for DOM to complete the rendering.
         final int timeout = 15;
@@ -145,12 +167,12 @@ public final class Crawler {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
         // 서비스 종료된 웹툰이면 '내 서재'로 접근한다.
-        String episodeUrl = args.isExpiredComic()
-            ? URIs.LIB_EPISODE.get(args.getLanguage(), Languages.from(args.getLanguage()).getLocale(), args.getComicName(), episode.getName())
-            : URIs.EPISODE.get(args.getLanguage(), args.getComicName(), episode.getName());
+        URI episodeUrl = args.isExpiredComic()
+                ? URIs.LIB_EPISODE.get(args.getLanguage(), Languages.from(args.getLanguage()).getLocale(), args.getComicName(), episode.getName())
+                : URIs.EPISODE.get(args.getLanguage(), args.getComicName(), episode.getName());
 
         Loggers.getLogger().debug("Request episode page: {}", episodeUrl);
-        driver.get(episodeUrl);
+        driver.get(episodeUrl.toString());
 
         WebElement scrollList = driver.findElementById("scroll-list");
 

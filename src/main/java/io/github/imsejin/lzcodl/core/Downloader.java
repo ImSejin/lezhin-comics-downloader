@@ -1,31 +1,48 @@
+/*
+ * Copyright 2020 Sejin Im
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.github.imsejin.lzcodl.core;
 
 import com.google.gson.JsonObject;
+import io.github.imsejin.common.util.FileUtils;
 import io.github.imsejin.common.util.JsonUtils;
 import io.github.imsejin.lzcodl.common.URLFactory;
+import io.github.imsejin.lzcodl.common.constant.EpisodeRange;
 import io.github.imsejin.lzcodl.common.constant.Languages;
 import io.github.imsejin.lzcodl.model.Arguments;
 import io.github.imsejin.lzcodl.model.Episode;
-import lombok.SneakyThrows;
+import me.tongfei.progressbar.ConsoleProgressBarConsumer;
 import me.tongfei.progressbar.ProgressBar;
+import me.tongfei.progressbar.ProgressBarBuilder;
 import me.tongfei.progressbar.ProgressBarStyle;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.IntStream;
 
+/**
+ * @since 1.0.0
+ */
 public final class Downloader {
 
     private static final String IMG_FORMAT_EXTENSION = "webp"; // or jpg
@@ -33,42 +50,22 @@ public final class Downloader {
     private Downloader() {
     }
 
-    public static void all(Arguments arguments) {
-        int to = arguments.getProduct().getEpisodes().size();
-        some(arguments, 1, to);
-    }
+    public static void download(Arguments args) throws IOException {
+        EpisodeRange episodeRange = EpisodeRange.of(args.getEpisodeRange());
 
-    public static void startTo(Arguments arguments, int from) {
-        int to = arguments.getProduct().getEpisodes().size();
-        some(arguments, from, to);
-    }
-
-    public static void endTo(Arguments arguments, int to) {
-        some(arguments, 1, to);
-    }
-
-    public static void some(Arguments arguments, int from, int to) {
-        List<Episode> episodes = arguments.getProduct().getEpisodes();
-
-        // 에피소드 번호를 인덱스에 맞게 변경한다.
-        from = from <= 0 ? 0 : from - 1;
-
-        // 해당 웹툰의 마지막 에피소드 번호를 초과하는 에피소드 번호를 지정하면, 마지막 에피소드까지 다운로드하는 것으로 변경한다.
-        to = Math.min(to, episodes.size());
-
-        for (int i = from; i < to; i++) {
+        List<Episode> episodes = args.getProduct().getEpisodes();
+        for (int i : episodeRange.getArray(args)) {
             Episode episode = episodes.get(i);
-            one(arguments, episode, i + 1);
+            downloadEpisode(args, episode, i + 1);
         }
     }
 
-    @SneakyThrows
-    public static void one(Arguments arguments, Episode episode, int num) {
+    private static void downloadEpisode(Arguments arguments, Episode episode, int num) throws IOException {
         // Cannot download paid episode.
         if (!episode.isFree()) return;
 
         // 한국이 아닌 다른 국가의 플랫폼은 에피소드 API를 찾을 수 없어, 직접 크롤링한다.
-        final int numOfImages = arguments.getLanguage().equals(Languages.KOREAN.value())
+        final int numOfImages = arguments.getLanguage().equals(Languages.KOREAN.getValue())
                 ? getNumOfImagesInEpisode(arguments, episode)
                 : Crawler.getNumOfImagesInEpisode(arguments, episode);
 
@@ -77,13 +74,10 @@ public final class Downloader {
 
         // Creates directory with the name of episode.
         String episodeDirName = String.format("%04d - %s", num, episode.getDisplay().getTitle());
-        Path episodeDir = Paths.get(arguments.getComicPath().toString(), episodeDirName);
+        Path episodeDir = arguments.getComicPath().resolve(episodeDirName);
         Files.createDirectories(episodeDir);
 
         try (ProgressBar progressBar = getDefaultProgressBar(arguments.getProduct().getAlias(), num, numOfImages)) {
-            // `ProgressBar.step()`이 step 1부터 시작하기 때문에 step 0로 초기화한다.
-            progressBar.stepTo(0);
-
             // Downloads all images of the episode.
             IntStream.rangeClosed(1, numOfImages).parallel().forEach(i -> {
                 String filename = String.format("%03d.%s", i, IMG_FORMAT_EXTENSION);
@@ -91,15 +85,15 @@ public final class Downloader {
 
                 // Tries to download high-resolution image for only paid users.
                 URL url = URLFactory.image(arguments, episode, i, true);
-                int result = createImage(url, file);
+                boolean success = downloadImage(url, file);
 
                 // Try to download low-resolution image for all users.
-                if (result == 0) {
+                if (!success) {
                     url = URLFactory.image(arguments, episode, i, false);
-                    result = createImage(url, file);
+                    success = downloadImage(url, file);
 
                     // If failed to download, skips this image.
-                    if (result == 0) return;
+                    if (!success) return;
                 }
 
                 progressBar.stepBy(1);
@@ -108,25 +102,16 @@ public final class Downloader {
     }
 
     /**
-     * 이미지 URL로 이미지 파일을 생성한다. 성공하면 1을, 실패하면 0을 반환한다.<br>
-     * Creates a image file with the image URL. Returns 1 if success, 0 else.
+     * Creates a image file with the image URL. Returns {@code true} if success or {@code false}.
      */
-    private static int createImage(URL url, File dest) {
-        try (InputStream in = url.openStream();
-             FileOutputStream out = new FileOutputStream(dest)) {
-            // Creates a image file.
-            ReadableByteChannel readChannel = Channels.newChannel(in);
-            out.getChannel().transferFrom(readChannel, 0, Long.MAX_VALUE);
-
-            // Success
-            return 1;
-        } catch (IOException ex) {
-            // Fail
-            return 0;
+    private static boolean downloadImage(URL url, File dest) {
+        try {
+            return FileUtils.download(url.openStream(), dest);
+        } catch (IOException e) {
+            return false;
         }
     }
 
-    @SneakyThrows
     private static int getNumOfImagesInEpisode(Arguments arguments, Episode episode) {
         URL url = URLFactory.oneEpisodeAPI(arguments, episode);
         JsonObject json = JsonUtils.readJsonFromUrl(url);
@@ -150,9 +135,19 @@ public final class Downloader {
      */
     private static ProgressBar getDefaultProgressBar(String episodeName, int episodeNo, int numOfImages) {
         String taskName = String.format("%s ep.%d", episodeName, episodeNo);
-        return new ProgressBar(taskName, numOfImages, 250, System.out, ProgressBarStyle.ASCII,
-                " imgs", 1, true, new DecimalFormat("| #.0"), ChronoUnit.SECONDS,
-                0L, Duration.ZERO);
+
+        ProgressBarBuilder builder = new ProgressBarBuilder();
+        builder.setTaskName(taskName);
+        builder.setInitialMax(numOfImages);
+        builder.setUpdateIntervalMillis(250);
+        builder.setConsumer(new ConsoleProgressBarConsumer(System.out));
+        builder.setStyle(ProgressBarStyle.ASCII);
+        builder.setUnit(" imgs", 1);
+        builder.showSpeed(new DecimalFormat("| #.0"));
+        builder.setSpeedUnit(ChronoUnit.SECONDS);
+        builder.startsFrom(0L, Duration.ZERO);
+
+        return builder.build();
     }
 
 }
