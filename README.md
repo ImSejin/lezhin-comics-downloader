@@ -18,6 +18,7 @@
     <img alt="jdk8" src="https://img.shields.io/badge/jdk-8-orange">
     <img alt="GitHub" src="https://img.shields.io/github/license/imsejin/lezhin-comics-downloader">
 </p>
+
 # Preview
 
 <img alt="preview" src="./src/main/resources/assets/preview.gif">
