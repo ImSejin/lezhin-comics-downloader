@@ -11,6 +11,8 @@ import java.net.URL;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 class URLFactoryTest {
 
     private Stopwatch stopwatch;
@@ -43,8 +45,11 @@ class URLFactoryTest {
         String accessToken = "5be30a25-a044-410c-88b0-19a1da968a64";
 
         // when
-        IntStream.range(1, 1_000_000).parallel()
-                .forEach(i -> URLFactory.image(comicId, episodeId, i, accessToken, (i & 1) == 1));
+        String regex = "^.+/comics/" + comicId + "/episodes/" + episodeId + "/.+\\?access_token=" + accessToken + ".+$";
+        assertThat(IntStream.range(1, 1_000_000).parallel()
+                .mapToObj(i -> URLFactory.image(comicId, episodeId, i, accessToken, (i & 1) == 1).toString()))
+                .as("Concatenates strings to generate URL of the image")
+                .allMatch(url -> url.matches(regex));
     }
 
     @Test
@@ -56,8 +61,11 @@ class URLFactoryTest {
         String accessToken = "5be30a25-a044-410c-88b0-19a1da968a64";
 
         // when
-        IntStream.range(1, 1_000_000).parallel()
-                .forEach(i -> getImageURL(comicId, episodeId, i, accessToken, (i & 1) == 1));
+        String regex = "^.+/comics/" + comicId + "/episodes/" + episodeId + "/.+\\?access_token=" + accessToken + ".+$";
+        assertThat(IntStream.range(1, 1_000_000).parallel()
+                .mapToObj(i -> getImageURL(comicId, episodeId, i, accessToken, (i & 1) == 1).toString()))
+                .as("Concatenates strings to generate URL of the image")
+                .allMatch(url -> url.matches(regex));
     }
 
 }
