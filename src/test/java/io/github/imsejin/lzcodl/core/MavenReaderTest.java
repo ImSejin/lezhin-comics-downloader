@@ -39,7 +39,7 @@ class MavenReaderTest {
         Model pom = mavenReader.read(reader);
 
         // then
-        assertThat(pom.getVersion()).isEqualTo("2.7.1");
+        assertThat(pom.getVersion()).isEqualTo("2.8.0");
     }
 
 }
