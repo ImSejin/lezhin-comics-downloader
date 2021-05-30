@@ -53,7 +53,7 @@
 
 ## Usage
 
-```cmd
+```bash
 java -jar {JAR filename} -l=<language> -n=<comic name> [-r=<episode range> -j -d]
 ```
 
@@ -81,7 +81,7 @@ java -jar {JAR filename} -l=<language> -n=<comic name> [-r=<episode range> -j -d
 
 # Examples
 
-```cmd
+```bash
 java -jar lezhin-comics-downloader.jar -l=en -n=appetite
 ```
 
@@ -89,7 +89,7 @@ Downloads all episodes of the comic named appetite.
 
 <br>
 
-```cmd
+```bash
 java -jar lezhin-comics-downloader.jar -l=en -n=appetite -r=8~
 ```
 
@@ -97,7 +97,7 @@ Downloads the episodes of the comic named appetite from ep.8 to the last.
 
 <br>
 
-```cmd
+```bash
 java -jar lezhin-comics-downloader.jar -l=en -n=appetite -r=~25
 ```
 
@@ -105,9 +105,21 @@ Downloads the episodes of the comic named appetite from the first to ep.25.
 
 <br>
 
-```cmd
+```bash
 java -jar lezhin-comics-downloader.jar -l=en -n=appetite -r=1~10
 ```
 
 Downloads the episodes of the comic named appetite from ep.1 to ep.10.
+
+<br>
+
+<br>
+
+# Build
+
+```bash
+./mvnw package
+```
+
+Then you will get a file `lezhin-comics-downloader-{version}-jar-with-dependencies.jar`.
 
