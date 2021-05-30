@@ -62,6 +62,7 @@ public final class Application {
                     .language(cmd.getOptionValue('l'))
                     .comicName(cmd.getOptionValue('n'))
                     .episodeRange(cmd.getOptionValue('r', null))
+                    .jpg(cmd.hasOption('j'))
                     .debugging(cmd.hasOption('d'))
                     .build();
 

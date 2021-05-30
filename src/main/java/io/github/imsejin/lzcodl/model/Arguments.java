@@ -38,7 +38,7 @@ import java.util.Map;
  */
 @Getter
 @Setter
-@ToString
+@ToString(of = {"language", "comicName", "episodeRange", "imageFormat", "debugging"})
 public class Arguments {
 
     private final String username;
@@ -46,6 +46,11 @@ public class Arguments {
     private final String language;
     private final String comicName;
     private final String episodeRange;
+
+    /**
+     * @since 2.7.2
+     */
+    private final String imageFormat;
 
     /**
      * @since 2.6.2
@@ -85,7 +90,7 @@ public class Arguments {
     }
 
     @Builder
-    private Arguments(String language, String comicName, String episodeRange, boolean debugging) {
+    private Arguments(String language, String comicName, String episodeRange, boolean jpg, boolean debugging) {
         // 유효하지 않은 언어의 경우
         if (!Languages.contains(language)) {
             throw new InvalidLanguageException("Invalid language: '%s'", language);
@@ -99,6 +104,7 @@ public class Arguments {
         this.language = language;
         this.comicName = comicName;
         this.episodeRange = episodeRange;
+        this.imageFormat = jpg ? "jpg" : "webp";
         this.debugging = debugging;
     }
 
