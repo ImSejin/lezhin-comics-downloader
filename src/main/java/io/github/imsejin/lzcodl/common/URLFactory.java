@@ -51,7 +51,13 @@ public final class URLFactory {
      */
     private static final String imgUrl = cdnUrl + "/v2/comics/";
 
-    private URLFactory() {
+    /**
+     * @since 2.7.2
+     */
+    private final Arguments args;
+
+    public URLFactory(Arguments args) {
+        this.args = args;
     }
 
     /**
@@ -60,7 +66,7 @@ public final class URLFactory {
      * </a>
      */
     @SneakyThrows(MalformedURLException.class)
-    public static synchronized URL image(long comicId, long episodeId, int filename, String accessToken, boolean purchased) {
+    public static URL image(long comicId, long episodeId, int filename, String imageFormat, String accessToken, boolean purchased) {
         StringBuilder sb = new StringBuilder();
 
         sb.append(imgUrl);
@@ -69,7 +75,9 @@ public final class URLFactory {
         sb.append(episodeId);
         sb.append("/contents/scrolls/");
         sb.append(filename);
-        sb.append(".webp?access_token=");
+        sb.append('.');
+        sb.append(imageFormat);
+        sb.append("?access_token=");
         sb.append(accessToken);
         sb.append("&purchased=").append(purchased); // If not append though you paid this episode, width of image decreases. (1080px => 720px)
         sb.append("&q=30"); // I don't know what this means, but if not append, width of image decreases. (1080px => 1024px)
@@ -78,10 +86,36 @@ public final class URLFactory {
     }
 
     /**
-     * @since 2.6.2
+     * @see <a href="https://cdn.lezhin.com/v2/comics/5651768999542784/episodes/6393378955722752/contents/scrolls/1.webp?access_token=5be30a25-a044-410c-88b0-19a1da968a64&purchased=false">
+     * Image URL
+     * </a>
+     * @since 2.7.2
      */
-    public static URL image(Arguments args, Episode episode, int filename, boolean purchased) {
-        return image(args.getProduct().getId(), episode.getId(), filename, args.getAccessToken(), purchased);
+    @SneakyThrows(MalformedURLException.class)
+    public URL image(long episodeId, int filename, boolean purchased) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(imgUrl);
+        sb.append(this.args.getProduct().getId());
+        sb.append("/episodes/");
+        sb.append(episodeId);
+        sb.append("/contents/scrolls/");
+        sb.append(filename);
+        sb.append('.');
+        sb.append(this.args.getImageFormat());
+        sb.append("?access_token=");
+        sb.append(this.args.getAccessToken());
+        sb.append("&purchased=").append(purchased); // If not append though you paid this episode, width of image decreases. (1080px => 720px)
+        sb.append("&q=30"); // I don't know what this means, but if not append, width of image decreases. (1080px => 1024px)
+
+        return new URL(sb.toString());
+    }
+
+    /**
+     * @since 2.7.2
+     */
+    public URL image(Episode episode, int filename, boolean purchased) {
+        return image(episode.getId(), filename, purchased);
     }
 
     /**

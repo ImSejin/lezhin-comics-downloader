@@ -94,7 +94,7 @@ public final class Application {
             args.setComicPath(comicDir);
 
             // Downloads images.
-            Downloader.download(args);
+            new Downloader(args).download();
 
             // Terminates the application.
             ChromeBrowser.getDriver().quit();
