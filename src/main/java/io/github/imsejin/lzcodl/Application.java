@@ -77,6 +77,7 @@ public final class Application {
             Model pom = mavenReader.read(reader);
             Loggers.getLogger().info("{} v{}", pom.getName(), pom.getVersion());
             Loggers.getLogger().info("If you have any questions, contact me by '{}/issues'", pom.getUrl());
+            Loggers.getLogger().debug("Argument: {}", args);
 
             // Login with username and password and gets a token.
             args.setAccessToken(LoginHelper.login(args));
