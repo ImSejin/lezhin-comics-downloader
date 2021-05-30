@@ -17,29 +17,37 @@
 package io.github.imsejin.lzcodl.core;
 
 import lombok.Cleanup;
-import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.junit.jupiter.api.Test;
 
-import java.io.FileReader;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class MavenReaderTest {
 
     @Test
-    void readPomXML() throws IOException, XmlPullParserException {
+    void readPomXML() throws IOException {
         // given
-        MavenXpp3Reader mavenReader = new MavenXpp3Reader();
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        String filename = "application.properties";
 
         // when
-        @Cleanup FileReader reader = new FileReader("./pom.xml");
-        Model pom = mavenReader.read(reader);
+        @Cleanup BufferedReader reader = new BufferedReader(new InputStreamReader(
+                classLoader.getResourceAsStream(filename), StandardCharsets.UTF_8));
+        Properties properties = reader.lines().filter(it -> !it.startsWith("#"))
+                .map(it -> it.split(" ?= ?"))
+                .collect(Properties::new, (props, arr) -> props.put(arr[0], arr[1]), (props, arr) -> {
+                });
 
         // then
-        assertThat(pom.getVersion()).isEqualTo("2.8.0");
+        assertThat(properties)
+                .hasSizeGreaterThan(0)
+                .containsKey("version")
+                .containsEntry("version", "2.8.0");
     }
 
 }
