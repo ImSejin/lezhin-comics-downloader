@@ -48,7 +48,7 @@ public class Arguments {
     private final String episodeRange;
 
     /**
-     * @since 2.7.2
+     * @since 2.8.0
      */
     private final String imageFormat;
 

@@ -52,7 +52,7 @@ public final class URLFactory {
     private static final String imgUrl = cdnUrl + "/v2/comics/";
 
     /**
-     * @since 2.7.2
+     * @since 2.8.0
      */
     private final Arguments args;
 
@@ -89,7 +89,7 @@ public final class URLFactory {
      * @see <a href="https://cdn.lezhin.com/v2/comics/5651768999542784/episodes/6393378955722752/contents/scrolls/1.webp?access_token=5be30a25-a044-410c-88b0-19a1da968a64&purchased=false">
      * Image URL
      * </a>
-     * @since 2.7.2
+     * @since 2.8.0
      */
     @SneakyThrows(MalformedURLException.class)
     public URL image(long episodeId, int filename, boolean purchased) {
@@ -112,7 +112,7 @@ public final class URLFactory {
     }
 
     /**
-     * @since 2.7.2
+     * @since 2.8.0
      */
     public URL image(Episode episode, int filename, boolean purchased) {
         return image(episode.getId(), filename, purchased);

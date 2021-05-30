@@ -46,12 +46,12 @@ import java.util.stream.IntStream;
 public final class Downloader {
 
     /**
-     * @since 2.7.2
+     * @since 2.8.0
      */
     private final Arguments args;
 
     /**
-     * @since 2.7.2
+     * @since 2.8.0
      */
     private final URLFactory urlFactory;
 

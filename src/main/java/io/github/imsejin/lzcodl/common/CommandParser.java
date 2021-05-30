@@ -49,7 +49,7 @@ public final class CommandParser {
             .build();
 
     /**
-     * @since 2.7.2
+     * @since 2.8.0
      */
     private static final Option jpg = Option.builder("j")
             .longOpt("jpg")
