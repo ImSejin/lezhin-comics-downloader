@@ -31,9 +31,7 @@ public final class URLFactory {
     /**
      * CDN 서버의 origin URL
      *
-     * <pre>{@code
-     *     http://cdn.lezhin.com
-     * }</pre>
+     * @see <a href="http://cdn.lezhin.com">CDN URL</a>
      */
     private static final String cdnUrl = "http://cdn.lezhin.com";
 
@@ -41,9 +39,7 @@ public final class URLFactory {
      * 각 회차의 정보를 얻을 수 있는 URI의 접두사<br>
      * The prefix of URI to obtain information for each episode
      *
-     * <pre>{@code
-     *     http://cdn.lezhin.com/episodes/
-     * }</pre>
+     * @see <a href="http://cdn.lezhin.com/episodes/">Episode Info URL</a>
      */
     private static final String episodeInfoUrl = cdnUrl + "/episodes/";
 
@@ -51,9 +47,7 @@ public final class URLFactory {
      * 이미지 URI의 접두사<br>
      * The prefix of image URI
      *
-     * <pre>{@code
-     *     http://cdn.lezhin.com/v2/comics/
-     * }</pre>
+     * @see <a href="http://cdn.lezhin.com/v2/comics/">Image Prefix URL</a>
      */
     private static final String imgUrl = cdnUrl + "/v2/comics/";
 
@@ -61,9 +55,9 @@ public final class URLFactory {
     }
 
     /**
-     * <pre>{@code
-     *     https://cdn.lezhin.com/v2/comics/5651768999542784/episodes/6393378955722752/contents/scrolls/1.webp?access_token=5be30a25-a044-410c-88b0-19a1da968a64&purchased=false
-     * }</pre>
+     * @see <a href="https://cdn.lezhin.com/v2/comics/5651768999542784/episodes/6393378955722752/contents/scrolls/1.webp?access_token=5be30a25-a044-410c-88b0-19a1da968a64&purchased=false">
+     * Image URL
+     * </a>
      */
     @SneakyThrows(MalformedURLException.class)
     public static synchronized URL image(long comicId, long episodeId, int filename, String accessToken, boolean purchased) {
@@ -91,9 +85,7 @@ public final class URLFactory {
     }
 
     /**
-     * <pre>{@code
-     *     http://cdn.lezhin.com/episodes/snail/1.json?access_token=5be30a25-a044-410c-88b0-19a1da968a64
-     * }</pre>
+     * @see <a href="http://cdn.lezhin.com/episodes/snail/1.json?access_token=5be30a25-a044-410c-88b0-19a1da968a64">A episode API</a>
      */
     @SneakyThrows(MalformedURLException.class)
     public static URL oneEpisodeAPI(String comicName, String episodeName, String accessToken) {
@@ -117,9 +109,7 @@ public final class URLFactory {
     }
 
     /**
-     * <pre>{@code
-     *     http://cdn.lezhin.com/episodes/snail?access_token=5be30a25-a044-410c-88b0-19a1da968a64
-     * }</pre>
+     * @see <a href="http://cdn.lezhin.com/episodes/snail?access_token=5be30a25-a044-410c-88b0-19a1da968a64">All episode API</a>
      */
     @SneakyThrows(MalformedURLException.class)
     public static URL allEpisodeAPI(String comicName, String accessToken) {
