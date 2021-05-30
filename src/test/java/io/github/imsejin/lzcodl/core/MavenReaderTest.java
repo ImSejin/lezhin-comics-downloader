@@ -46,8 +46,11 @@ class MavenReaderTest {
         // then
         assertThat(properties)
                 .hasSizeGreaterThan(0)
-                .containsKey("version")
-                .containsEntry("version", "2.8.0");
+                .containsKey("version");
+        assertThat(properties.getProperty("version"))
+                .isNotNull()
+                .isNotBlank()
+                .matches("[0-9]+\\.[0-9]+\\.[0-9]+");
     }
 
 }
