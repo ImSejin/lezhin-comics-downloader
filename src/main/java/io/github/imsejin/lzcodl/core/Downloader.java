@@ -45,22 +45,32 @@ import java.util.stream.IntStream;
  */
 public final class Downloader {
 
-    private static final String IMG_FORMAT_EXTENSION = "webp"; // or jpg
+    /**
+     * @since 2.8.0
+     */
+    private final Arguments args;
 
-    private Downloader() {
+    /**
+     * @since 2.8.0
+     */
+    private final URLFactory urlFactory;
+
+    public Downloader(Arguments args) {
+        this.args = args;
+        this.urlFactory = new URLFactory(args);
     }
 
-    public static void download(Arguments args) throws IOException {
-        EpisodeRange episodeRange = EpisodeRange.of(args.getEpisodeRange());
+    public void download() throws IOException {
+        EpisodeRange episodeRange = EpisodeRange.of(this.args.getEpisodeRange());
 
-        List<Episode> episodes = args.getProduct().getEpisodes();
-        for (int i : episodeRange.getArray(args)) {
+        List<Episode> episodes = this.args.getProduct().getEpisodes();
+        for (int i : episodeRange.getArray(this.args)) {
             Episode episode = episodes.get(i);
-            downloadEpisode(args, episode, i + 1);
+            downloadEpisode(this.args, episode, i + 1);
         }
     }
 
-    private static void downloadEpisode(Arguments arguments, Episode episode, int num) throws IOException {
+    private void downloadEpisode(Arguments arguments, Episode episode, int num) throws IOException {
         // Cannot download paid episode.
         if (!episode.isFree()) return;
 
@@ -80,16 +90,16 @@ public final class Downloader {
         try (ProgressBar progressBar = getDefaultProgressBar(arguments.getProduct().getAlias(), num, numOfImages)) {
             // Downloads all images of the episode.
             IntStream.rangeClosed(1, numOfImages).parallel().forEach(i -> {
-                String filename = String.format("%03d.%s", i, IMG_FORMAT_EXTENSION);
+                String filename = String.format("%03d.%s", i, this.args.getImageFormat());
                 File file = new File(episodeDir.toFile(), filename);
 
                 // Tries to download high-resolution image for only paid users.
-                URL url = URLFactory.image(arguments, episode, i, true);
+                URL url = this.urlFactory.image(episode, i, true);
                 boolean success = downloadImage(url, file);
 
                 // Try to download low-resolution image for all users.
                 if (!success) {
-                    url = URLFactory.image(arguments, episode, i, false);
+                    url = this.urlFactory.image(episode, i, false);
                     success = downloadImage(url, file);
 
                     // If failed to download, skips this image.

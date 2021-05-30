@@ -62,6 +62,7 @@ public final class Application {
                     .language(cmd.getOptionValue('l'))
                     .comicName(cmd.getOptionValue('n'))
                     .episodeRange(cmd.getOptionValue('r', null))
+                    .jpg(cmd.hasOption('j'))
                     .debugging(cmd.hasOption('d'))
                     .build();
 
@@ -76,6 +77,7 @@ public final class Application {
             Model pom = mavenReader.read(reader);
             Loggers.getLogger().info("{} v{}", pom.getName(), pom.getVersion());
             Loggers.getLogger().info("If you have any questions, contact me by '{}/issues'", pom.getUrl());
+            Loggers.getLogger().debug("Argument: {}", args);
 
             // Login with username and password and gets a token.
             args.setAccessToken(LoginHelper.login(args));
@@ -93,7 +95,7 @@ public final class Application {
             args.setComicPath(comicDir);
 
             // Downloads images.
-            Downloader.download(args);
+            new Downloader(args).download();
 
             // Terminates the application.
             ChromeBrowser.getDriver().quit();

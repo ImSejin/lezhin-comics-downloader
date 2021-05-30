@@ -1,6 +1,7 @@
 package io.github.imsejin.lzcodl.common;
 
 import io.github.imsejin.common.tool.Stopwatch;
+import io.github.imsejin.common.util.MathUtils;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +48,7 @@ class URLFactoryTest {
         // when
         String regex = "^.+/comics/" + comicId + "/episodes/" + episodeId + "/.+\\?access_token=" + accessToken + ".+$";
         assertThat(IntStream.range(1, 1_000_000).parallel()
-                .mapToObj(i -> URLFactory.image(comicId, episodeId, i, accessToken, (i & 1) == 1).toString()))
+                .mapToObj(i -> URLFactory.image(comicId, episodeId, i, "webp", accessToken, MathUtils.isOdd(i)).toString()))
                 .as("Concatenates strings to generate URL of the image")
                 .allMatch(url -> url.matches(regex));
     }
@@ -63,7 +64,7 @@ class URLFactoryTest {
         // when
         String regex = "^.+/comics/" + comicId + "/episodes/" + episodeId + "/.+\\?access_token=" + accessToken + ".+$";
         assertThat(IntStream.range(1, 1_000_000).parallel()
-                .mapToObj(i -> getImageURL(comicId, episodeId, i, accessToken, (i & 1) == 1).toString()))
+                .mapToObj(i -> getImageURL(comicId, episodeId, i, accessToken, MathUtils.isOdd(i)).toString()))
                 .as("Concatenates strings to generate URL of the image")
                 .allMatch(url -> url.matches(regex));
     }

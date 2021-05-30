@@ -1,8 +1,10 @@
-<p align="center" width="40%">
-	<img alt="Lezhin Comics Downloader" src="./src/main/resources/assets/main-image.png">
+<p align="center">
+    <img alt="Lezhin Comics Downloader" src="./src/main/resources/assets/lezhin-comics-downloader-logo.png" width="20%">
 </p>
 
+<h1 align="center">Lezhin Comics Downloader</h1>
 
+<p align="center">Downloader for lezhin comics</p>
 
 <p align="center">
     <a href="https://lgtm.com/projects/g/ImSejin/lezhin-comics-downloader/context:java"><img alt="Language grade: Java" src="https://img.shields.io/lgtm/grade/java/g/ImSejin/lezhin-comics-downloader.svg?logo=lgtm&logoWidth=18"/></a>
@@ -12,21 +14,17 @@
 
 <p align="center">
     <img alt="GitHub All Releases" src="https://img.shields.io/github/downloads/imsejin/lezhin-comics-downloader/total">
-	<img alt="GitHub Releases" src="https://img.shields.io/github/downloads/imsejin/lezhin-comics-downloader/latest/total">
+    <img alt="GitHub Releases" src="https://img.shields.io/github/downloads/imsejin/lezhin-comics-downloader/latest/total">
     <img alt="jdk8" src="https://img.shields.io/badge/jdk-8-orange">
-	<img alt="GitHub" src="https://img.shields.io/github/license/imsejin/lezhin-comics-downloader">
+    <img alt="GitHub" src="https://img.shields.io/github/license/imsejin/lezhin-comics-downloader">
 </p>
-
-This is downloader that helps you to login and downloads the specified comic for all lezhin-comics even adults.
-
-※ *The user is responsible for everything that happens using this program.*
-
-<br><br>
 
 # Preview
 
 <img alt="preview" src="./src/main/resources/assets/preview.gif">
 
+<p align="center">This is downloader that helps you to login and downloads the specified comic for all lezhin-comics even adults.</p>
+<p align="center">※ <i>The user is responsible for everything that happens using this program.</i></p>
 <br><br>
 
 # Getting started
@@ -56,7 +54,7 @@ This is downloader that helps you to login and downloads the specified comic for
 ## Usage
 
 ```cmd
-java -jar {JAR filename} -l=<language> -n=<comic name> [-r=<episode range> -d]
+java -jar {JAR filename} -l=<language> -n=<comic name> [-r=<episode range> -j -d]
 ```
 
 - *<ins>language</ins> (required)*: language of lezhin platform you want to see.
@@ -76,6 +74,7 @@ java -jar {JAR filename} -l=<language> -n=<comic name> [-r=<episode range> -d]
   - __n~__ : from ep.N to the last episode
   - __~n__ : from the first episode to ep.N
   - __m~n__ : from ep.M to ep.N
+- <ins>jpg</ins> (optional): save images as JPEG format (default: WEBP format).
 - <ins>debug</ins> (optional): enables debugging mode.
 
 <br><br>

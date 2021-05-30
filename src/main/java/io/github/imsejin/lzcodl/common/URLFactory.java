@@ -31,9 +31,7 @@ public final class URLFactory {
     /**
      * CDN 서버의 origin URL
      *
-     * <pre>{@code
-     *     http://cdn.lezhin.com
-     * }</pre>
+     * @see <a href="http://cdn.lezhin.com">CDN URL</a>
      */
     private static final String cdnUrl = "http://cdn.lezhin.com";
 
@@ -41,9 +39,7 @@ public final class URLFactory {
      * 각 회차의 정보를 얻을 수 있는 URI의 접두사<br>
      * The prefix of URI to obtain information for each episode
      *
-     * <pre>{@code
-     *     http://cdn.lezhin.com/episodes/
-     * }</pre>
+     * @see <a href="http://cdn.lezhin.com/episodes/">Episode Info URL</a>
      */
     private static final String episodeInfoUrl = cdnUrl + "/episodes/";
 
@@ -51,22 +47,26 @@ public final class URLFactory {
      * 이미지 URI의 접두사<br>
      * The prefix of image URI
      *
-     * <pre>{@code
-     *     http://cdn.lezhin.com/v2/comics/
-     * }</pre>
+     * @see <a href="http://cdn.lezhin.com/v2/comics/">Image Prefix URL</a>
      */
     private static final String imgUrl = cdnUrl + "/v2/comics/";
 
-    private URLFactory() {
+    /**
+     * @since 2.8.0
+     */
+    private final Arguments args;
+
+    public URLFactory(Arguments args) {
+        this.args = args;
     }
 
     /**
-     * <pre>{@code
-     *     https://cdn.lezhin.com/v2/comics/5651768999542784/episodes/6393378955722752/contents/scrolls/1.webp?access_token=5be30a25-a044-410c-88b0-19a1da968a64&purchased=false
-     * }</pre>
+     * @see <a href="https://cdn.lezhin.com/v2/comics/5651768999542784/episodes/6393378955722752/contents/scrolls/1.webp?access_token=5be30a25-a044-410c-88b0-19a1da968a64&purchased=false">
+     * Image URL
+     * </a>
      */
     @SneakyThrows(MalformedURLException.class)
-    public static synchronized URL image(long comicId, long episodeId, int filename, String accessToken, boolean purchased) {
+    public static URL image(long comicId, long episodeId, int filename, String imageFormat, String accessToken, boolean purchased) {
         StringBuilder sb = new StringBuilder();
 
         sb.append(imgUrl);
@@ -75,7 +75,9 @@ public final class URLFactory {
         sb.append(episodeId);
         sb.append("/contents/scrolls/");
         sb.append(filename);
-        sb.append(".webp?access_token=");
+        sb.append('.');
+        sb.append(imageFormat);
+        sb.append("?access_token=");
         sb.append(accessToken);
         sb.append("&purchased=").append(purchased); // If not append though you paid this episode, width of image decreases. (1080px => 720px)
         sb.append("&q=30"); // I don't know what this means, but if not append, width of image decreases. (1080px => 1024px)
@@ -84,16 +86,40 @@ public final class URLFactory {
     }
 
     /**
-     * @since 2.6.2
+     * @see <a href="https://cdn.lezhin.com/v2/comics/5651768999542784/episodes/6393378955722752/contents/scrolls/1.webp?access_token=5be30a25-a044-410c-88b0-19a1da968a64&purchased=false">
+     * Image URL
+     * </a>
+     * @since 2.8.0
      */
-    public static URL image(Arguments args, Episode episode, int filename, boolean purchased) {
-        return image(args.getProduct().getId(), episode.getId(), filename, args.getAccessToken(), purchased);
+    @SneakyThrows(MalformedURLException.class)
+    public URL image(long episodeId, int filename, boolean purchased) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(imgUrl);
+        sb.append(this.args.getProduct().getId());
+        sb.append("/episodes/");
+        sb.append(episodeId);
+        sb.append("/contents/scrolls/");
+        sb.append(filename);
+        sb.append('.');
+        sb.append(this.args.getImageFormat());
+        sb.append("?access_token=");
+        sb.append(this.args.getAccessToken());
+        sb.append("&purchased=").append(purchased); // If not append though you paid this episode, width of image decreases. (1080px => 720px)
+        sb.append("&q=30"); // I don't know what this means, but if not append, width of image decreases. (1080px => 1024px)
+
+        return new URL(sb.toString());
     }
 
     /**
-     * <pre>{@code
-     *     http://cdn.lezhin.com/episodes/snail/1.json?access_token=5be30a25-a044-410c-88b0-19a1da968a64
-     * }</pre>
+     * @since 2.8.0
+     */
+    public URL image(Episode episode, int filename, boolean purchased) {
+        return image(episode.getId(), filename, purchased);
+    }
+
+    /**
+     * @see <a href="http://cdn.lezhin.com/episodes/snail/1.json?access_token=5be30a25-a044-410c-88b0-19a1da968a64">A episode API</a>
      */
     @SneakyThrows(MalformedURLException.class)
     public static URL oneEpisodeAPI(String comicName, String episodeName, String accessToken) {
@@ -117,9 +143,7 @@ public final class URLFactory {
     }
 
     /**
-     * <pre>{@code
-     *     http://cdn.lezhin.com/episodes/snail?access_token=5be30a25-a044-410c-88b0-19a1da968a64
-     * }</pre>
+     * @see <a href="http://cdn.lezhin.com/episodes/snail?access_token=5be30a25-a044-410c-88b0-19a1da968a64">All episode API</a>
      */
     @SneakyThrows(MalformedURLException.class)
     public static URL allEpisodeAPI(String comicName, String accessToken) {

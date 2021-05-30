@@ -3,10 +3,7 @@ package io.github.imsejin.lzcodl.core;
 import io.github.imsejin.common.util.JsonUtils;
 import io.github.imsejin.lzcodl.common.constant.URIs;
 import io.github.imsejin.lzcodl.model.Product;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.lang.reflect.Method;
@@ -38,6 +35,7 @@ class ChromeBrowserTest {
     }
 
     @Test
+    @Disabled
     void findLoadedClass() throws Exception {
         // given
         Method findLoadedClass = ClassLoader.class.getDeclaredMethod("findLoadedClass", String.class);
