@@ -54,7 +54,7 @@
 ## Usage
 
 ```cmd
-java -jar {JAR filename} -l=<language> -n=<comic name> [-r=<episode range> -d]
+java -jar {JAR filename} -l=<language> -n=<comic name> [-r=<episode range> -j -d]
 ```
 
 - *<ins>language</ins> (required)*: language of lezhin platform you want to see.
@@ -74,6 +74,7 @@ java -jar {JAR filename} -l=<language> -n=<comic name> [-r=<episode range> -d]
   - __n~__ : from ep.N to the last episode
   - __~n__ : from the first episode to ep.N
   - __m~n__ : from ep.M to ep.N
+- <ins>jpg</ins> (optional): save images as JPEG format (default: WEBP format).
 - <ins>debug</ins> (optional): enables debugging mode.
 
 <br><br>
