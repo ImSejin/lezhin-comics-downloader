@@ -34,16 +34,14 @@ import io.github.imsejin.lzcodl.model.Artist;
 import io.github.imsejin.lzcodl.model.Episode;
 import io.github.imsejin.lzcodl.model.Product;
 import org.apache.commons.cli.CommandLine;
-import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
+import java.util.Properties;
 
 import static java.util.stream.Collectors.joining;
 
@@ -53,7 +51,17 @@ public final class Application {
     }
 
     public static void main(String[] arguments) {
-        try (FileReader reader = new FileReader("./pom.xml")) {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        InputStream in = classLoader.getResourceAsStream("application.properties");
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                in, StandardCharsets.UTF_8))) {
+            // Reads "application.properties".
+            Properties properties = reader.lines().filter(it -> !it.startsWith("#"))
+                    .map(it -> it.split(" ?= ?"))
+                    .collect(Properties::new, (props, arr) -> props.put(arr[0], arr[1]), (props, arr) -> {
+                    });
+
             // Validates and parses options and arguments.
             CommandLine cmd = CommandParser.parse(arguments);
 
@@ -73,10 +81,9 @@ public final class Application {
             }
 
             // Notices.
-            MavenXpp3Reader mavenReader = new MavenXpp3Reader();
-            Model pom = mavenReader.read(reader);
-            Loggers.getLogger().info("{} v{}", pom.getName(), pom.getVersion());
-            Loggers.getLogger().info("If you have any questions, contact me by '{}/issues'", pom.getUrl());
+            Loggers.getLogger().info("Lezhin Comics Downloader v{}", properties.getProperty("version"));
+            String issueUrl = "https://github.com/ImSejin/lezhin-comics-downloader/issues";
+            Loggers.getLogger().info("If you have any questions, contact me by '{}'", issueUrl);
             Loggers.getLogger().debug("Argument: {}", args);
 
             // Login with username and password and gets a token.

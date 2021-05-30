@@ -81,13 +81,6 @@
             <version>1.4</version>
         </dependency>
 
-        <!-- Reader for Maven pom.xml -->
-        <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-model</artifactId>
-            <version>3.8.1</version>
-        </dependency>
-
         <!-- Junit 5 -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -131,6 +124,22 @@
 
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>
+
+        <!--
+            In Maven, enable resource filtering.
+            This will cause Maven to copy that file into your output classes and
+            translate the resource during that copy, interpreting the property.
+            You can find some info here.
+
+            See http://maven.apache.org/guides/getting-started/index.html#How_do_I_filter_resource_files
+        -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -141,7 +150,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>EntryPoint</mainClass>
+                            <mainClass>io.github.imsejin.lzcodl.Application</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -196,18 +205,28 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.6</version>
-                <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>io.github.imsejin.lzcodl.Application</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
+                <executions>
+                    <execution>
+                        <id>create-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>assembly</goal>
+                        </goals>
+
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                            <archive>
+                                <manifest>
+                                    <addClasspath>true</addClasspath>
+                                    <classpathPrefix>lib/</classpathPrefix>
+                                    <mainClass>io.github.imsejin.lzcodl.Application</mainClass>
+                                </manifest>
+                            </archive>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
