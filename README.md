@@ -121,5 +121,5 @@ Downloads the episodes of the comic named appetite from ep.1 to ep.10.
 ./mvnw package
 ```
 
-Then you will get a file `lezhin-comics-downloader-{version}-jar-with-dependencies.jar`.
+Then you will get a file `lezhin-comics-downloader-{version}.jar`.
 
