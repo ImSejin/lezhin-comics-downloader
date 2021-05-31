@@ -146,6 +146,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
+                    <finalName>${project.build.finalName}-jar-without-dependencies</finalName>
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
@@ -217,6 +218,8 @@
                             <descriptorRefs>
                                 <descriptorRef>jar-with-dependencies</descriptorRef>
                             </descriptorRefs>
+                            <finalName>${project.build.finalName}</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
                             <archive>
                                 <manifest>
                                     <addClasspath>true</addClasspath>
