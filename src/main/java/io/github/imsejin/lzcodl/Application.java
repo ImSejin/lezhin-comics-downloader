@@ -57,9 +57,9 @@ public final class Application {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(
                 in, StandardCharsets.UTF_8))) {
             // Reads "application.properties".
-            Properties properties = reader.lines().filter(it -> !it.startsWith("#"))
-                    .map(it -> it.split(" ?= ?"))
-                    .collect(Properties::new, (props, arr) -> props.put(arr[0], arr[1]), (props, arr) -> {
+            Properties properties = reader.lines().filter(it -> !it.matches("^\\s#.*"))
+                    .map(it -> it.split("=", 2))
+                    .collect(Properties::new, (props, arr) -> props.put(arr[0].trim(), arr[1].trim()), (props, arr) -> {
                     });
 
             // Validates and parses options and arguments.
