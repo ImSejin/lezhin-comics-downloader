@@ -81,9 +81,16 @@ public class Arguments {
         String password = section.get("password");
 
         // 유효하지 않은 계정 정보의 경우
-        if (StringUtils.isNullOrBlank(username) || StringUtils.isNullOrBlank(password)) {
-            throw new ConfigParseException("ID or password is not valid.");
-        }
+        Asserts.that(username)
+                .as("ID is not valid.")
+                .exception(ConfigParseException::new)
+                .isNotNull()
+                .hasText();
+        Asserts.that(password)
+                .as("Password is not valid.")
+                .exception(ConfigParseException::new)
+                .isNotNull()
+                .hasText();
 
         this.username = username;
         this.password = password;

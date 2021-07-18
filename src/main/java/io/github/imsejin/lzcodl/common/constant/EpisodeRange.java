@@ -16,6 +16,7 @@
 
 package io.github.imsejin.lzcodl.common.constant;
 
+import io.github.imsejin.common.assertion.Asserts;
 import io.github.imsejin.common.util.StringUtils;
 import io.github.imsejin.lzcodl.common.exception.EpisodeRangeParseException;
 import io.github.imsejin.lzcodl.model.Arguments;
@@ -87,16 +88,21 @@ public enum EpisodeRange {
      */
     public static final String SEPARATOR = "~";
 
-    private static final Pattern pattern = Pattern.compile("^([0-9]*)" + SEPARATOR + "([0-9]*)$");
+    private static final Pattern RANGE_REGEX = Pattern.compile("^([0-9]*)" + SEPARATOR + "([0-9]*)$");
 
     public static boolean invalidate(String range) {
-        return !StringUtils.isNullOrBlank(range) && !pattern.matcher(range).find();
+        return !StringUtils.isNullOrBlank(range) && !RANGE_REGEX.matcher(range).find();
     }
 
     private static String[] parse(String range) {
-        Matcher matcher = pattern.matcher(range);
-        if (!matcher.find()) throw new EpisodeRangeParseException("Invalid episode range: '%s'", range);
+        Asserts.that(range)
+                .as("Invalid episode range: '{0}'", range)
+                .exception(EpisodeRangeParseException::new)
+                .isNotNull()
+                .hasText()
+                .matches(RANGE_REGEX);
 
+        Matcher matcher = RANGE_REGEX.matcher(range);
         String start = matcher.group(1);
         String end = matcher.group(2);
 
