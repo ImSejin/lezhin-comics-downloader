@@ -61,7 +61,7 @@ public final class Downloader {
     }
 
     public void download() throws IOException {
-        EpisodeRange episodeRange = EpisodeRange.of(this.args.getEpisodeRange());
+        EpisodeRange episodeRange = EpisodeRange.from(this.args.getEpisodeRange());
 
         List<Episode> episodes = this.args.getProduct().getEpisodes();
         for (int i : episodeRange.getArray(this.args)) {

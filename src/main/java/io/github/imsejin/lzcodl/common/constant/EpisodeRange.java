@@ -108,7 +108,7 @@ public enum EpisodeRange {
      * @return episode range
      * @throws EpisodeRangeParseException if range is invalid
      */
-    public static EpisodeRange of(String range) {
+    public static EpisodeRange from(String range) {
         if (StringUtils.isNullOrBlank(range)) return ALL;
 
         String[] parsed = parse(range);
