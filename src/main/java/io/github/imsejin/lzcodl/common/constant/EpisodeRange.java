@@ -95,14 +95,15 @@ public enum EpisodeRange {
     }
 
     private static String[] parse(String range) {
+        Matcher matcher = RANGE_REGEX.matcher(range);
+
         Asserts.that(range)
                 .as("Invalid episode range: '{0}'", range)
                 .exception(EpisodeRangeParseException::new)
                 .isNotNull()
                 .hasText()
-                .matches(RANGE_REGEX);
+                .returns(matcher.find(), it -> RANGE_REGEX.matcher(it).matches());
 
-        Matcher matcher = RANGE_REGEX.matcher(range);
         String start = matcher.group(1);
         String end = matcher.group(2);
 
