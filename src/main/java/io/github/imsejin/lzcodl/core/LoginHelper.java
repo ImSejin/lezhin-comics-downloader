@@ -87,7 +87,7 @@ public final class LoginHelper {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
         // Requests login page.
-        URI loginUrl = URIs.LOGIN.get(args.getLanguage());
+        URI loginUrl = URIs.LOGIN.get(args.getLanguage().getValue());
         Loggers.getLogger().info("Request login page: {}", loginUrl);
         driver.get(loginUrl.toString());
 
@@ -139,8 +139,9 @@ public final class LoginHelper {
                     By.xpath("//main[@id='main' and @class='lzCntnr lzCntnr--home']")));
         } catch (TimeoutException e) {
             // When failed to login because of other problems.
-            if (!URI.create(driver.getCurrentUrl()).getPath().equals(URIs.LOGIN.get(args.getLanguage()).getPath()))
-                throw e;
+            URI currentUri = URI.create(driver.getCurrentUrl());
+            URI loginUri = URIs.LOGIN.get(args.getLanguage().getValue());
+            if (!currentUri.getPath().equals(loginUri.getPath())) throw e;
 
             // When failed to login because of invalid account information.
             driver.executeScript("localStorage.setItem('errorCode', window.__LZ_ERROR_CODE__);");

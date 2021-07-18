@@ -16,14 +16,13 @@
 
 package io.github.imsejin.lzcodl.model;
 
+import io.github.imsejin.common.assertion.Asserts;
 import io.github.imsejin.common.util.IniUtils;
 import io.github.imsejin.common.util.PathnameUtils;
-import io.github.imsejin.common.util.StringUtils;
 import io.github.imsejin.lzcodl.common.constant.EpisodeRange;
 import io.github.imsejin.lzcodl.common.constant.Languages;
 import io.github.imsejin.lzcodl.common.exception.ConfigParseException;
 import io.github.imsejin.lzcodl.common.exception.EpisodeRangeParseException;
-import io.github.imsejin.lzcodl.common.exception.InvalidLanguageException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -43,7 +42,7 @@ public class Arguments {
 
     private final String username;
     private final String password;
-    private final String language;
+    private final Languages language;
     private final String comicName;
     private final String episodeRange;
 
@@ -98,17 +97,12 @@ public class Arguments {
 
     @Builder
     private Arguments(String language, String comicName, String episodeRange, boolean jpg, boolean debugging) {
-        // 유효하지 않은 언어의 경우
-        if (!Languages.contains(language)) {
-            throw new InvalidLanguageException("Invalid language: '%s'", language);
-        }
-
         // 유효하지 않은 에피소드 범위의 경우
         if (EpisodeRange.invalidate(episodeRange)) {
             throw new EpisodeRangeParseException("Invalid episode range: '%s'", episodeRange);
         }
 
-        this.language = language;
+        this.language = Languages.from(language);
         this.comicName = comicName;
         this.episodeRange = episodeRange;
         this.imageFormat = jpg ? "jpg" : "webp";
