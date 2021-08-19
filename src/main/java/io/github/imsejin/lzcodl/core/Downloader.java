@@ -28,6 +28,7 @@ import io.github.imsejin.lzcodl.model.Arguments;
 import io.github.imsejin.lzcodl.model.Artist;
 import io.github.imsejin.lzcodl.model.Episode;
 import io.github.imsejin.lzcodl.model.Product;
+import lombok.SneakyThrows;
 import me.tongfei.progressbar.ConsoleProgressBarConsumer;
 import me.tongfei.progressbar.ProgressBar;
 import me.tongfei.progressbar.ProgressBarBuilder;
@@ -74,10 +75,14 @@ public final class Downloader {
     /**
      * @since 2.8.2
      */
+    @SneakyThrows
     public Downloader(Arguments args, Path comicDir) {
         this.args = args;
         this.urlFactory = new URLFactory(args);
         this.comicDir = comicDir;
+
+        // Creates a directory to save episodes.
+        if (!comicDir.toFile().isDirectory()) Files.createDirectories(comicDir);
     }
 
     /**
@@ -87,6 +92,7 @@ public final class Downloader {
      *
      * @param product product
      * @return path of comic directory
+     * @since 2.8.2
      */
     private static Path createDirectory(Product product) {
         String comicTitle = product.getDisplay().getTitle();
