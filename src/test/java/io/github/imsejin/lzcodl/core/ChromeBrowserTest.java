@@ -29,33 +29,32 @@ class ChromeBrowserTest {
     @DisplayName("Gets json using chrome driver")
     class GetJson {
         @Test
-        @EnabledOnOs(OS.WINDOWS)
-        @DisplayName("when on windows")
-        void test0() {
-            URL url = Thread.currentThread().getContextClassLoader()
-                    .getResource("chrome-driver/92.0.4515.107/windows/chromedriver.exe");
-            assertThatGettingJson(url);
-        }
-
-        @Test
         @EnabledOnOs(OS.LINUX)
         @DisplayName("when on linux")
-        void test1() {
+        void test0() {
             URL url = Thread.currentThread().getContextClassLoader()
-                    .getResource("chrome-driver/92.0.4515.107/windows/chromedriver.exe");
+                    .getResource("chrome-driver/92.0.4515.107/linux/chromedriver");
             assertThatGettingJson(url);
         }
 
         @Test
         @EnabledOnOs(OS.MAC)
         @DisplayName("when on mac")
+        void test1() {
+            URL url = Thread.currentThread().getContextClassLoader()
+                    .getResource("chrome-driver/92.0.4515.107/mac/chromedriver");
+            assertThatGettingJson(url);
+        }
+
+        @Test
+        @EnabledOnOs(OS.WINDOWS)
+        @DisplayName("when on windows")
         void test2() {
             URL url = Thread.currentThread().getContextClassLoader()
                     .getResource("chrome-driver/92.0.4515.107/windows/chromedriver.exe");
             assertThatGettingJson(url);
         }
 
-        @Test
         @SneakyThrows
         private void assertThatGettingJson(URL url) {
             // Pre-initializes class "ChromeBrowser".
