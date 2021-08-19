@@ -25,8 +25,6 @@ class ChromeBrowserTest {
     @Nested
     @DisplayName("Gets version of google chrome installed")
     class GetChromeBrowserVersion {
-        private static final String VERSION = "92.0.4515.159";
-
         @Test
         @EnabledOnOs(OS.WINDOWS)
         @DisplayName("when on windows")
@@ -59,7 +57,7 @@ class ChromeBrowserTest {
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String version = reader.lines().collect(joining());
 
-            assertThat(version).isNotNull().isEqualTo(VERSION);
+            assertThat(version).isNotNull().isEqualTo("92.0.4515.159");
         }
     }
 
@@ -70,10 +68,8 @@ class ChromeBrowserTest {
         @EnabledOnOs(OS.WINDOWS)
         @DisplayName("when on windows")
         void test0() {
-            // Sets up pathname of web driver.
             URL url = Thread.currentThread().getContextClassLoader()
                     .getResource("chrome-driver/92.0.4515.107/windows/chromedriver.exe");
-
             assertThatGettingJson(url);
         }
 
@@ -81,10 +77,8 @@ class ChromeBrowserTest {
         @EnabledOnOs(OS.LINUX)
         @DisplayName("when on linux")
         void test1() {
-            // Sets up pathname of web driver.
             URL url = Thread.currentThread().getContextClassLoader()
                     .getResource("chrome-driver/92.0.4515.107/windows/chromedriver.exe");
-
             assertThatGettingJson(url);
         }
 
@@ -92,10 +86,8 @@ class ChromeBrowserTest {
         @EnabledOnOs(OS.MAC)
         @DisplayName("when on mac")
         void test2() {
-            // Sets up pathname of web driver.
             URL url = Thread.currentThread().getContextClassLoader()
                     .getResource("chrome-driver/92.0.4515.107/windows/chromedriver.exe");
-
             assertThatGettingJson(url);
         }
 
@@ -144,7 +136,10 @@ class ChromeBrowserTest {
         assertThat(clazz).isNull();
 
         // when: 2
-        ChromeBrowser.getDriver().quit();
+        try {
+            ChromeBrowser.getDriver().quit();
+        } catch (Throwable ignored) {
+        }
         Class<?> loadedClass = (Class<?>) findLoadedClass.invoke(classLoader, className);
         // then: 2
         assertThat(loadedClass)
