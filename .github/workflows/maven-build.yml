@@ -6,7 +6,8 @@ name: Java CI with Maven
 on:
   push:
     branches:
-    - release
+    # - release
+    - dev
     
   schedule:
   - cron: "0 20 * * 6" # Runs at 05:00 Asia/Seoul on Sun.
@@ -38,6 +39,7 @@ jobs:
     - name: Install Google Chrome before maven test on linux
       if: runner.os == 'Linux'
       run: |
+        echo 'GITHUB_WORKSPACE: ${GITHUB_WORKSPACE}'
         chmod +x ${GITHUB_WORKSPACE}/src/test/resources/chrome-driver/92.0.4515.107/linux/chromedriver
         apt-get -y ${GITHUB_WORKSPACE}/src/test/resources/google-chrome/92.0.4515.159/linux/google-chrome-amd64-92.0.4515.159.deb
         apt-get -y --fix-broken install
@@ -45,12 +47,15 @@ jobs:
     - name: Install Google Chrome before maven test on mac
       if: runner.os == 'macOS'
       run: |
+        echo 'GITHUB_WORKSPACE: ${GITHUB_WORKSPACE}'
         chmod +x ${GITHUB_WORKSPACE}/src/test/resources/chrome-driver/92.0.4515.107/mac/chromedriver
         
     - name: Install Google Chrome before maven test on windows
       if: runner.os == 'Windows'
       shell: pwsh
       run: |
+        echo 'GITHUB_WORKSPACE: $env:GITHUB_WORKSPACE'
+        
         # Installs Google Chrome silently.
         Start-Process -FilePath '$env:GITHUB_WORKSPACE/src/test/resources/google-chrome/92.0.4515.159/ChromeSetup-92.0.4515.159.exe' -Args '/silent /install' -Wait
         
