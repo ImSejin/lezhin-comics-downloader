@@ -42,6 +42,8 @@ jobs:
       run: |
         echo 'GITHUB_WORKSPACE 1: $GITHUB_WORKSPACE'
         echo 'GITHUB_WORKSPACE 2: ${{ github.workspace }}'
+        ls -lh ${{ github.workspace }}
+        ls -lh '${{ github.workspace }}'
         echo 'GITHUB_WORKSPACE 3: github.workspace'
         echo 'GITHUB_WORKSPACE 4: $env:GITHUB_WORKSPACE'
         chmod +x $GITHUB_WORKSPACE/src/test/resources/chrome-driver/92.0.4515.107/linux/chromedriver
