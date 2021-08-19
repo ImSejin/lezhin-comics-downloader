@@ -35,6 +35,23 @@ jobs:
         java-version: ${{ matrix.java }}
         distribution: 'adopt'
         
+    - name: Install Google Chrome before maven test
+      if: ${{ env.RUNNER_OS == 'Linux' }}
+      run: |
+        chmod +x ${GITHUB_WORKSPACE}/src/test/resources/chrome-driver/92.0.4515.107/linux/chromedriver
+        apt-get -y ${GITHUB_WORKSPACE}/src/test/resources/google-chrome/92.0.4515.159/linux/google-chrome-amd64-92.0.4515.159.deb
+        apt-get -y --fix-broken install
+        
+      if: ${{ env.RUNNER_OS == 'macOS' }}
+      run: |
+        chmod +x ${GITHUB_WORKSPACE}/src/test/resources/chrome-driver/92.0.4515.107/mac/chromedriver
+        
+      if: ${{ env.RUNNER_OS == 'Windows' }}
+      shell: pwsh
+      run: |
+        # Installs Google Chrome silently.
+        Start-Process -FilePath '$env:GITHUB_WORKSPACE/src/test/resources/google-chrome/92.0.4515.159/ChromeSetup-92.0.4515.159.exe' -Args '/silent /install' -Wait
+        
     - name: Build with Maven
       run: mvn clean package -B --file pom.xml
       
