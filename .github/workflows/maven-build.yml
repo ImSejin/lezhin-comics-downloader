@@ -27,7 +27,7 @@ jobs:
     
     env:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      GITHUB_WORKSPACE: ${{ github.GITHUB_WORKSPACE }}
+      GITHUB_WORKSPACE: ${{ github.workspace }}
       
     steps:
     - uses: actions/checkout@v2
@@ -40,16 +40,17 @@ jobs:
     - name: Install Google Chrome before maven test on linux
       if: runner.os == 'Linux'
       run: |
-        echo 'GITHUB_WORKSPACE: ${GITHUB_WORKSPACE}'
-        chmod +x ${GITHUB_WORKSPACE}/src/test/resources/chrome-driver/92.0.4515.107/linux/chromedriver
-        apt-get -y ${GITHUB_WORKSPACE}/src/test/resources/google-chrome/92.0.4515.159/linux/google-chrome-amd64-92.0.4515.159.deb
+        echo 'GITHUB_WORKSPACE 1: $GITHUB_WORKSPACE'
+        echo 'GITHUB_WORKSPACE 2: github.'
+        chmod +x $GITHUB_WORKSPACE/src/test/resources/chrome-driver/92.0.4515.107/linux/chromedriver
+        apt-get -y $GITHUB_WORKSPACE/src/test/resources/google-chrome/92.0.4515.159/linux/google-chrome-amd64-92.0.4515.159.deb
         apt-get -y --fix-broken install
     
     - name: Install Google Chrome before maven test on mac
       if: runner.os == 'macOS'
       run: |
-        echo 'GITHUB_WORKSPACE: ${GITHUB_WORKSPACE}'
-        chmod +x ${GITHUB_WORKSPACE}/src/test/resources/chrome-driver/92.0.4515.107/mac/chromedriver
+        echo 'GITHUB_WORKSPACE: $GITHUB_WORKSPACE'
+        chmod +x $GITHUB_WORKSPACE/src/test/resources/chrome-driver/92.0.4515.107/mac/chromedriver
         
     - name: Install Google Chrome before maven test on windows
       if: runner.os == 'Windows'
