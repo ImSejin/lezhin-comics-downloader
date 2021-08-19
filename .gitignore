@@ -2,11 +2,13 @@ target/
 bin/
 L_*/
 .gitconfig
-chromedriver*
 !.mvn/wrapper/maven-wrapper.jar
 *.log
 *.conf*
 
+# Chrome driver
+chromedriver*
+!src/test/**/chrome-driver/**/chromedriver*
 
 #################################
 #              STS              #
