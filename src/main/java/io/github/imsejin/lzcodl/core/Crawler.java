@@ -16,6 +16,7 @@
 
 package io.github.imsejin.lzcodl.core;
 
+import io.github.imsejin.common.annotation.ExcludeFromGeneratedJacocoReport;
 import io.github.imsejin.lzcodl.common.Loggers;
 import io.github.imsejin.lzcodl.common.constant.Languages;
 import io.github.imsejin.lzcodl.common.constant.URIs;
@@ -39,7 +40,9 @@ import java.util.List;
  */
 public final class Crawler {
 
+    @ExcludeFromGeneratedJacocoReport
     private Crawler() {
+        throw new UnsupportedOperationException(getClass().getName() + " is not allowed to instantiate");
     }
 
     /**

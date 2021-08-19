@@ -16,6 +16,7 @@
 
 package io.github.imsejin.lzcodl.core;
 
+import io.github.imsejin.common.annotation.ExcludeFromGeneratedJacocoReport;
 import io.github.imsejin.common.util.StringUtils;
 import io.github.imsejin.lzcodl.common.Loggers;
 import io.github.imsejin.lzcodl.common.constant.URIs;
@@ -41,7 +42,9 @@ import java.util.UUID;
  */
 public final class LoginHelper {
 
+    @ExcludeFromGeneratedJacocoReport
     private LoginHelper() {
+        throw new UnsupportedOperationException(getClass().getName() + " is not allowed to instantiate");
     }
 
     /**

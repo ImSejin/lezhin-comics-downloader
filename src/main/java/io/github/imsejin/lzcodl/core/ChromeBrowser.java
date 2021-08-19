@@ -16,6 +16,7 @@
 
 package io.github.imsejin.lzcodl.core;
 
+import io.github.imsejin.common.annotation.ExcludeFromGeneratedJacocoReport;
 import io.github.imsejin.common.util.PathnameUtils;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -51,11 +52,13 @@ public final class ChromeBrowser {
         System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_PATHNAME);
     }
 
+    @ExcludeFromGeneratedJacocoReport
     private ChromeBrowser() {
+        throw new UnsupportedOperationException(getClass().getName() + " is not allowed to instantiate");
     }
 
     public static boolean isRunning() {
-        return initialized;
+        return ChromeBrowser.initialized;
     }
 
     /**
@@ -72,7 +75,7 @@ public final class ChromeBrowser {
     }
 
     public static void softQuit() {
-        if (initialized) SingletonLazyHolder.DRIVER.quit();
+        if (ChromeBrowser.initialized) SingletonLazyHolder.DRIVER.quit();
     }
 
     private static class SingletonLazyHolder {

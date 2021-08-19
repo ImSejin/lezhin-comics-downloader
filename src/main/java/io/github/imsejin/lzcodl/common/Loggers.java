@@ -16,6 +16,7 @@
 
 package io.github.imsejin.lzcodl.common;
 
+import io.github.imsejin.common.annotation.ExcludeFromGeneratedJacocoReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +27,9 @@ public final class Loggers {
 
     private static String loggerName = "NormalLogger";
 
+    @ExcludeFromGeneratedJacocoReport
     private Loggers() {
+        throw new UnsupportedOperationException(getClass().getName() + " is not allowed to instantiate");
     }
 
     public static void debugging() {
