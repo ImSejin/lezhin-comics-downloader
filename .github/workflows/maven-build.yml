@@ -36,19 +36,19 @@ jobs:
         distribution: 'adopt'
         
     - name: Install Google Chrome before maven test on linux
-      if: ${{ env.RUNNER_OS == 'Linux' }}
+      if: runner.os == 'Linux'
       run: |
         chmod +x ${GITHUB_WORKSPACE}/src/test/resources/chrome-driver/92.0.4515.107/linux/chromedriver
         apt-get -y ${GITHUB_WORKSPACE}/src/test/resources/google-chrome/92.0.4515.159/linux/google-chrome-amd64-92.0.4515.159.deb
         apt-get -y --fix-broken install
     
     - name: Install Google Chrome before maven test on mac
-      if: ${{ env.RUNNER_OS == 'macOS' }}
+      if: runner.os == 'macOS'
       run: |
         chmod +x ${GITHUB_WORKSPACE}/src/test/resources/chrome-driver/92.0.4515.107/mac/chromedriver
         
     - name: Install Google Chrome before maven test on windows
-      if: ${{ env.RUNNER_OS == 'Windows' }}
+      if: runner.os == 'Windows'
       shell: pwsh
       run: |
         # Installs Google Chrome silently.
