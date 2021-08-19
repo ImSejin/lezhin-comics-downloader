@@ -17,17 +17,23 @@
 package io.github.imsejin.lzcodl.core;
 
 import io.github.imsejin.common.annotation.ExcludeFromGeneratedJacocoReport;
+import io.github.imsejin.common.constant.OperatingSystem;
+import io.github.imsejin.common.tool.OSDetector;
 import io.github.imsejin.common.util.PathnameUtils;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -79,6 +85,37 @@ public final class ChromeBrowser {
 
     public static void softQuit() {
         if (ChromeBrowser.initialized) SingletonLazyHolder.DRIVER.quit();
+    }
+
+    /**
+     * Returns version of Google Chrome installed.
+     *
+     * @return version of Google Chrome
+     * @since 2.8.2
+     */
+    @SneakyThrows
+    public static String getVersion() {
+        OperatingSystem os = OSDetector.getOS();
+        String[] command;
+
+        if (os == OperatingSystem.UNIX) {
+            command = new String[]{"google-chrome", "--version", "|", "grep", "-oE", "'[0-9][0-9.]+[0-9]'"};
+        } else if (os == OperatingSystem.MAC) {
+            command = new String[]{"/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome", "--version"};
+        } else if (os == OperatingSystem.WINDOWS) {
+            command = new String[]{"powershell.exe",
+                    "(Get-Item 'C:/Program Files/Google/Chrome/Application/chrome.exe').VersionInfo", "|",
+                    "Select-String '(\\d{1,3}\\.[\\d.]+\\d)'", "|",
+                    "ForEach-Object {$_.Matches[0].Groups[0].Value}"};
+        } else {
+            throw new UnsupportedOperationException("Unsupported operating system: " + os.name().toLowerCase());
+        }
+
+        Process process = Runtime.getRuntime().exec(command);
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+            return reader.lines().collect(joining()).trim();
+        }
     }
 
     private static class SingletonLazyHolder {
