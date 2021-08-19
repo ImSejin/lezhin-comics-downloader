@@ -65,9 +65,9 @@ jobs:
         echo 'GITHUB_WORKSPACE: ${{ github.workspace }}'
         
         # Installs Google Chrome silently.
-        Start-Process \
-          -FilePath '${{ github.workspace }}\src\test\resources\google-chrome\92.0.4515.159\windows\ChromeSetup-92.0.4515.159.exe' \
-          -Args '/silent /install' \
+        Start-Process `
+          -FilePath '${{ github.workspace }}\src\test\resources\google-chrome\92.0.4515.159\windows\ChromeSetup-92.0.4515.159.exe' `
+          -Args '/silent /install' `
           -Wait
         
     - name: Build with Maven
