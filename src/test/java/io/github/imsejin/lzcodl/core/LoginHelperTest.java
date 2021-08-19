@@ -2,21 +2,23 @@ package io.github.imsejin.lzcodl.core;
 
 import io.github.imsejin.lzcodl.model.Arguments;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class LoginHelperTest {
+@DisplayName("LoginHelper")
+class LoginHelperTest {
 
     @AfterAll
-    public static void quitDriver() {
+    static void quitDriver() {
         // ChromeDriver를 닫고 해당 프로세스를 종료한다.
         ChromeBrowser.getDriver().quit();
     }
 
     @Test
-    public void login() {
+    void login() {
         // given
         ChromeDriver driver = ChromeBrowser.getDriver();
         Arguments arguments = Arguments.builder()
