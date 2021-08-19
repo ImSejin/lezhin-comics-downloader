@@ -29,7 +29,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.util.Map;
 
 /**
@@ -58,7 +57,6 @@ public class Arguments {
 
     private String accessToken;
     private Product product;
-    private Path comicPath;
 
     /**
      * @since 2.6.0

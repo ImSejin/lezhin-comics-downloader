@@ -19,11 +19,15 @@ package io.github.imsejin.lzcodl.core;
 import com.google.gson.JsonObject;
 import io.github.imsejin.common.util.FileUtils;
 import io.github.imsejin.common.util.JsonUtils;
+import io.github.imsejin.common.util.PathnameUtils;
+import io.github.imsejin.lzcodl.common.Loggers;
 import io.github.imsejin.lzcodl.common.URLFactory;
 import io.github.imsejin.lzcodl.common.constant.EpisodeRange;
 import io.github.imsejin.lzcodl.common.constant.Languages;
 import io.github.imsejin.lzcodl.model.Arguments;
+import io.github.imsejin.lzcodl.model.Artist;
 import io.github.imsejin.lzcodl.model.Episode;
+import io.github.imsejin.lzcodl.model.Product;
 import me.tongfei.progressbar.ConsoleProgressBarConsumer;
 import me.tongfei.progressbar.ProgressBar;
 import me.tongfei.progressbar.ProgressBarBuilder;
@@ -34,11 +38,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.IntStream;
+
+import static java.util.stream.Collectors.joining;
 
 /**
  * @since 1.0.0
@@ -55,9 +62,50 @@ public final class Downloader {
      */
     private final URLFactory urlFactory;
 
+    /**
+     * @since 2.8.2
+     */
+    private final Path comicDir;
+
     public Downloader(Arguments args) {
+        this(args, createDirectory(args.getProduct()));
+    }
+
+    /**
+     * @since 2.8.2
+     */
+    public Downloader(Arguments args, Path comicDir) {
         this.args = args;
         this.urlFactory = new URLFactory(args);
+        this.comicDir = comicDir;
+    }
+
+    /**
+     * Creates a directory and returns its path.
+     *
+     * <p> Make a directory named after the comic title.
+     *
+     * @param product product
+     * @return path of comic directory
+     */
+    private static Path createDirectory(Product product) {
+        String comicTitle = product.getDisplay().getTitle();
+        String artists = product.getArtists().stream().map(Artist::getName)
+                .collect(joining(", "));
+        String dirName = String.format("L_%s - %s", comicTitle, artists);
+
+        Path path = Paths.get(PathnameUtils.getCurrentPathname(), dirName);
+        File dir = path.toFile();
+        if (dir.exists() && dir.isDirectory()) return path;
+
+        try {
+            Loggers.getLogger().debug("Create directory: {}", path);
+            Files.createDirectories(path);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to create directory: " + path, e);
+        }
+
+        return path;
     }
 
     public void download() throws IOException {
@@ -84,7 +132,7 @@ public final class Downloader {
 
         // Creates directory with the name of episode.
         String episodeDirName = String.format("%04d - %s", num, episode.getDisplay().getTitle());
-        Path episodeDir = arguments.getComicPath().resolve(episodeDirName);
+        Path episodeDir = this.comicDir.resolve(episodeDirName);
         Files.createDirectories(episodeDir);
 
         try (ProgressBar progressBar = getDefaultProgressBar(arguments.getProduct().getAlias(), num, numOfImages)) {
