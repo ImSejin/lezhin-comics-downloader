@@ -45,7 +45,8 @@ jobs:
         chmod +x ${GITHUB_WORKSPACE}/src/test/resources/chrome-driver/92.0.4515.107/linux/chromedriver
         
         # Installs Google Chrome using deb file.
-        sudo apt-get -y install ${GITHUB_WORKSPACE}/src/test/resources/google-chrome/92.0.4515.159/linux/google-chrome-amd64-92.0.4515.159.deb
+        sudo apt-get -y install \
+          ${GITHUB_WORKSPACE}/src/test/resources/google-chrome/92.0.4515.159/linux/google-chrome-amd64-92.0.4515.159.deb
         
         # Installs dependencies of Google Chrome.
         sudo apt-get -y --fix-broken install
@@ -62,17 +63,12 @@ jobs:
       run: |
         echo 'GITHUB_WORKSPACE: $env:GITHUB_WORKSPACE'
         echo 'GITHUB_WORKSPACE: ${{ github.workspace }}'
-        Get-ChildItem ${{ github.workspace }}
-        Get-ChildItem '${{ github.workspace }}\src'
-        Get-ChildItem '${{ github.workspace }}\src\test'
-        Get-ChildItem '${{ github.workspace }}\src\test\resources'
-        Get-ChildItem '${{ github.workspace }}\src\test\resources\google-chrome'
-        Get-ChildItem '${{ github.workspace }}\src\test\resources\google-chrome\92.0.4515.159'
-
-        (Get-Item ${{ github.workspace }}\src\test\resources\google-chrome\92.0.4515.159\ChromeSetup-92.0.4515.159.exe).VersionInfo
         
         # Installs Google Chrome silently.
-        Start-Process -FilePath '${{ github.workspace }}\src\test\resources\google-chrome\92.0.4515.159\ChromeSetup-92.0.4515.159.exe' -Args '/silent /install' -Wait
+        Start-Process \
+          -FilePath '${{ github.workspace }}\src\test\resources\google-chrome\92.0.4515.159\windows\ChromeSetup-92.0.4515.159.exe' \
+          -Args '/silent /install' \
+          -Wait
         
     - name: Build with Maven
       run: mvn clean package -B --file pom.xml
