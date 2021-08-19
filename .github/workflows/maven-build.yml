@@ -27,6 +27,7 @@ jobs:
     
     env:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      GITHUB_WORKSPACE: ${{ env.GITHUB_WORKSPACE }}
       
     steps:
     - uses: actions/checkout@v2
