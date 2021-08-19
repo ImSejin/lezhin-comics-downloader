@@ -63,6 +63,12 @@ jobs:
         echo 'GITHUB_WORKSPACE: $env:GITHUB_WORKSPACE'
         echo 'GITHUB_WORKSPACE: ${{ github.workspace }}'
         Get-ChildItem ${{ github.workspace }}
+        Get-ChildItem '${{ github.workspace }}\src'
+        Get-ChildItem '${{ github.workspace }}\src\test'
+        Get-ChildItem '${{ github.workspace }}\src\test\resources'
+        Get-ChildItem '${{ github.workspace }}\src\test\resources\google-chrome'
+        Get-ChildItem '${{ github.workspace }}\src\test\resources\google-chrome\92.0.4515.159'
+
         (Get-Item ${{ github.workspace }}\src\test\resources\google-chrome\92.0.4515.159\ChromeSetup-92.0.4515.159.exe).VersionInfo
         
         # Installs Google Chrome silently.
