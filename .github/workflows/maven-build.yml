@@ -42,8 +42,12 @@ jobs:
       run: |
         echo 'GITHUB_WORKSPACE: ${{ github.workspace }}'
         chmod +x ${GITHUB_WORKSPACE}/src/test/resources/chrome-driver/92.0.4515.107/linux/chromedriver
+        
+        # Installs Google Chrome using deb file.
         sudo apt-get -y install ${GITHUB_WORKSPACE}/src/test/resources/google-chrome/92.0.4515.159/linux/google-chrome-amd64-92.0.4515.159.deb
-        apt-get -y --fix-broken install
+        
+        # Installs dependencies of Google Chrome.
+        sudo apt-get -y --fix-broken install
     
     - name: Install Google Chrome before maven test on mac
       if: runner.os == 'macOS'
@@ -56,9 +60,10 @@ jobs:
       shell: pwsh
       run: |
         echo 'GITHUB_WORKSPACE: $env:GITHUB_WORKSPACE'
+        echo 'GITHUB_WORKSPACE: ${{ github.workspace }}'
         
         # Installs Google Chrome silently.
-        Start-Process -FilePath '$env:GITHUB_WORKSPACE/src/test/resources/google-chrome/92.0.4515.159/ChromeSetup-92.0.4515.159.exe' -Args '/silent /install' -Wait
+        Start-Process -FilePath '${{ github.workspace }}/src/test/resources/google-chrome/92.0.4515.159/ChromeSetup-92.0.4515.159.exe' -Args '/silent /install' -Wait
         
     - name: Build with Maven
       run: mvn clean package -B --file pom.xml
