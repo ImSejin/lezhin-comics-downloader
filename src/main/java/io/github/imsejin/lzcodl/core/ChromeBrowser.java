@@ -67,6 +67,9 @@ public final class ChromeBrowser {
     public static void debugging() {
         List<String> arguments = ChromeOption.getArguments();
         arguments.remove(ChromeOption.HEADLESS.argument);
+        arguments.remove(ChromeOption.NO_SANDBOX.argument);
+        arguments.remove(ChromeOption.DISABLE_GPU.argument);
+
         options = new ChromeOptions().addArguments(arguments);
     }
 
@@ -92,36 +95,86 @@ public final class ChromeBrowser {
     @Getter
     @RequiredArgsConstructor
     public enum ChromeOption {
-
         /**
-         * 전체화면으로 실행한다.
+         * Opens browser in maximized mode.
          */
-        START_MAXIMIZED("--start_maximized"),
+        START_MAXIMIZED("--start-maximized"),
 
         /**
-         * 팝업화면을 무시한다.
+         * Opens browser on private mode.
          */
-        DISABLE_POPUP_BLOCKING("--disable_popup_blocking"),
+        INCOGNITO("--incognito"),
 
         /**
-         * 기본 앱을 사용하지 않는다.
-         */
-        DISABLE_DEFAULT_APPS("--disable_default_apps"),
-
-        /**
-         * 인증 오류를 무시한다.
-         */
-        IGNORE_CERTIFICATE_ERRORS("--ignore_certificate_errors"),
-
-        /**
-         * CLI 환경에서도 실행할 수 있게 한다.
+         * Runs browser using CLI.
          */
         HEADLESS("--headless"),
 
         /**
-         * 프라이빗 모드로 실행한다.
+         * Bypasses OS security model.
+         *
+         * @since 2.8.2
          */
-        INCOGNITO("--incognito");
+        NO_SANDBOX("--no-sandbox"),
+
+        /**
+         * Disables GPU computation (applicable to Windows OS only).
+         *
+         * @since 2.8.2
+         */
+        DISABLE_GPU("--disable-gpu"),
+
+        /**
+         * Ignores certificate errors.
+         */
+        IGNORE_CERTIFICATE_ERRORS("--ignore-certificate-errors"),
+
+        /**
+         * Disables to check if Google Chrome is default browser on your device.
+         *
+         * @since 2.8.2
+         */
+        NO_DEFAULT_BROWSER_CHECK("--no-default-browser-check"),
+
+        /**
+         * Disables popup blocking.
+         */
+        DISABLE_POPUP_BLOCKING("--disable-popup-blocking"),
+
+        /**
+         * Disables installed extensions(plugins) of Google Chrome.
+         *
+         * @since 2.8.2
+         */
+        DISABLE_EXTENSIONS("--disable-extensions"),
+
+        /**
+         * Disables default web apps on Google Chrome’s new tab page
+         * <p>
+         * Chrome Web Store, Google Drive, Gmail, YouTube, Google Search, etc.
+         */
+        DISABLE_DEFAULT_APPS("--disable-default-apps"),
+
+        /**
+         * Disables Google translate feature.
+         *
+         * @since 2.8.2
+         */
+        DISABLE_TRANSLATE("--disable-translate"),
+
+        /**
+         * Disables detection for client side phishing.
+         *
+         * @since 2.8.2
+         */
+        DISABLE_CLIENT_SIDE_PHISHING_DETECTION("--disable-client-side-phishing-detection"),
+
+        /**
+         * Overcomes limited resource problems.
+         *
+         * @since 2.8.2
+         */
+        DISABLE_DEV_SHM_USAGE("--disable-dev-shm-usage");
 
         private final String argument;
 
