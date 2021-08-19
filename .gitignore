@@ -6,9 +6,16 @@ L_*/
 *.log
 *.conf*
 
-# Chrome driver
+
+#################################
+#         Chrome driver         #
+#################################
 chromedriver*
 !src/test/**/chrome-driver/**/chromedriver*
+src/test/**/chrome-driver/**/chromedriver-m1-*
+src/test/**/google-chrome/**/googlechrome-m1-*
+#################################
+
 
 #################################
 #              STS              #
