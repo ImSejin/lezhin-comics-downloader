@@ -6,6 +6,7 @@ import io.github.imsejin.lzcodl.common.Loggers;
 import io.github.imsejin.lzcodl.common.constant.URIs;
 import io.github.imsejin.lzcodl.model.Arguments;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -36,10 +37,15 @@ import java.util.stream.IntStream;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CrawlerTest {
+class CrawlerTest {
+
+    @AfterAll
+    static void quitDriver() {
+        ChromeBrowser.softQuit();
+    }
 
     @Test
-    public void getNumOfImagesInEpisode() {
+    void getNumOfImagesInEpisode() {
         // given
         String language = "ja";
         String comicName = "jisoo";
@@ -152,7 +158,6 @@ public class CrawlerTest {
                 }
             });
         }
-
-        ChromeBrowser.getDriver().quit();
     }
+
 }

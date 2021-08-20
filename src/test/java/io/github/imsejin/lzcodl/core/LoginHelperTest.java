@@ -13,8 +13,7 @@ class LoginHelperTest {
 
     @AfterAll
     static void quitDriver() {
-        // ChromeDriver를 닫고 해당 프로세스를 종료한다.
-        ChromeBrowser.getDriver().quit();
+        ChromeBrowser.softQuit();
     }
 
     @Test
