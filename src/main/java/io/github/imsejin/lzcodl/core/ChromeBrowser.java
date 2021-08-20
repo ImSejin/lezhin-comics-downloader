@@ -99,7 +99,7 @@ public final class ChromeBrowser {
         String[] command;
 
         if (os == OperatingSystem.UNIX) {
-            command = new String[]{"/bin/sh", "-c", "\"google-chrome --version | grep -oE '[0-9][0-9.]+[0-9]'\""};
+            command = new String[]{"/bin/sh", "-c", "google-chrome --version | grep -oE '[0-9][0-9.]+[0-9]'"};
         } else if (os == OperatingSystem.MAC) {
             command = new String[]{"/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome", "--version"};
         } else if (os == OperatingSystem.WINDOWS) {
