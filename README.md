@@ -57,7 +57,7 @@
 ## Usage
 
 ```bash
-java -jar {JAR filename} -l=<language> -n=<comic name> [-r=<episode range> -j -d]
+java -jar {JAR filename} -l=<language> -n=<comic_name> [-r=<episode_range> -j -d]
 ```
 
 - *<ins>language</ins> (required)*: language of lezhin platform you want to see.
