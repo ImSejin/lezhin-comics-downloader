@@ -8,6 +8,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -18,9 +19,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ChromeBrowserTest {
 
+    private static ChromeDriver driver;
+
+    @BeforeAll
+    static void beforeAll() {
+        driver = new ChromeDriver(new ChromeOptions().addArguments(ChromeBrowser.ChromeOption.getArguments()));
+    }
+
     @AfterAll
-    static void quitDriver() {
-        ChromeBrowser.softQuit();
+    static void afterAll() {
+        driver.quit();
     }
 
     @Test
@@ -66,7 +74,6 @@ class ChromeBrowserTest {
 
             // given
             System.setProperty("webdriver.chrome.driver", url.toURI().getPath());
-            ChromeDriver driver = ChromeBrowser.getDriver();
 
             // when
             driver.get(URIs.COMIC.get("ko", "snail").toString());

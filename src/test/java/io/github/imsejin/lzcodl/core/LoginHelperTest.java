@@ -2,24 +2,32 @@ package io.github.imsejin.lzcodl.core;
 
 import io.github.imsejin.lzcodl.model.Arguments;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("LoginHelper")
 class LoginHelperTest {
 
+    private static ChromeDriver driver;
+
+    @BeforeAll
+    static void beforeAll() {
+        driver = new ChromeDriver(new ChromeOptions().addArguments(ChromeBrowser.ChromeOption.getArguments()));
+    }
+
     @AfterAll
-    static void quitDriver() {
-        ChromeBrowser.softQuit();
+    static void afterAll() {
+        driver.quit();
     }
 
     @Test
     void login() {
         // given
-        ChromeDriver driver = ChromeBrowser.getDriver();
         Arguments arguments = Arguments.builder()
                 .language("ko")
                 .comicName("snail")

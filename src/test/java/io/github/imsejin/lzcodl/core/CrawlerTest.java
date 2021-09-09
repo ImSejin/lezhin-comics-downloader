@@ -7,11 +7,13 @@ import io.github.imsejin.lzcodl.common.constant.URIs;
 import io.github.imsejin.lzcodl.model.Arguments;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.w3c.dom.Document;
@@ -39,9 +41,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class CrawlerTest {
 
+    private static ChromeDriver driver;
+
+    @BeforeAll
+    static void beforeAll() {
+        driver = new ChromeDriver(new ChromeOptions().addArguments(ChromeBrowser.ChromeOption.getArguments()));
+    }
+
     @AfterAll
-    static void quitDriver() {
-        ChromeBrowser.softQuit();
+    static void afterAll() {
+        driver.quit();
     }
 
     @Test
@@ -53,7 +62,6 @@ class CrawlerTest {
         URI episodeUrl = URIs.EPISODE.get(language, comicName, episodeName);
 
         // when
-        ChromeDriver driver = ChromeBrowser.getDriver();
         driver.get(episodeUrl.toString());
 
         WebElement scrollList = driver.findElementById("scroll-list");
@@ -85,7 +93,6 @@ class CrawlerTest {
         }
 
         // Goes to login page.
-        ChromeDriver driver = ChromeBrowser.getDriver();
         driver.get("https://accounts.kakao.com/login?continue=https%3A%2F%2Flogins.daum.net");
 
         // Waits for rendering.
