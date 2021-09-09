@@ -1,17 +1,14 @@
 package io.github.imsejin.lzcodl.core;
 
 import io.github.imsejin.common.util.JsonUtils;
+import io.github.imsejin.lzcodl.TestUtils;
 import io.github.imsejin.lzcodl.common.constant.URIs;
 import io.github.imsejin.lzcodl.model.Product;
-import lombok.SneakyThrows;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.condition.EnabledOnOs;
-import org.junit.jupiter.api.condition.OS;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.lang.reflect.Method;
-import java.net.URL;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,6 +20,7 @@ class ChromeBrowserTest {
 
     @BeforeAll
     static void beforeAll() {
+        System.setProperty("webdriver.chrome.driver", TestUtils.getDriverPath().getPath());
         driver = new ChromeDriver(new ChromeOptions().addArguments(ChromeBrowser.ChromeOption.getArguments()));
     }
 
@@ -37,59 +35,23 @@ class ChromeBrowserTest {
         assertThat(ChromeBrowser.getVersion()).isNotNull().isEqualTo("92.0.4515.159");
     }
 
-    @Nested
+    @Test
     @DisplayName("Gets json using chrome driver")
-    class GetJson {
-        @Test
-        @EnabledOnOs(OS.LINUX)
-        @DisplayName("when on linux")
-        void test0() {
-            URL url = Thread.currentThread().getContextClassLoader()
-                    .getResource("chrome-driver/92.0.4515.107/linux/chromedriver");
-            assertThatGettingJson(url);
-        }
+    void getJson() {
+        // when
+        driver.get(URIs.COMIC.get("ko", "snail").toString());
+        driver.executeScript("localStorage.setItem('product', JSON.stringify(window.__LZ_PRODUCT__.product));");
+        String json = driver.getLocalStorage().getItem("product");
 
-        @Test
-        @EnabledOnOs(OS.MAC)
-        @DisplayName("when on mac")
-        void test1() {
-            URL url = Thread.currentThread().getContextClassLoader()
-                    .getResource("chrome-driver/92.0.4515.107/mac/chromedriver");
-            assertThatGettingJson(url);
-        }
-
-        @Test
-        @EnabledOnOs(OS.WINDOWS)
-        @DisplayName("when on windows")
-        void test2() {
-            URL url = Thread.currentThread().getContextClassLoader()
-                    .getResource("chrome-driver/92.0.4515.107/windows/chromedriver.exe");
-            assertThatGettingJson(url);
-        }
-
-        @SneakyThrows
-        private void assertThatGettingJson(URL url) {
-            // Pre-initializes class "ChromeBrowser".
-            Class.forName(ChromeBrowser.class.getName());
-
-            // given
-            System.setProperty("webdriver.chrome.driver", url.toURI().getPath());
-
-            // when
-            driver.get(URIs.COMIC.get("ko", "snail").toString());
-            driver.executeScript("localStorage.setItem('product', JSON.stringify(window.__LZ_PRODUCT__.product));");
-            String json = driver.getLocalStorage().getItem("product");
-
-            // then
-            assertThat(json)
-                    .as("The item 'product' of local storage must be json string")
-                    .matches("\\{\"\\w.*\":.+}");
-            Product product = JsonUtils.toObject(json, Product.class);
-            assertThat(product)
-                    .as("The json string can be parsed to Product")
-                    .isExactlyInstanceOf(Product.class)
-                    .returns("아가씨와 우렁총각", it -> it.getDisplay().getTitle());
-        }
+        // then
+        assertThat(json)
+                .as("The item 'product' of local storage must be json string")
+                .matches("\\{\"\\w.*\":.+}");
+        Product product = JsonUtils.toObject(json, Product.class);
+        assertThat(product)
+                .as("The json string can be parsed to Product")
+                .isExactlyInstanceOf(Product.class)
+                .returns("아가씨와 우렁총각", it -> it.getDisplay().getTitle());
     }
 
     @Test

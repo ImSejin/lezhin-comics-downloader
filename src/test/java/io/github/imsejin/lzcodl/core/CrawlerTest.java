@@ -2,6 +2,7 @@ package io.github.imsejin.lzcodl.core;
 
 import io.github.imsejin.common.util.FileUtils;
 import io.github.imsejin.common.util.FilenameUtils;
+import io.github.imsejin.lzcodl.TestUtils;
 import io.github.imsejin.lzcodl.common.Loggers;
 import io.github.imsejin.lzcodl.common.constant.URIs;
 import io.github.imsejin.lzcodl.model.Arguments;
@@ -45,6 +46,7 @@ class CrawlerTest {
 
     @BeforeAll
     static void beforeAll() {
+        System.setProperty("webdriver.chrome.driver", TestUtils.getDriverPath().getPath());
         driver = new ChromeDriver(new ChromeOptions().addArguments(ChromeBrowser.ChromeOption.getArguments()));
     }
 

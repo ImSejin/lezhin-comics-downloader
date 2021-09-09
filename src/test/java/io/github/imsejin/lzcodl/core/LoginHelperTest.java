@@ -1,5 +1,6 @@
 package io.github.imsejin.lzcodl.core;
 
+import io.github.imsejin.lzcodl.TestUtils;
 import io.github.imsejin.lzcodl.model.Arguments;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,6 +18,7 @@ class LoginHelperTest {
 
     @BeforeAll
     static void beforeAll() {
+        System.setProperty("webdriver.chrome.driver", TestUtils.getDriverPath().getPath());
         driver = new ChromeDriver(new ChromeOptions().addArguments(ChromeBrowser.ChromeOption.getArguments()));
     }
 
