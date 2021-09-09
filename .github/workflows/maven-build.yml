@@ -65,7 +65,10 @@ jobs:
         echo 'GITHUB_WORKSPACE: ${{ github.workspace }}'
 
         # Uninstalls Google Chrome forcefully.
-        Uninstall-Package -InputObject (Get-Package -Name 'Chrome') -AllVersions -Force
+        (Get-ItemProperty -path 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Google Chrome').version `
+          | ForEach-Object {& ${env:ProgramFiles(x86)}\Google\Chrome\Application\$_\Installer\setup.exe `
+            --uninstall --multi-install --chrome --system-level --force-uninstall}
+        # Uninstall-Package -InputObject (Get-Package -Name 'Chrome') -AllVersions -Force
 
         # Installs Google Chrome silently.
         Start-Process `
