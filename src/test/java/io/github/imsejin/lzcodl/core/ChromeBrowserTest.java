@@ -4,12 +4,19 @@ import io.github.imsejin.common.util.JsonUtils;
 import io.github.imsejin.lzcodl.TestUtils;
 import io.github.imsejin.lzcodl.common.constant.URIs;
 import io.github.imsejin.lzcodl.model.Product;
+import lombok.Cleanup;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
+import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,8 +41,23 @@ class ChromeBrowserTest {
     }
 
     @Test
+    @SneakyThrows
     @DisplayName("method 'getVersion'")
     void getVersion() {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        InputStream in = classLoader.getResourceAsStream("application.properties");
+
+        @Cleanup
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+
+        Properties properties = reader.lines().filter(it -> !it.matches("^\\s#.*"))
+                .map(it -> it.split("=", 2))
+                .collect(Properties::new, (props, arr) -> props.put(arr[0].trim(), arr[1].trim()), (props, arr) -> {
+                });
+
+        // Enables to build on development environment.
+        if (properties.getProperty("environment").equals("local")) return;
+
         assertThat(ChromeBrowser.getVersion()).isNotNull().isEqualTo("92.0.4515.159");
     }
 

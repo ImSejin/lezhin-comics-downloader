@@ -44,6 +44,16 @@
         <lombok.version>1.18.20</lombok.version>
     </properties>
 
+    <!-- Enables to build on development environment -->
+    <profiles>
+        <profile>
+            <id>local</id>
+            <properties>
+                <env>local</env>
+            </properties>
+        </profile>
+    </profiles>
+
     <dependencies>
         <!-- Common Utils -->
         <dependency>
