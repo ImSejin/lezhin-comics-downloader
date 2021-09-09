@@ -17,8 +17,7 @@
 package io.github.imsejin.lzcodl.core;
 
 import io.github.imsejin.common.annotation.ExcludeFromGeneratedJacocoReport;
-import io.github.imsejin.common.constant.OperatingSystem;
-import io.github.imsejin.common.tool.OSDetector;
+import io.github.imsejin.common.constant.OS;
 import io.github.imsejin.common.util.PathnameUtils;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -95,14 +94,14 @@ public final class ChromeBrowser {
      */
     @SneakyThrows
     public static String getVersion() {
-        OperatingSystem os = OSDetector.getOS();
+        OS os = OS.getCurrentOS();
         String[] command;
 
-        if (os == OperatingSystem.UNIX) {
+        if (os == OS.LINUX) {
             command = new String[]{"/bin/sh", "-c", "google-chrome --version | grep -oE '[0-9][0-9.]+[0-9]'"};
-        } else if (os == OperatingSystem.MAC) {
+        } else if (os == OS.MAC) {
             command = new String[]{"/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome", "--version"};
-        } else if (os == OperatingSystem.WINDOWS) {
+        } else if (os == OS.WINDOWS) {
             command = new String[]{"powershell.exe",
                     "(Get-Item 'C:/Program Files/Google/Chrome/Application/chrome.exe').VersionInfo", "|",
                     "Select-String '(\\d{1,3}\\.[\\d.]+\\d)'", "|",
