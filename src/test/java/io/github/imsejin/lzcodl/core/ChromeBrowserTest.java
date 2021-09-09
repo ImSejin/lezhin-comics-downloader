@@ -8,6 +8,7 @@ import org.junit.jupiter.api.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+import java.io.File;
 import java.lang.reflect.Method;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,7 +21,10 @@ class ChromeBrowserTest {
 
     @BeforeAll
     static void beforeAll() {
-        System.setProperty("webdriver.chrome.driver", TestUtils.getDriverPath().getPath());
+        String path = TestUtils.getDriverPath().getPath();
+        System.setProperty("webdriver.chrome.driver", path);
+
+        new File(path).setExecutable(true);
         driver = new ChromeDriver(new ChromeOptions().addArguments(ChromeBrowser.ChromeOption.getArguments()));
     }
 

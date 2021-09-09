@@ -46,7 +46,10 @@ class CrawlerTest {
 
     @BeforeAll
     static void beforeAll() {
-        System.setProperty("webdriver.chrome.driver", TestUtils.getDriverPath().getPath());
+        String path = TestUtils.getDriverPath().getPath();
+        System.setProperty("webdriver.chrome.driver", path);
+
+        new File(path).setExecutable(true);
         driver = new ChromeDriver(new ChromeOptions().addArguments(ChromeBrowser.ChromeOption.getArguments()));
     }
 
