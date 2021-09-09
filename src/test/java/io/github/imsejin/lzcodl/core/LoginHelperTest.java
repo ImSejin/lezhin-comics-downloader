@@ -2,10 +2,7 @@ package io.github.imsejin.lzcodl.core;
 
 import io.github.imsejin.lzcodl.TestUtils;
 import io.github.imsejin.lzcodl.model.Arguments;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
@@ -13,6 +10,7 @@ import java.io.File;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Disabled
 @DisplayName("LoginHelper")
 class LoginHelperTest {
 
