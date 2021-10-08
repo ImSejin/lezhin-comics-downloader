@@ -41,7 +41,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <common.utils.version>0.6.0</common.utils.version>
-        <lombok.version>1.18.20</lombok.version>
+        <lombok.version>1.18.22</lombok.version>
     </properties>
 
     <!-- Enables to build on development environment -->
