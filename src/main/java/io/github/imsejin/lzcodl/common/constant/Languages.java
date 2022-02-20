@@ -81,10 +81,10 @@ public enum Languages {
      * @throws InvalidLanguageException if {@link Languages} that has the parameter doesn't exist
      */
     public static Languages from(String value) {
-        Asserts.that($CODE_LOOKUP)
+        Asserts.that(contains(value))
                 .as("Invalid language: '{0}'", value)
                 .exception(InvalidLanguageException::new)
-                .containsKey(value);
+                .isTrue();
 
         return $CODE_LOOKUP.get(value);
     }
