@@ -20,6 +20,7 @@ import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Disabled
 @DisplayName("ChromeBrowser")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ChromeBrowserTest {
