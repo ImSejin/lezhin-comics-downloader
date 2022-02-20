@@ -16,6 +16,7 @@
 
 package io.github.imsejin.lzcodl;
 
+import io.github.imsejin.common.annotation.ExcludeFromGeneratedJacocoReport;
 import io.github.imsejin.common.util.FilenameUtils;
 import io.github.imsejin.common.util.JsonUtils;
 import io.github.imsejin.lzcodl.common.CommandParser;
@@ -38,24 +39,25 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Properties;
 
 public final class Application {
 
+    @ExcludeFromGeneratedJacocoReport
     private Application() {
+        throw new UnsupportedOperationException(getClass().getName() + " is not allowed to instantiate");
     }
 
     public static void main(String[] arguments) {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         InputStream in = classLoader.getResourceAsStream("application.properties");
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-                in, StandardCharsets.UTF_8))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
             // Reads "application.properties".
             Properties properties = reader.lines().filter(it -> !it.matches("^\\s#.*"))
                     .map(it -> it.split("=", 2))
-                    .collect(Properties::new, (props, arr) -> props.put(arr[0].trim(), arr[1].trim()), (props, arr) -> {
-                    });
+                    .collect(Properties::new, (props, arr) -> props.put(arr[0].trim(), arr[1].trim()), Map::putAll);
 
             // Validates and parses options and arguments.
             CommandLine cmd = CommandParser.parse(arguments);
