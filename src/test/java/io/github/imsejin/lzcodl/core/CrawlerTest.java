@@ -32,6 +32,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -69,10 +70,10 @@ class CrawlerTest {
         // when
         driver.get(episodeUrl.toString());
 
-        WebElement scrollList = driver.findElementById("scroll-list");
+        WebElement scrollList = driver.findElement(By.id("scroll-list"));
 
         // Waits for DOM to complete the rendering.
-        WebDriverWait wait = new WebDriverWait(driver, 15);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         wait.until(ExpectedConditions.visibilityOfAllElements(scrollList));
 
         List<WebElement> images = scrollList.findElements(

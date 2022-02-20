@@ -31,6 +31,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import javax.annotation.Nullable;
 import java.net.URI;
+import java.time.Duration;
 import java.util.List;
 
 /**
@@ -97,7 +98,7 @@ public final class Crawler {
         // Waits for DOM to complete the rendering.
         final int timeout = 15;
         Loggers.getLogger().debug("Wait up to {} sec for episode list to be rendered", timeout);
-        WebDriverWait wait = new WebDriverWait(driver, timeout);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeout));
         wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.xpath("//main[@id='main' and @class='lzCntnr lzCntnr--episode']")));
 
@@ -122,7 +123,7 @@ public final class Crawler {
         // Waits for DOM to complete the rendering.
         final int timeout = 15;
         Loggers.getLogger().debug("Wait up to {} sec for episode list to be rendered", timeout);
-        WebDriverWait wait = new WebDriverWait(driver, timeout);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeout));
         wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.xpath("//ul[@id='library-episode-list' and @class='epsList']")));
 
@@ -178,12 +179,12 @@ public final class Crawler {
         Loggers.getLogger().debug("Request episode page: {}", episodeUrl);
         driver.get(episodeUrl.toString());
 
-        WebElement scrollList = driver.findElementById("scroll-list");
+        WebElement scrollList = driver.findElement(By.id("scroll-list"));
 
         // Waits for DOM to complete the rendering.
         final int timeout = 15;
         Loggers.getLogger().debug("Wait up to {} sec for images to be rendered", timeout);
-        WebDriverWait wait = new WebDriverWait(driver, timeout);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeout));
         wait.until(ExpectedConditions.visibilityOfAllElements(scrollList));
 
         try {

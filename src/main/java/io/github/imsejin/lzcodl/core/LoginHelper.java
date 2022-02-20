@@ -31,6 +31,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URI;
+import java.time.Duration;
 import java.util.UUID;
 
 /**
@@ -97,9 +98,9 @@ public final class LoginHelper {
         // Waits for DOM to complete the rendering.
         final int timeout = 15;
         Loggers.getLogger().debug("Wait up to {} sec for login element to be rendered", timeout);
-        WebDriverWait waitLogin = new WebDriverWait(driver, timeout);
-        WebElement loginForm = driver.findElementByXPath(
-                "//form[@id='email' and contains(@action, '/login') and @method='post']");
+        WebDriverWait waitLogin = new WebDriverWait(driver, Duration.ofSeconds(timeout));
+        WebElement loginForm = driver.findElement(By
+                .xpath("//form[@id='email' and contains(@action, '/login') and @method='post']"));
         waitLogin.until(ExpectedConditions.visibilityOfAllElements(loginForm));
 
         // Inputs username into the element.
@@ -137,7 +138,7 @@ public final class LoginHelper {
         try {
             // Waits for DOM to complete the rendering.
             Loggers.getLogger().debug("Wait up to {} sec for main page to be rendered", timeout);
-            WebDriverWait wait = new WebDriverWait(driver, timeout);
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeout));
             wait.until(ExpectedConditions.visibilityOfElementLocated(
                     By.xpath("//main[@id='main' and @class='lzCntnr lzCntnr--home']")));
         } catch (TimeoutException e) {
@@ -210,7 +211,7 @@ public final class LoginHelper {
         // Finds the script tag that has access token.
         WebElement script;
         try {
-            script = driver.findElementByXPath("//script[not(@src) and contains(text(), '__LZ_ME__')]");
+            script = driver.findElement(By.xpath("//script[not(@src) and contains(text(), '__LZ_ME__')]"));
         } catch (NoSuchElementException e) {
             throw new RuntimeException("Cannot find access token", e);
         }
