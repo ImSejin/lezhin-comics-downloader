@@ -16,6 +16,7 @@
 
 package io.github.imsejin.lzcodl.common;
 
+import io.github.imsejin.common.annotation.ExcludeFromGeneratedJacocoReport;
 import org.apache.commons.cli.*;
 
 import javax.annotation.Nonnull;
@@ -64,7 +65,9 @@ public final class CommandParser {
     private static final Options options = new Options()
             .addOption(lang).addOption(name).addOption(range).addOption(jpg).addOption(debug);
 
+    @ExcludeFromGeneratedJacocoReport
     private CommandParser() {
+        throw new UnsupportedOperationException(getClass().getName() + " is not allowed to instantiate");
     }
 
     /**

@@ -16,17 +16,23 @@
 
 package io.github.imsejin.lzcodl.core;
 
+import io.github.imsejin.common.annotation.ExcludeFromGeneratedJacocoReport;
+import io.github.imsejin.common.constant.OS;
 import io.github.imsejin.common.util.PathnameUtils;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -51,11 +57,13 @@ public final class ChromeBrowser {
         System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_PATHNAME);
     }
 
+    @ExcludeFromGeneratedJacocoReport
     private ChromeBrowser() {
+        throw new UnsupportedOperationException(getClass().getName() + " is not allowed to instantiate");
     }
 
     public static boolean isRunning() {
-        return initialized;
+        return ChromeBrowser.initialized;
     }
 
     /**
@@ -64,6 +72,9 @@ public final class ChromeBrowser {
     public static void debugging() {
         List<String> arguments = ChromeOption.getArguments();
         arguments.remove(ChromeOption.HEADLESS.argument);
+        arguments.remove(ChromeOption.NO_SANDBOX.argument);
+        arguments.remove(ChromeOption.DISABLE_GPU.argument);
+
         options = new ChromeOptions().addArguments(arguments);
     }
 
@@ -72,7 +83,38 @@ public final class ChromeBrowser {
     }
 
     public static void softQuit() {
-        if (initialized) SingletonLazyHolder.DRIVER.quit();
+        if (ChromeBrowser.initialized) SingletonLazyHolder.DRIVER.quit();
+    }
+
+    /**
+     * Returns version of Google Chrome installed.
+     *
+     * @return version of Google Chrome
+     * @since 2.8.2
+     */
+    @SneakyThrows
+    public static String getVersion() {
+        OS os = OS.getCurrentOS();
+        String[] command;
+
+        if (os == OS.LINUX) {
+            command = new String[]{"/bin/sh", "-c", "google-chrome --version | grep -oE '[0-9][0-9.]+[0-9]'"};
+        } else if (os == OS.MAC) {
+            command = new String[]{"/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome", "--version"};
+        } else if (os == OS.WINDOWS) {
+            command = new String[]{"powershell.exe",
+                    "(Get-Item 'C:/Program Files/Google/Chrome/Application/chrome.exe').VersionInfo", "|",
+                    "Select-String '(\\d{1,3}\\.[\\d.]+\\d)'", "|",
+                    "ForEach-Object {$_.Matches[0].Groups[0].Value}"};
+        } else {
+            throw new UnsupportedOperationException("Unsupported operating system: " + os.name().toLowerCase());
+        }
+
+        Process process = Runtime.getRuntime().exec(command);
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+            return reader.lines().collect(joining()).trim();
+        }
     }
 
     private static class SingletonLazyHolder {
@@ -89,36 +131,86 @@ public final class ChromeBrowser {
     @Getter
     @RequiredArgsConstructor
     public enum ChromeOption {
-
         /**
-         * 전체화면으로 실행한다.
+         * Opens browser in maximized mode.
          */
-        START_MAXIMIZED("--start_maximized"),
+        START_MAXIMIZED("--start-maximized"),
 
         /**
-         * 팝업화면을 무시한다.
+         * Opens browser on private mode.
          */
-        DISABLE_POPUP_BLOCKING("--disable_popup_blocking"),
+        INCOGNITO("--incognito"),
 
         /**
-         * 기본 앱을 사용하지 않는다.
-         */
-        DISABLE_DEFAULT_APPS("--disable_default_apps"),
-
-        /**
-         * 인증 오류를 무시한다.
-         */
-        IGNORE_CERTIFICATE_ERRORS("--ignore_certificate_errors"),
-
-        /**
-         * CLI 환경에서도 실행할 수 있게 한다.
+         * Runs browser using CLI.
          */
         HEADLESS("--headless"),
 
         /**
-         * 프라이빗 모드로 실행한다.
+         * Bypasses OS security model.
+         *
+         * @since 2.8.2
          */
-        INCOGNITO("--incognito");
+        NO_SANDBOX("--no-sandbox"),
+
+        /**
+         * Disables GPU computation (applicable to Windows OS only).
+         *
+         * @since 2.8.2
+         */
+        DISABLE_GPU("--disable-gpu"),
+
+        /**
+         * Ignores certificate errors.
+         */
+        IGNORE_CERTIFICATE_ERRORS("--ignore-certificate-errors"),
+
+        /**
+         * Disables to check if Google Chrome is default browser on your device.
+         *
+         * @since 2.8.2
+         */
+        NO_DEFAULT_BROWSER_CHECK("--no-default-browser-check"),
+
+        /**
+         * Disables popup blocking.
+         */
+        DISABLE_POPUP_BLOCKING("--disable-popup-blocking"),
+
+        /**
+         * Disables installed extensions(plugins) of Google Chrome.
+         *
+         * @since 2.8.2
+         */
+        DISABLE_EXTENSIONS("--disable-extensions"),
+
+        /**
+         * Disables default web apps on Google Chrome’s new tab page
+         * <p>
+         * Chrome Web Store, Google Drive, Gmail, YouTube, Google Search, etc.
+         */
+        DISABLE_DEFAULT_APPS("--disable-default-apps"),
+
+        /**
+         * Disables Google translate feature.
+         *
+         * @since 2.8.2
+         */
+        DISABLE_TRANSLATE("--disable-translate"),
+
+        /**
+         * Disables detection for client side phishing.
+         *
+         * @since 2.8.2
+         */
+        DISABLE_CLIENT_SIDE_PHISHING_DETECTION("--disable-client-side-phishing-detection"),
+
+        /**
+         * Overcomes limited resource problems.
+         *
+         * @since 2.8.2
+         */
+        DISABLE_DEV_SHM_USAGE("--disable-dev-shm-usage");
 
         private final String argument;
 

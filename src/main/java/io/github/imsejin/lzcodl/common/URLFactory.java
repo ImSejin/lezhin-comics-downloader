@@ -33,7 +33,7 @@ public final class URLFactory {
      *
      * @see <a href="http://cdn.lezhin.com">CDN URL</a>
      */
-    private static final String cdnUrl = "http://cdn.lezhin.com";
+    private static final String cdnUrl = "https://ccdn.lezhin.com";
 
     /**
      * 각 회차의 정보를 얻을 수 있는 URI의 접두사<br>

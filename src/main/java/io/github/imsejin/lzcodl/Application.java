@@ -16,9 +16,9 @@
 
 package io.github.imsejin.lzcodl;
 
+import io.github.imsejin.common.annotation.ExcludeFromGeneratedJacocoReport;
 import io.github.imsejin.common.util.FilenameUtils;
 import io.github.imsejin.common.util.JsonUtils;
-import io.github.imsejin.common.util.PathnameUtils;
 import io.github.imsejin.lzcodl.common.CommandParser;
 import io.github.imsejin.lzcodl.common.Loggers;
 import io.github.imsejin.lzcodl.common.UsagePrinter;
@@ -30,37 +30,34 @@ import io.github.imsejin.lzcodl.core.Crawler;
 import io.github.imsejin.lzcodl.core.Downloader;
 import io.github.imsejin.lzcodl.core.LoginHelper;
 import io.github.imsejin.lzcodl.model.Arguments;
-import io.github.imsejin.lzcodl.model.Artist;
 import io.github.imsejin.lzcodl.model.Episode;
 import io.github.imsejin.lzcodl.model.Product;
 import org.apache.commons.cli.CommandLine;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Properties;
-
-import static java.util.stream.Collectors.joining;
 
 public final class Application {
 
+    @ExcludeFromGeneratedJacocoReport
     private Application() {
+        throw new UnsupportedOperationException(getClass().getName() + " is not allowed to instantiate");
     }
 
     public static void main(String[] arguments) {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         InputStream in = classLoader.getResourceAsStream("application.properties");
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-                in, StandardCharsets.UTF_8))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
             // Reads "application.properties".
-            Properties properties = reader.lines().filter(it -> !it.startsWith("#"))
-                    .map(it -> it.split(" ?= ?"))
-                    .collect(Properties::new, (props, arr) -> props.put(arr[0], arr[1]), (props, arr) -> {
-                    });
+            Properties properties = reader.lines().filter(it -> !it.matches("^\\s#.*"))
+                    .map(it -> it.split("=", 2))
+                    .collect(Properties::new, (props, arr) -> props.put(arr[0].trim(), arr[1].trim()), Map::putAll);
 
             // Validates and parses options and arguments.
             CommandLine cmd = CommandParser.parse(arguments);
@@ -96,10 +93,8 @@ public final class Application {
             Product product = JsonUtils.toObject(jsonText, Product.class);
             args.setProduct(product);
 
-            // To download, pre-processes the data and creates a directory to save episodes.
+            // To download, pre-processes the data.
             preprocess(product);
-            Path comicDir = createDirectory(product);
-            args.setComicPath(comicDir);
 
             // Downloads images.
             new Downloader(args).download();
@@ -143,34 +138,6 @@ public final class Application {
 
         // 해당 웹툰의 에피소드; 순서가 거꾸로 되어 있어 정렬한다.
         Collections.reverse(product.getEpisodes());
-    }
-
-    /**
-     * Creates a directory and returns its path.
-     *
-     * <p> Make a directory named after the comic title.
-     *
-     * @param product product
-     * @return path of comic directory
-     */
-    private static Path createDirectory(Product product) {
-        String comicTitle = product.getDisplay().getTitle();
-        String artists = product.getArtists().stream().map(Artist::getName)
-                .collect(joining(", "));
-        String dirName = String.format("L_%s - %s", comicTitle, artists);
-
-        Path path = Paths.get(PathnameUtils.getCurrentPathname(), dirName);
-        File dir = path.toFile();
-        if (dir.exists() && dir.isDirectory()) return path;
-
-        try {
-            Loggers.getLogger().debug("Create directory: {}", path);
-            Files.createDirectories(path);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to create directory: " + path, e);
-        }
-
-        return path;
     }
 
 }

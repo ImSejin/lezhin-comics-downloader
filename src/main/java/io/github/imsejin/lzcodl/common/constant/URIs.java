@@ -16,6 +16,7 @@
 
 package io.github.imsejin.lzcodl.common.constant;
 
+import io.github.imsejin.common.assertion.Asserts;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -107,7 +108,9 @@ public enum URIs {
         }
 
         // Validates all variables in URI are converted to parameters.
-        if (pattern.matcher(uri).find()) throw new RuntimeException("Template URI has not matched variable(s)");
+        Asserts.that(pattern.matcher(uri).find())
+                .as("Template URI has not matched variable(s): '{0}'", uri)
+                .isFalse();
 
         return URI.create(uri);
     }

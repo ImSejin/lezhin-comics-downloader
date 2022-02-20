@@ -20,7 +20,7 @@ import io.github.imsejin.lzcodl.model.Arguments;
 
 /**
  * @see Arguments.ArgumentsBuilder#build()
- * @see io.github.imsejin.lzcodl.common.constant.EpisodeRange#of(String)
+ * @see io.github.imsejin.lzcodl.common.constant.EpisodeRange#from(String)
  * @since 2.7.1
  */
 public class EpisodeRangeParseException extends RuntimeException {

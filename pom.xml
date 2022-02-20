@@ -6,7 +6,7 @@
 
     <groupId>io.github.imsejin</groupId>
     <artifactId>lezhin-comics-downloader</artifactId>
-    <version>2.8.1</version>
+    <version>2.9.0</version>
     <packaging>jar</packaging>
 
     <name>Lezhin Comics Downloader</name>
@@ -40,16 +40,29 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <common.utils.version>0.4.7</common.utils.version>
-        <lombok.version>1.18.20</lombok.version>
+        <junit5.version>5.8.2</junit5.version>
+        <assertj.version>3.22.0</assertj.version>
+        <common-utils.version>0.7.1</common-utils.version>
+        <lombok.version>1.18.22</lombok.version>
+        <selenium.version>4.1.2</selenium.version>
     </properties>
+
+    <!-- Enables to build on development environment -->
+    <profiles>
+        <profile>
+            <id>local</id>
+            <properties>
+                <env>local</env>
+            </properties>
+        </profile>
+    </profiles>
 
     <dependencies>
         <!-- Common Utils -->
         <dependency>
             <groupId>io.github.imsejin</groupId>
             <artifactId>common-utils</artifactId>
-            <version>${common.utils.version}</version>
+            <version>${common-utils.version}</version>
         </dependency>
 
         <!-- Lombok -->
@@ -64,40 +77,52 @@
         <dependency>
             <groupId>me.tongfei</groupId>
             <artifactId>progressbar</artifactId>
-            <version>0.9.1</version>
+            <version>0.9.3</version>
         </dependency>
 
         <!-- Selenium -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>3.141.59</version>
+            <version>${selenium.version}</version>
         </dependency>
 
         <!-- Apache Commons CLI -->
         <dependency>
             <groupId>commons-cli</groupId>
             <artifactId>commons-cli</artifactId>
-            <version>1.4</version>
+            <version>1.5.0</version>
+        </dependency>
+
+        <!-- Logger -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.36</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.10</version>
         </dependency>
 
         <!-- Junit 5 -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.7.2</version>
+            <version>${junit5.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.7.2</version>
+            <version>${junit5.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
-            <version>5.7.2</version>
+            <version>${junit5.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -105,20 +130,8 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>3.19.0</version>
+            <version>${assertj.version}</version>
             <scope>test</scope>
-        </dependency>
-
-        <!-- Logger -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.30</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.2.3</version>
         </dependency>
     </dependencies>
 
@@ -146,6 +159,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
+                    <finalName>${project.build.finalName}-jar-without-dependencies</finalName>
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
@@ -154,24 +168,6 @@
                         </manifest>
                     </archive>
                 </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.1.2</version>
-                <executions>
-                    <execution>
-                        <id>copy</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
 
             <plugin>
@@ -190,7 +186,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.2</version>
                 <configuration>
-                    <testFailureIgnore>true</testFailureIgnore>
+                    <testFailureIgnore>false</testFailureIgnore>
                 </configuration>
             </plugin>
 
@@ -198,25 +194,28 @@
                 Assembler for third-party libraries
 
                 THIS PLUGIN ASSEMBLES OWN CODE AND DEPENDENCIES IN A JAR FILE BY THE FOLLOWING COMMAND.
-                    mvn assembly:assembly
-                DO NOT UPGRADE THIS PLUGIN. THE GOAL IS NOT AVAILABLE SINCE '3.X.X'.
+                    mvn assembly:single
+                THE GOAL "assembly:assembly" IS REMOVED SINCE "3.X.X".
+                REPLACEMENT OF THE GOAL IS "assembly:single".
             -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.6</version>
+                <version>3.3.0</version>
                 <executions>
                     <execution>
                         <id>create-jar</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>assembly</goal>
+                            <goal>single</goal>
                         </goals>
 
                         <configuration>
                             <descriptorRefs>
                                 <descriptorRef>jar-with-dependencies</descriptorRef>
                             </descriptorRefs>
+                            <finalName>${project.build.finalName}</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
                             <archive>
                                 <manifest>
                                     <addClasspath>true</addClasspath>
@@ -225,6 +224,31 @@
                                 </manifest>
                             </archive>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--
+                Jacoco
+
+                Plugin for analyzing code coverage of test cases.
+            -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.7</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>

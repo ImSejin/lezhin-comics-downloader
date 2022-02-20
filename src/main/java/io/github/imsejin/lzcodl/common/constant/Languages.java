@@ -16,11 +16,17 @@
 
 package io.github.imsejin.lzcodl.common.constant;
 
+import io.github.imsejin.common.assertion.Asserts;
 import io.github.imsejin.lzcodl.common.exception.InvalidLanguageException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.Map;
+
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * @since 2.1.2
@@ -50,6 +56,9 @@ public enum Languages {
      */
     JAPANESE("ja", "ja-JP");
 
+    private static final Map<String, Languages> $CODE_LOOKUP = EnumSet.allOf(Languages.class).stream()
+            .collect(collectingAndThen(toMap(it -> it.value, it -> it), Collections::unmodifiableMap));
+
     private final String value;
 
     private final String locale;
@@ -61,8 +70,7 @@ public enum Languages {
      * @return {@link Languages}
      */
     public static boolean contains(String value) {
-        if (value == null) return false;
-        return Arrays.stream(values()).map(lang -> lang.value).anyMatch(value::equals);
+        return $CODE_LOOKUP.containsKey(value);
     }
 
     /**
@@ -73,11 +81,12 @@ public enum Languages {
      * @throws InvalidLanguageException if {@link Languages} that has the parameter doesn't exist
      */
     public static Languages from(String value) {
-        Languages languages = Arrays.stream(values()).filter(lang -> lang.value.equals(value))
-                .findAny().orElse(null);
+        Asserts.that(contains(value))
+                .as("Invalid language: '{0}'", value)
+                .exception(InvalidLanguageException::new)
+                .isTrue();
 
-        if (languages == null) throw new InvalidLanguageException("Invalid language: '%s'", value);
-        return languages;
+        return $CODE_LOOKUP.get(value);
     }
 
 }

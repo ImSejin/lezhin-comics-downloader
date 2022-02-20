@@ -7,16 +7,19 @@
 <p align="center">Downloader for lezhin comics</p>
 
 <p align="center">
-    <a href="https://lgtm.com/projects/g/ImSejin/lezhin-comics-downloader/context:java"><img alt="Language grade: Java" src="https://img.shields.io/lgtm/grade/java/g/ImSejin/lezhin-comics-downloader.svg?logo=lgtm&logoWidth=18"/></a>
-    <a href="https://frontend.code-inspector.com/project/16360/dashboard"><img alt="Code Inspector" src="https://www.code-inspector.com/project/16360/score/svg"></a>
-    <img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/imsejin/lezhin-comics-downloader">
-</p>
-
-<p align="center">
-    <img alt="GitHub All Releases" src="https://img.shields.io/github/downloads/imsejin/lezhin-comics-downloader/total">
-    <img alt="GitHub Releases" src="https://img.shields.io/github/downloads/imsejin/lezhin-comics-downloader/latest/total">
-    <img alt="jdk8" src="https://img.shields.io/badge/jdk-8-orange">
-    <img alt="GitHub" src="https://img.shields.io/github/license/imsejin/lezhin-comics-downloader">
+    <a href="https://lgtm.com/projects/g/ImSejin/lezhin-comics-downloader/context:java">
+        <img alt="Lgtm grade" src="https://img.shields.io/lgtm/grade/java/github/ImSejin/lezhin-comics-downloader.svg?logo=&logoWidth=&label=lgtm%3A%20code%20quality&&style=flat-square"/>
+    </a>
+    <a href="https://app.codacy.com/gh/ImSejin/lezhin-comics-downloader/dashboard">
+        <img alt="Codacy grade" src="https://img.shields.io/codacy/grade/1a2400c31a8346ddbf108fb3ac78f481?label=codacy%3A%20code%20quality&style=flat-square">
+    </a>
+    <img alt="jdk8" src="https://img.shields.io/badge/jdk-8-orange?style=flat-square">
+    <br/>
+    <img alt="GitHub All Releases" src="https://img.shields.io/github/downloads/imsejin/lezhin-comics-downloader/total?style=flat-square">
+    <img alt="GitHub Releases" src="https://img.shields.io/github/downloads/imsejin/lezhin-comics-downloader/latest/total?style=flat-square">
+    <a href="https://github.com/ImSejin/lezhin-comics-downloader/releases/latest">
+        <img alt="Latest release" src="https://img.shields.io/github/v/release/ImSejin/lezhin-comics-downloader?color=orange&style=flat-square">
+    </a>
 </p>
 
 # Preview
@@ -53,8 +56,8 @@
 
 ## Usage
 
-```cmd
-java -jar {JAR filename} -l=<language> -n=<comic name> [-r=<episode range> -j -d]
+```bash
+java -jar {JAR filename} -l=<language> -n=<comic_name> [-r=<episode_range> -j -d]
 ```
 
 - *<ins>language</ins> (required)*: language of lezhin platform you want to see.
@@ -81,7 +84,7 @@ java -jar {JAR filename} -l=<language> -n=<comic name> [-r=<episode range> -j -d
 
 # Examples
 
-```cmd
+```bash
 java -jar lezhin-comics-downloader.jar -l=en -n=appetite
 ```
 
@@ -89,7 +92,7 @@ Downloads all episodes of the comic named appetite.
 
 <br>
 
-```cmd
+```bash
 java -jar lezhin-comics-downloader.jar -l=en -n=appetite -r=8~
 ```
 
@@ -97,7 +100,7 @@ Downloads the episodes of the comic named appetite from ep.8 to the last.
 
 <br>
 
-```cmd
+```bash
 java -jar lezhin-comics-downloader.jar -l=en -n=appetite -r=~25
 ```
 
@@ -105,9 +108,21 @@ Downloads the episodes of the comic named appetite from the first to ep.25.
 
 <br>
 
-```cmd
+```bash
 java -jar lezhin-comics-downloader.jar -l=en -n=appetite -r=1~10
 ```
 
 Downloads the episodes of the comic named appetite from ep.1 to ep.10.
+
+<br>
+
+<br>
+
+# Build
+
+```bash
+./mvnw package
+```
+
+Then you will get a file `lezhin-comics-downloader-{version}.jar`.
 

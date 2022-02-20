@@ -16,6 +16,7 @@
 
 package io.github.imsejin.lzcodl.core;
 
+import io.github.imsejin.common.annotation.ExcludeFromGeneratedJacocoReport;
 import io.github.imsejin.lzcodl.common.Loggers;
 import io.github.imsejin.lzcodl.common.constant.Languages;
 import io.github.imsejin.lzcodl.common.constant.URIs;
@@ -30,6 +31,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import javax.annotation.Nullable;
 import java.net.URI;
+import java.time.Duration;
 import java.util.List;
 
 /**
@@ -39,7 +41,9 @@ import java.util.List;
  */
 public final class Crawler {
 
+    @ExcludeFromGeneratedJacocoReport
     private Crawler() {
+        throw new UnsupportedOperationException(getClass().getName() + " is not allowed to instantiate");
     }
 
     /**
@@ -74,18 +78,18 @@ public final class Crawler {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
         // 언어/지역 설정 변경 페이지가 노출되면 다운로드할 수 없기에, 미리 API를 호출하여 설정을 변경한다.
-        String locale = Languages.from(args.getLanguage()).getLocale();
-        URI localeUrl = URIs.LOCALE.get(args.getLanguage(), locale);
+        String locale = args.getLanguage().getLocale();
+        URI localeUrl = URIs.LOCALE.get(args.getLanguage().getValue(), locale);
         Loggers.getLogger().debug("Change locale setting: {}", localeUrl);
         driver.get(localeUrl.toString());
 
         // 해당 웹툰 페이지로 이동한다.
-        URI comicUrl = URIs.COMIC.get(args.getLanguage(), args.getComicName());
+        URI comicUrl = URIs.COMIC.get(args.getLanguage().getValue(), args.getComicName());
         Loggers.getLogger().info("Request comic page: {}", comicUrl);
         driver.get(comicUrl.toString());
 
         // 서비스 종료된 웹툰인지 확인한다.
-        if (URI.create(driver.getCurrentUrl()).getPath().equals(URIs.EXPIRED.get(args.getLanguage()).getPath())) {
+        if (URI.create(driver.getCurrentUrl()).getPath().equals(URIs.EXPIRED.get(args.getLanguage().getValue()).getPath())) {
             Loggers.getLogger().info("Comic is expired -> try to find it in 'My Library'");
             args.setExpiredComic(true);
             return getJsonInMyLibrary(args);
@@ -94,7 +98,7 @@ public final class Crawler {
         // Waits for DOM to complete the rendering.
         final int timeout = 15;
         Loggers.getLogger().debug("Wait up to {} sec for episode list to be rendered", timeout);
-        WebDriverWait wait = new WebDriverWait(driver, timeout);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeout));
         wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.xpath("//main[@id='main' and @class='lzCntnr lzCntnr--episode']")));
 
@@ -111,15 +115,15 @@ public final class Crawler {
     private static String getJsonInMyLibrary(Arguments args) {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
-        String locale = Languages.from(args.getLanguage()).getLocale();
-        URI libComicUrl = URIs.LIB_COMIC.get(args.getLanguage(), locale, args.getComicName());
+        Languages language = args.getLanguage();
+        URI libComicUrl = URIs.LIB_COMIC.get(language.getValue(), language.getLocale(), args.getComicName());
         Loggers.getLogger().debug("Request comic page in 'My Library': {}", libComicUrl);
         driver.get(libComicUrl.toString());
 
         // Waits for DOM to complete the rendering.
         final int timeout = 15;
         Loggers.getLogger().debug("Wait up to {} sec for episode list to be rendered", timeout);
-        WebDriverWait wait = new WebDriverWait(driver, timeout);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeout));
         wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.xpath("//ul[@id='library-episode-list' and @class='epsList']")));
 
@@ -167,19 +171,20 @@ public final class Crawler {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
         // 서비스 종료된 웹툰이면 '내 서재'로 접근한다.
+        Languages language = args.getLanguage();
         URI episodeUrl = args.isExpiredComic()
-                ? URIs.LIB_EPISODE.get(args.getLanguage(), Languages.from(args.getLanguage()).getLocale(), args.getComicName(), episode.getName())
-                : URIs.EPISODE.get(args.getLanguage(), args.getComicName(), episode.getName());
+                ? URIs.LIB_EPISODE.get(language.getValue(), language.getLocale(), args.getComicName(), episode.getName())
+                : URIs.EPISODE.get(language.getValue(), args.getComicName(), episode.getName());
 
         Loggers.getLogger().debug("Request episode page: {}", episodeUrl);
         driver.get(episodeUrl.toString());
 
-        WebElement scrollList = driver.findElementById("scroll-list");
+        WebElement scrollList = driver.findElement(By.id("scroll-list"));
 
         // Waits for DOM to complete the rendering.
         final int timeout = 15;
         Loggers.getLogger().debug("Wait up to {} sec for images to be rendered", timeout);
-        WebDriverWait wait = new WebDriverWait(driver, timeout);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeout));
         wait.until(ExpectedConditions.visibilityOfAllElements(scrollList));
 
         try {

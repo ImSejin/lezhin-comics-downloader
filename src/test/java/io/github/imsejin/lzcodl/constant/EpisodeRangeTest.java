@@ -45,7 +45,7 @@ class EpisodeRangeTest {
         System.out.printf("group(): '%s'\n", matcher.group());
         System.out.printf("group(1): '%s'\n", matcher.group(1));
         System.out.printf("group(2): '%s'\n", matcher.group(2));
-        Map<Integer, String> group = StringUtils.find(range, "([0-9]*)~([0-9]*)", Pattern.MULTILINE, 1, 2);
+        Map<Integer, String> group = StringUtils.find(range, "^([0-9]*)~([0-9]*)$", Pattern.MULTILINE, 1, 2);
 
         // then
         assertThat(group).isNotNull().hasSize(2)
@@ -60,7 +60,7 @@ class EpisodeRangeTest {
         String range = start + EpisodeRange.SEPARATOR;
 
         // when
-        Map<Integer, String> group = StringUtils.find(range, "([0-9]*)~([0-9]*)", Pattern.MULTILINE, 1, 2);
+        Map<Integer, String> group = StringUtils.find(range, "^([0-9]*)~([0-9]*)$", Pattern.MULTILINE, 1, 2);
 
         // then
         assertThat(group).isNotNull().hasSize(2)
@@ -75,7 +75,7 @@ class EpisodeRangeTest {
         String range = EpisodeRange.SEPARATOR + end;
 
         // when
-        Map<Integer, String> group = StringUtils.find(range, "([0-9]*)~([0-9]*)", Pattern.MULTILINE, 1, 2);
+        Map<Integer, String> group = StringUtils.find(range, "^([0-9]*)~([0-9]*)$", Pattern.MULTILINE, 1, 2);
 
         // then
         assertThat(group).isNotNull().hasSize(2)

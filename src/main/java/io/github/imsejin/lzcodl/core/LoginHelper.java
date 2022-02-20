@@ -16,6 +16,7 @@
 
 package io.github.imsejin.lzcodl.core;
 
+import io.github.imsejin.common.annotation.ExcludeFromGeneratedJacocoReport;
 import io.github.imsejin.common.util.StringUtils;
 import io.github.imsejin.lzcodl.common.Loggers;
 import io.github.imsejin.lzcodl.common.constant.URIs;
@@ -30,6 +31,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URI;
+import java.time.Duration;
 import java.util.UUID;
 
 /**
@@ -41,7 +43,9 @@ import java.util.UUID;
  */
 public final class LoginHelper {
 
+    @ExcludeFromGeneratedJacocoReport
     private LoginHelper() {
+        throw new UnsupportedOperationException(getClass().getName() + " is not allowed to instantiate");
     }
 
     /**
@@ -87,16 +91,16 @@ public final class LoginHelper {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
         // Requests login page.
-        URI loginUrl = URIs.LOGIN.get(args.getLanguage());
+        URI loginUrl = URIs.LOGIN.get(args.getLanguage().getValue());
         Loggers.getLogger().info("Request login page: {}", loginUrl);
         driver.get(loginUrl.toString());
 
         // Waits for DOM to complete the rendering.
         final int timeout = 15;
         Loggers.getLogger().debug("Wait up to {} sec for login element to be rendered", timeout);
-        WebDriverWait waitLogin = new WebDriverWait(driver, timeout);
-        WebElement loginForm = driver.findElementByXPath(
-                "//form[@id='email' and contains(@action, '/login') and @method='post']");
+        WebDriverWait waitLogin = new WebDriverWait(driver, Duration.ofSeconds(timeout));
+        WebElement loginForm = driver.findElement(By
+                .xpath("//form[@id='email' and contains(@action, '/login') and @method='post']"));
         waitLogin.until(ExpectedConditions.visibilityOfAllElements(loginForm));
 
         // Inputs username into the element.
@@ -134,13 +138,14 @@ public final class LoginHelper {
         try {
             // Waits for DOM to complete the rendering.
             Loggers.getLogger().debug("Wait up to {} sec for main page to be rendered", timeout);
-            WebDriverWait wait = new WebDriverWait(driver, timeout);
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeout));
             wait.until(ExpectedConditions.visibilityOfElementLocated(
                     By.xpath("//main[@id='main' and @class='lzCntnr lzCntnr--home']")));
         } catch (TimeoutException e) {
             // When failed to login because of other problems.
-            if (!URI.create(driver.getCurrentUrl()).getPath().equals(URIs.LOGIN.get(args.getLanguage()).getPath()))
-                throw e;
+            URI currentUri = URI.create(driver.getCurrentUrl());
+            URI loginUri = URIs.LOGIN.get(args.getLanguage().getValue());
+            if (!currentUri.getPath().equals(loginUri.getPath())) throw e;
 
             // When failed to login because of invalid account information.
             driver.executeScript("localStorage.setItem('errorCode', window.__LZ_ERROR_CODE__);");
@@ -206,7 +211,7 @@ public final class LoginHelper {
         // Finds the script tag that has access token.
         WebElement script;
         try {
-            script = driver.findElementByXPath("//script[not(@src) and contains(text(), '__LZ_ME__')]");
+            script = driver.findElement(By.xpath("//script[not(@src) and contains(text(), '__LZ_ME__')]"));
         } catch (NoSuchElementException e) {
             throw new RuntimeException("Cannot find access token", e);
         }

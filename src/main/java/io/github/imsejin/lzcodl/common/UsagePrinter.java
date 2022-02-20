@@ -16,6 +16,7 @@
 
 package io.github.imsejin.lzcodl.common;
 
+import io.github.imsejin.common.annotation.ExcludeFromGeneratedJacocoReport;
 import io.github.imsejin.lzcodl.common.constant.Languages;
 
 import javax.annotation.Nullable;
@@ -31,7 +32,9 @@ import static java.util.stream.Collectors.toList;
  */
 public final class UsagePrinter {
 
+    @ExcludeFromGeneratedJacocoReport
     private UsagePrinter() {
+        throw new UnsupportedOperationException(getClass().getName() + " is not allowed to instantiate");
     }
 
     public static void printAndQuit(String... messages) {
