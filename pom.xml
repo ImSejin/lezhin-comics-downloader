@@ -44,7 +44,7 @@
         <assertj.version>3.22.0</assertj.version>
         <common-utils.version>0.8.0</common-utils.version>
         <lombok.version>1.18.24</lombok.version>
-        <selenium.version>4.1.4</selenium.version>
+        <selenium.version>4.2.1</selenium.version>
     </properties>
 
     <!-- Enables to build on development environment -->
