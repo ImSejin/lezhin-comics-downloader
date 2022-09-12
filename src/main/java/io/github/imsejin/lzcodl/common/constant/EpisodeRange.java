@@ -83,12 +83,11 @@ public enum EpisodeRange {
     };
 
     /**
-     * 에피소드 번호의 구분자<br>
-     * Separator of episode number
+     * Delimiter of episode number.
      */
-    public static final String SEPARATOR = "~";
+    public static final String DELIMITER = "~";
 
-    private static final Pattern RANGE_REGEX = Pattern.compile("^([0-9]*)" + SEPARATOR + "([0-9]*)$");
+    private static final Pattern RANGE_REGEX = Pattern.compile("^([0-9]*)" + DELIMITER + "([0-9]*)$");
 
     public static boolean invalidate(String range) {
         return !StringUtils.isNullOrBlank(range) && !RANGE_REGEX.matcher(range).find();
@@ -98,8 +97,8 @@ public enum EpisodeRange {
         Matcher matcher = RANGE_REGEX.matcher(range);
 
         Asserts.that(range)
-                .as("Invalid episode range: '{0}'", range)
-                .exception(EpisodeRangeParseException::new)
+                .describedAs("Invalid episode range: '{0}'", range)
+                .thrownBy(EpisodeRangeParseException::new)
                 .isNotNull()
                 .hasText()
                 .returns(matcher.find(), it -> RANGE_REGEX.matcher(it).matches());

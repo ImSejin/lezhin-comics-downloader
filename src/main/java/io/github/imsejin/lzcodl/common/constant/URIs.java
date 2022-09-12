@@ -109,7 +109,7 @@ public enum URIs {
 
         // Validates all variables in URI are converted to parameters.
         Asserts.that(pattern.matcher(uri).find())
-                .as("Template URI has not matched variable(s): '{0}'", uri)
+                .describedAs("Template URI has not matched variable(s): '{0}'", uri)
                 .isFalse();
 
         return URI.create(uri);

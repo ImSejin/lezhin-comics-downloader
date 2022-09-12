@@ -82,8 +82,8 @@ public enum Languages {
      */
     public static Languages from(String value) {
         Asserts.that(contains(value))
-                .as("Invalid language: '{0}'", value)
-                .exception(InvalidLanguageException::new)
+                .describedAs("Invalid language: '{0}'", value)
+                .thrownBy(InvalidLanguageException::new)
                 .isTrue();
 
         return $CODE_LOOKUP.get(value);

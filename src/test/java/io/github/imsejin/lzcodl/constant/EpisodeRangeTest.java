@@ -36,7 +36,7 @@ class EpisodeRangeTest {
     })
     void SOME(String start, String end) {
         // given
-        String range = start + EpisodeRange.SEPARATOR + end;
+        String range = start + EpisodeRange.DELIMITER + end;
 
         // when
         Pattern regex = Pattern.compile("([0-9]*)~([0-9]*)", Pattern.MULTILINE);
@@ -57,7 +57,7 @@ class EpisodeRangeTest {
     @ValueSource(strings = {"1", "5", "13", "200"})
     void START_POINT(String start) {
         // given
-        String range = start + EpisodeRange.SEPARATOR;
+        String range = start + EpisodeRange.DELIMITER;
 
         // when
         Map<Integer, String> group = StringUtils.find(range, "^([0-9]*)~([0-9]*)$", Pattern.MULTILINE, 1, 2);
@@ -72,7 +72,7 @@ class EpisodeRangeTest {
     @ValueSource(strings = {"1024", "27", "13", "3502"})
     void END_POINT(String end) {
         // given
-        String range = EpisodeRange.SEPARATOR + end;
+        String range = EpisodeRange.DELIMITER + end;
 
         // when
         Map<Integer, String> group = StringUtils.find(range, "^([0-9]*)~([0-9]*)$", Pattern.MULTILINE, 1, 2);

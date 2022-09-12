@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static io.github.imsejin.lzcodl.common.constant.EpisodeRange.SEPARATOR;
+import static io.github.imsejin.lzcodl.common.constant.EpisodeRange.DELIMITER;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -87,9 +87,9 @@ public final class UsagePrinter {
         if (format != null) messages.add(String.format(format + "%n", args));
         messages.add("- HOW TO SETUP EPISODE RANGE?");
         messages.add("    case 1. skipped : all episodes");
-        messages.add(String.format("    case 2. 8%s   : from ep.8 to the last", SEPARATOR));
-        messages.add(String.format("    case 3. %s25  : from the first to ep.25", SEPARATOR));
-        messages.add(String.format("    case 4. 1%s10 : from ep.1 to ep.10", SEPARATOR));
+        messages.add(String.format("    case 2. 8%s   : from ep.8 to the last", DELIMITER));
+        messages.add(String.format("    case 3. %s25  : from the first to ep.25", DELIMITER));
+        messages.add(String.format("    case 4. 1%s10 : from ep.1 to ep.10", DELIMITER));
 
         printAndQuit(messages.toArray(new String[0]));
     }

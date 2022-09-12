@@ -144,17 +144,17 @@ public final class Downloader {
         try (ProgressBar progressBar = getDefaultProgressBar(arguments.getProduct().getAlias(), num, numOfImages)) {
             // Downloads all images of the episode.
             IntStream.rangeClosed(1, numOfImages).parallel().forEach(i -> {
-                String filename = String.format("%03d.%s", i, this.args.getImageFormat());
-                File file = new File(episodeDir.toFile(), filename);
+                String fileName = String.format("%03d.%s", i, this.args.getImageFormat());
+                Path dest = episodeDir.resolve(fileName);
 
                 // Tries to download high-resolution image for only paid users.
                 URL url = this.urlFactory.image(episode, i, true);
-                boolean success = downloadImage(url, file);
+                boolean success = downloadImage(url, dest);
 
                 // Try to download low-resolution image for all users.
                 if (!success) {
                     url = this.urlFactory.image(episode, i, false);
-                    success = downloadImage(url, file);
+                    success = downloadImage(url, dest);
 
                     // If failed to download, skips this image.
                     if (!success) return;
@@ -168,10 +168,11 @@ public final class Downloader {
     /**
      * Creates a image file with the image URL. Returns {@code true} if success or {@code false}.
      */
-    private static boolean downloadImage(URL url, File dest) {
+    private static boolean downloadImage(URL url, Path dest) {
         try {
-            return FileUtils.download(url.openStream(), dest);
-        } catch (IOException e) {
+            FileUtils.download(url, dest);
+            return true;
+        } catch (Exception e) {
             return false;
         }
     }

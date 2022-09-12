@@ -79,13 +79,13 @@ public class Arguments {
 
         // 유효하지 않은 계정 정보의 경우
         Asserts.that(username)
-                .as("ID is not valid.")
-                .exception(ConfigParseException::new)
+                .describedAs("ID is not valid.")
+                .thrownBy(ConfigParseException::new)
                 .isNotNull()
                 .hasText();
         Asserts.that(password)
-                .as("Password is not valid.")
-                .exception(ConfigParseException::new)
+                .describedAs("Password is not valid.")
+                .thrownBy(ConfigParseException::new)
                 .isNotNull()
                 .hasText();
 
