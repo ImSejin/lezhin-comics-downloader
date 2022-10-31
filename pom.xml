@@ -41,7 +41,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- Dependency versions -->
-        <common-utils.version>0.11.0</common-utils.version>
+        <common-utils.version>0.13.0</common-utils.version>
         <commons-cli.version>1.5.0</commons-cli.version>
         <progressbar.version>0.9.4</progressbar.version>
         <selenium.version>4.1.4</selenium.version>
