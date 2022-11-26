@@ -18,7 +18,6 @@ package io.github.imsejin.lzcodl.core;
 
 import io.github.imsejin.common.annotation.ExcludeFromGeneratedJacocoReport;
 import io.github.imsejin.common.constant.OS;
-import io.github.imsejin.common.util.PathnameUtils;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -26,8 +25,9 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
@@ -47,11 +47,22 @@ public final class ChromeBrowser {
     private static boolean initialized;
 
     static {
+        Path currentPath;
+        try {
+            currentPath = Paths.get(".").toRealPath();
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+
         // Assigns chrome driver pathname.
-        final String currentPathname = PathnameUtils.getCurrentPathname();
-        String filename = "chromedriver.exe";                                                 // for Microsoft Windows
-        if (Files.notExists(Paths.get(currentPathname, filename))) filename = "chromedriver"; // for Linux and macOS
-        CHROME_DRIVER_PATHNAME = Paths.get(currentPathname, filename).toString();
+        String fileName;
+        if (OS.WINDOWS.isCurrentOS()) {
+            fileName = "chromedriver.exe"; // for Microsoft Windows
+        } else {
+            fileName = "chromedriver"; // for Linux and macOS
+        }
+
+        CHROME_DRIVER_PATHNAME = currentPath.resolve(fileName).toString();
 
         // Sets up pathname of web driver.
         System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_PATHNAME);

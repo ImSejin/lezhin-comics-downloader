@@ -19,7 +19,6 @@ package io.github.imsejin.lzcodl.core;
 import com.google.gson.JsonObject;
 import io.github.imsejin.common.util.FileUtils;
 import io.github.imsejin.common.util.JsonUtils;
-import io.github.imsejin.common.util.PathnameUtils;
 import io.github.imsejin.lzcodl.common.Loggers;
 import io.github.imsejin.lzcodl.common.URLFactory;
 import io.github.imsejin.lzcodl.common.constant.EpisodeRange;
@@ -34,7 +33,6 @@ import me.tongfei.progressbar.ProgressBar;
 import me.tongfei.progressbar.ProgressBarBuilder;
 import me.tongfei.progressbar.ProgressBarStyle;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -100,18 +98,20 @@ public final class Downloader {
                 .collect(joining(", "));
         String dirName = String.format("L_%s - %s", comicTitle, artists);
 
-        Path path = Paths.get(PathnameUtils.getCurrentPathname(), dirName);
-        File dir = path.toFile();
-        if (dir.exists() && dir.isDirectory()) return path;
-
         try {
+            Path path = Paths.get(".").toRealPath().resolve(dirName);
+
+            if (Files.exists(path) && Files.isDirectory(path)) {
+                return path;
+            }
+
             Loggers.getLogger().debug("Create directory: {}", path);
             Files.createDirectories(path);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to create directory: " + path, e);
-        }
 
-        return path;
+            return path;
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to create directory: " + dirName, e);
+        }
     }
 
     public void download() throws IOException {

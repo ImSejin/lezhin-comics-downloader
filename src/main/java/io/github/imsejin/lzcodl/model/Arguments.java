@@ -18,7 +18,6 @@ package io.github.imsejin.lzcodl.model;
 
 import io.github.imsejin.common.assertion.Asserts;
 import io.github.imsejin.common.util.IniUtils;
-import io.github.imsejin.common.util.PathnameUtils;
 import io.github.imsejin.lzcodl.common.constant.EpisodeRange;
 import io.github.imsejin.lzcodl.common.constant.Languages;
 import io.github.imsejin.lzcodl.common.exception.ConfigParseException;
@@ -28,7 +27,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 
 /**
@@ -64,11 +65,16 @@ public class Arguments {
     private boolean expiredComic;
 
     {
-        final File file = new File(PathnameUtils.getCurrentPathname(), "config.ini");
+        Path filePath;
+        try {
+            filePath = Paths.get(".").toRealPath().resolve("config.ini");
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
 
         Map<String, String> section;
         try {
-            section = IniUtils.readSection(file, "account");
+            section = IniUtils.readSection(filePath.toFile(), "account");
         } catch (Exception e) {
             // 'config.ini' 파일이 없거나, 'account' 섹션이 없는 경우
             throw new ConfigParseException("File 'config.ini' or section 'account' does not exist.", e);
