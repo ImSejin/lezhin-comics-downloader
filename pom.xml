@@ -201,7 +201,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>io.github.imsejin.lzcodl.Application</mainClass>
+                            <mainClass>io.github.imsejin.dl.lezhin.Application</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
