@@ -44,6 +44,7 @@
         <common-utils.version>0.13.0</common-utils.version>
         <commons-cli.version>1.5.0</commons-cli.version>
         <progressbar.version>0.9.4</progressbar.version>
+        <reftrofit.version>2.9.0</reftrofit.version>
         <selenium.version>4.6.0</selenium.version>
         <lombok.version>1.18.24</lombok.version>
         <logback-classic.version>1.3.5</logback-classic.version>
@@ -83,6 +84,18 @@
             <groupId>me.tongfei</groupId>
             <artifactId>progressbar</artifactId>
             <version>${progressbar.version}</version>
+        </dependency>
+
+        <!-- Retrofit -->
+        <dependency>
+            <groupId>com.squareup.retrofit2</groupId>
+            <artifactId>retrofit</artifactId>
+            <version>${reftrofit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.retrofit2</groupId>
+            <artifactId>converter-gson</artifactId>
+            <version>${reftrofit.version}</version>
         </dependency>
 
         <!-- Selenium -->
