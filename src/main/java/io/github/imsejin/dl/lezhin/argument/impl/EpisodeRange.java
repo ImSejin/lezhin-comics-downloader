@@ -16,19 +16,46 @@
 
 package io.github.imsejin.dl.lezhin.argument.impl;
 
-import io.github.imsejin.common.assertion.Asserts;
 import io.github.imsejin.dl.lezhin.argument.Argument;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import org.apache.commons.cli.Option;
 
-import java.util.Locale;
+import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.regex.Pattern;
 
 @Getter
 @ToString
+@EqualsAndHashCode(callSuper = false)
 public class EpisodeRange extends Argument {
 
-    private Locale value;
+    private static final Pattern PATTERN = Pattern.compile("\\d+|\\d+~(\\d+)?|(\\d+)?~\\d+");
+
+    private Integer startNumber;
+
+    private Integer endNumber;
+
+    private RangeType rangeType;
+
+    @Override
+    public String getValue() {
+        if (this.startNumber == null && this.endNumber == null) {
+            return "*";
+        }
+
+        if (Objects.equals(this.startNumber, this.endNumber)) {
+            return String.valueOf(this.startNumber);
+        }
+
+        Object startNumber = Objects.requireNonNullElse(this.startNumber, "");
+        Object endNumber = Objects.requireNonNullElse(this.endNumber, "");
+
+        return startNumber + "~" + endNumber;
+    }
+
+    // -------------------------------------------------------------------------------------------------
 
     @Override
     protected Option getOption() {
@@ -43,17 +70,123 @@ public class EpisodeRange extends Argument {
 
     @Override
     protected void validate(String value) {
-        Asserts.that(value)
-                .describedAs("Invalid EpisodeRange.value: {0}", value)
-                .isNotNull()
-                .isNotEmpty()
-                .matches("^(\\d*)~(\\d*)$");
+        if (value == null) {
+            throw new IllegalArgumentException("Invalid EpisodeRange.value: null");
+        }
+
+        if (value.isEmpty()) {
+            return;
+        }
+
+        if (!PATTERN.matcher(value).matches()) {
+            throw new IllegalArgumentException("Invalid EpisodeRange.value: " + value);
+        }
     }
 
-    // TODO: define class "Range".
     @Override
     protected void setValue(String value) {
-        this.value = Locale.forLanguageTag(value);
+        for (RangeType rangeType : RangeType.values()) {
+            if (rangeType.supports(value)) {
+                rangeType.parse(value).accept(this);
+                return;
+            }
+        }
+    }
+
+    // -------------------------------------------------------------------------------------------------
+
+    public enum RangeType {
+        ALL {
+            @Override
+            boolean supports(String value) {
+                return value.isEmpty();
+            }
+
+            @Override
+            Consumer<EpisodeRange> parse(String value) {
+                return it -> it.rangeType = this;
+            }
+        },
+
+        ONE {
+            @Override
+            boolean supports(String value) {
+                return !value.contains("~");
+            }
+
+            @Override
+            Consumer<EpisodeRange> parse(String value) {
+                return it -> {
+                    int number = Integer.parseInt(value);
+                    it.startNumber = number;
+                    it.endNumber = number;
+                    it.rangeType = this;
+                };
+            }
+        },
+
+        TO_END {
+            @Override
+            boolean supports(String value) {
+                return value.endsWith("~");
+            }
+
+            @Override
+            Consumer<EpisodeRange> parse(String value) {
+                return it -> {
+                    String[] numbers = value.split("~");
+                    it.startNumber = Integer.parseInt(numbers[0]);
+                    it.rangeType = this;
+                };
+            }
+        },
+
+        FROM_BEGINNING {
+            @Override
+            boolean supports(String value) {
+                return value.startsWith("~");
+            }
+
+            @Override
+            Consumer<EpisodeRange> parse(String value) {
+                return it -> {
+                    String[] numbers = value.split("~");
+                    it.endNumber = Integer.parseInt(numbers[1]);
+                    it.rangeType = this;
+                };
+            }
+        },
+
+        SOME {
+            @Override
+            boolean supports(String value) {
+                return value.matches("\\d+~\\d+");
+            }
+
+            @Override
+            Consumer<EpisodeRange> parse(String value) {
+                return it -> {
+                    String[] numbers = value.split("~");
+                    int startNumber = Integer.parseInt(numbers[0]);
+                    int endNumber = Integer.parseInt(numbers[1]);
+
+                    if (startNumber == endNumber) {
+                        it.startNumber = startNumber;
+                        it.endNumber = startNumber;
+                        it.rangeType = ONE;
+                        return;
+                    }
+
+                    it.startNumber = startNumber;
+                    it.endNumber = endNumber;
+                    it.rangeType = this;
+                };
+            }
+        };
+
+        abstract boolean supports(String value);
+
+        abstract Consumer<EpisodeRange> parse(String value);
     }
 
 }

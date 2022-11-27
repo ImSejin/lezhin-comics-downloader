@@ -18,9 +18,11 @@ package io.github.imsejin.dl.lezhin.argument.impl;
 
 import io.github.imsejin.common.assertion.Asserts;
 import io.github.imsejin.dl.lezhin.argument.Argument;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
+@EqualsAndHashCode(callSuper = false)
 abstract class BooleanArgument extends Argument {
 
     private Boolean value;

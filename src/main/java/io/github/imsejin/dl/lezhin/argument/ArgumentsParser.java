@@ -30,6 +30,7 @@ import org.apache.commons.cli.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class ArgumentsParser {
 
@@ -55,15 +56,21 @@ public class ArgumentsParser {
         this.arguments = List.of(arguments);
     }
 
-    public List<Argument> parse(String... arguments) {
+    /**
+     * Parses program arguments.
+     *
+     * @param args program arguments
+     * @return arguments
+     */
+    public List<Argument> parse(String... args) {
         CommandLine cmd;
 
         try {
-            cmd = new DefaultParser().parse(this.options, arguments);
+            cmd = new DefaultParser().parse(this.options, args);
         } catch (ParseException e) {
             // Without required options or arguments, the program will exit.
             new HelpFormatter().printHelp(" ", null, this.options, "", true);
-            throw new ParsingArgumentException(e, "Failed to parse argument: %s", ArrayUtils.toString(arguments));
+            throw new ParsingArgumentException(e, "Failed to parse argument: %s", ArrayUtils.toString(args));
         }
 
         List<Argument> clones = new ArrayList<>();
@@ -89,7 +96,7 @@ public class ArgumentsParser {
 
     private static String getOptionValue(CommandLine cmd, Option option) {
         if (option.hasArg()) {
-            return cmd.getOptionValue(option.getOpt());
+            return Objects.requireNonNullElse(cmd.getOptionValue(option.getOpt()), "");
         } else {
             boolean hasOption = cmd.hasOption(option.getOpt());
             return String.valueOf(hasOption);
