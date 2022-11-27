@@ -16,7 +16,7 @@
 
 package io.github.imsejin.dl.lezhin.api.auth.service
 
-import io.github.imsejin.dl.lezhin.api.auth.model.AuthForViewEpisodeRequest
+import io.github.imsejin.dl.lezhin.api.auth.model.ServiceRequest
 import spock.lang.Specification
 
 class AuthorityServiceSpec extends Specification {
@@ -28,7 +28,7 @@ class AuthorityServiceSpec extends Specification {
         when:
         // First episode doesn't need access token in HTTP header.
         // https://www.lezhin.com/ko/comic/bff/p1
-        def request = new AuthForViewEpisodeRequest(contentId: 5474379383439360, episodeId: 6310446659534848, firstCheckType: 'P' as char)
+        def request = new ServiceRequest(contentId: 5474379383439360, episodeId: 6310446659534848, firstCheckType: 'P' as char)
         def response = service.getAuthForViewEpisode(request)
 
         then:

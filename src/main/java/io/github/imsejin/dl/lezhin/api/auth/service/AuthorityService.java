@@ -18,8 +18,8 @@ package io.github.imsejin.dl.lezhin.api.auth.service;
 
 import com.google.gson.annotations.SerializedName;
 import io.github.imsejin.dl.lezhin.api.BaseService;
-import io.github.imsejin.dl.lezhin.api.auth.model.AuthForViewEpisodeRequest;
-import io.github.imsejin.dl.lezhin.api.auth.model.AuthForViewEpisodeResponse;
+import io.github.imsejin.dl.lezhin.api.auth.model.ServiceRequest;
+import io.github.imsejin.dl.lezhin.api.auth.model.Authority;
 import io.github.imsejin.dl.lezhin.common.PropertyBinder;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -55,7 +55,7 @@ public class AuthorityService extends BaseService {
         this.serviceInterface = retrofit.create(ServiceInterface.class);
     }
 
-    public AuthForViewEpisodeResponse getAuthForViewEpisode(AuthForViewEpisodeRequest request) {
+    public Authority getAuthForViewEpisode(ServiceRequest request) {
         Call<AuthResponse> call = this.serviceInterface.getAuthForViewEpisode(
                 request.getContentId(),
                 request.getEpisodeId(),
@@ -71,7 +71,7 @@ public class AuthorityService extends BaseService {
         }
 
         AuthResponse authResponse = Objects.requireNonNull(response.body());
-        return PropertyBinder.INSTANCE.toAuthForViewEpisodeResponse(authResponse.getAuthData());
+        return PropertyBinder.INSTANCE.toAuthority(authResponse.getAuthData());
     }
 
     // -------------------------------------------------------------------------------------------------

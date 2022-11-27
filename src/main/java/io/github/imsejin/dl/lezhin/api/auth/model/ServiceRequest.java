@@ -19,16 +19,23 @@ package io.github.imsejin.dl.lezhin.api.auth.model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.jetbrains.annotations.NotNull;
 
 @Getter
 @Setter
 @ToString
-public class AuthForViewEpisodeResponse {
+public class ServiceRequest {
 
-    private String policy;
+    @NotNull
+    private Long contentId;
 
-    private String signature;
+    @NotNull
+    private Long episodeId;
 
-    private String keyPairId;
+    private boolean purchased;
+
+    private int q = 30;
+
+    private Character firstCheckType;
 
 }
