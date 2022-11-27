@@ -57,16 +57,16 @@
 ## Usage
 
 ```bash
-java -jar {JAR filename} -l=<language> -n=<comic_name> [-r=<episode_range> -j -d]
+java -jar {JAR filename} -l=<locale_language> -n=<content_name> [-r=<episode_range> -j -d]
 ```
 
-- *<ins>language</ins> (required)*: language of lezhin platform you want to see.
+- *<ins>locale language</ins> (required)*: language of lezhin platform you want to download the webtoon on.
   
   - **ko** : korean
   - **en** : english
   - **ja** : japanese
   
-- *<ins>comic name</ins> (required)*: webtoon name you want to download.
+- *<ins>content name</ins> (required)*: webtoon name you want to download.
 
 <p>
     <img alt="comic name" src="./src/main/resources/assets/comic-name.png">
