@@ -66,7 +66,7 @@ class ProcessContextSpec extends Specification {
         newContext === context
     }
 
-    def "Creates new context with other context and attributes"() {
+    def "Creates new context with other context"() {
         given:
         def attributes = [language, contentName, episodeRange, saveAsJpeg, debugMode]
         def context = ProcessContext.create(attributes as Object[])
@@ -76,12 +76,12 @@ class ProcessContextSpec extends Specification {
 
         then:
         newContext != null
-        newContext !== context
-        context.language === language
-        context.contentName === contentName
-        context.episodeRange === episodeRange
-        context.saveAsJpeg === saveAsJpeg
-        context.debugMode === debugMode
+        newContext === context
+        newContext.language === language
+        newContext.contentName === contentName
+        newContext.episodeRange === episodeRange
+        newContext.saveAsJpeg === saveAsJpeg
+        newContext.debugMode === debugMode
 
         where:
         language                  | contentName                       | episodeRange                    | saveAsJpeg                     | debugMode

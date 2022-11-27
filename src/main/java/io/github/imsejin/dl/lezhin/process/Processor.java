@@ -16,8 +16,10 @@
 
 package io.github.imsejin.dl.lezhin.process;
 
-public interface Processor<S, R, X extends Exception> {
+import io.github.imsejin.dl.lezhin.exception.LezhinComicsDownloaderException;
 
-    R process(S source) throws X;
+public interface Processor {
+
+    Object process(ProcessContext context) throws LezhinComicsDownloaderException;
 
 }

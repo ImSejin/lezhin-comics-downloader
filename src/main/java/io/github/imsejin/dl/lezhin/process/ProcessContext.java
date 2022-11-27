@@ -18,6 +18,7 @@ package io.github.imsejin.dl.lezhin.process;
 
 import io.github.imsejin.common.util.ArrayUtils;
 import io.github.imsejin.common.util.ReflectionUtils;
+import io.github.imsejin.dl.lezhin.api.auth.model.Authority;
 import io.github.imsejin.dl.lezhin.argument.impl.ContentName;
 import io.github.imsejin.dl.lezhin.argument.impl.DebugMode;
 import io.github.imsejin.dl.lezhin.argument.impl.EpisodeRange;
@@ -34,6 +35,7 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 import static java.util.stream.Collectors.toUnmodifiableList;
 
@@ -47,6 +49,8 @@ public final class ProcessContext {
             .filter(it -> !Modifier.isStatic(it.getModifiers()))
             .collect(toUnmodifiableList());
 
+    // From command line ---------------------------------------------------------------------
+
     private Language language;
 
     private ContentName contentName;
@@ -57,12 +61,20 @@ public final class ProcessContext {
 
     private DebugMode debugMode;
 
+    // Arguments from command line ---------------------------------------------------------------------
+
+    private UUID accessToken;
+
+    private Authority authority;
+
     /**
      * Creates new instance.
      *
      * <p> There are some careful points. First, if the attributes have {@code null} element, it is ignored.
-     * Second, when an attribute matches one of the fields, the attribute is assigned to new instance and
-     * other attributes that is the same as that attribute is discarded.
+     * Second, an attribute that context doesn't know is discarded — in other words, the attribute which
+     * doesn't match one of the fields in {@link ProcessContext} doesn't be assigned. Third, when an attribute
+     * matches one of the fields, the attribute is assigned to new instance but other attributes whose type is
+     * the same as that attribute is discarded.
      *
      * @param attributes attributes
      * @return new context
@@ -102,13 +114,7 @@ public final class ProcessContext {
             return context;
         }
 
-        Object[] originAttributes = new Object[]{
-                context.language,
-                context.contentName,
-                context.episodeRange,
-                context.saveAsJpeg,
-                context.debugMode,
-        };
+        Object[] originAttributes = FIELDS.stream().map(it -> ReflectionUtils.getFieldValue(context, it)).toArray();
 
         // New attributes take precedence over the attributes of context.
         Object[] prepended = ArrayUtils.prepend(originAttributes, attributes);
