@@ -16,7 +16,7 @@
 
 package io.github.imsejin.dl.lezhin.common;
 
-import io.github.imsejin.dl.lezhin.api.auth.model.AuthForViewEpisodeResponse;
+import io.github.imsejin.dl.lezhin.api.auth.model.Authority;
 import io.github.imsejin.dl.lezhin.api.auth.service.AuthorityService.AuthData;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -26,6 +26,6 @@ public interface PropertyBinder {
 
     PropertyBinder INSTANCE = Mappers.getMapper(PropertyBinder.class);
 
-    AuthForViewEpisodeResponse toAuthForViewEpisodeResponse(AuthData source);
+    Authority toAuthority(AuthData source);
 
 }
