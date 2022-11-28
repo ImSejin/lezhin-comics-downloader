@@ -17,6 +17,7 @@
 package io.github.imsejin.dl.lezhin.argument.impl;
 
 import io.github.imsejin.dl.lezhin.argument.Argument;
+import io.github.imsejin.dl.lezhin.attribute.Attribute;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -29,7 +30,7 @@ import java.util.regex.Pattern;
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = false)
-public class EpisodeRange extends Argument {
+public class EpisodeRange extends Argument implements Attribute {
 
     private static final Pattern PATTERN = Pattern.compile("\\d+|\\d+~(\\d+)?|(\\d+)?~\\d+");
 

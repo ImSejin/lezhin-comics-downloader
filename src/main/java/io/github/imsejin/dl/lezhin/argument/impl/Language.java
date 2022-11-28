@@ -18,6 +18,7 @@ package io.github.imsejin.dl.lezhin.argument.impl;
 
 import io.github.imsejin.common.assertion.Asserts;
 import io.github.imsejin.dl.lezhin.argument.Argument;
+import io.github.imsejin.dl.lezhin.attribute.Attribute;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -28,7 +29,7 @@ import java.util.Locale;
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = false)
-public class Language extends Argument {
+public class Language extends Argument implements Attribute {
 
     private Locale value;
 

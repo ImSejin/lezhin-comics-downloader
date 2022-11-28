@@ -16,9 +16,10 @@
 
 package io.github.imsejin.dl.lezhin.argument.impl;
 
+import io.github.imsejin.dl.lezhin.attribute.Attribute;
 import org.apache.commons.cli.Option;
 
-public class SaveAsJpeg extends BooleanArgument {
+public class SaveAsJpeg extends BooleanArgument implements Attribute {
 
     @Override
     protected Option getOption() {

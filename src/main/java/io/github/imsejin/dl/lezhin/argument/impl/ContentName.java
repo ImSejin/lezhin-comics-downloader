@@ -18,6 +18,7 @@ package io.github.imsejin.dl.lezhin.argument.impl;
 
 import io.github.imsejin.common.assertion.Asserts;
 import io.github.imsejin.dl.lezhin.argument.Argument;
+import io.github.imsejin.dl.lezhin.attribute.Attribute;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,7 +29,7 @@ import org.apache.commons.cli.Option;
 @Setter
 @ToString
 @EqualsAndHashCode(callSuper = false)
-public class ContentName extends Argument {
+public class ContentName extends Argument implements Attribute {
 
     private String value;
 

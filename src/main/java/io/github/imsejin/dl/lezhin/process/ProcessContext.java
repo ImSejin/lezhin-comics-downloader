@@ -24,6 +24,7 @@ import io.github.imsejin.dl.lezhin.argument.impl.DebugMode;
 import io.github.imsejin.dl.lezhin.argument.impl.EpisodeRange;
 import io.github.imsejin.dl.lezhin.argument.impl.Language;
 import io.github.imsejin.dl.lezhin.argument.impl.SaveAsJpeg;
+import io.github.imsejin.dl.lezhin.attribute.Attribute;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -46,10 +47,11 @@ import static java.util.stream.Collectors.toUnmodifiableList;
 public final class ProcessContext {
 
     private static final List<Field> FIELDS = Arrays.stream(ProcessContext.class.getDeclaredFields())
+            .filter(it -> Attribute.class.isAssignableFrom(it.getType()))
             .filter(it -> !Modifier.isStatic(it.getModifiers()))
             .collect(toUnmodifiableList());
 
-    // From command line ---------------------------------------------------------------------
+    // From command line -------------------------------------------------------------------------------
 
     private Language language;
 
@@ -69,6 +71,8 @@ public final class ProcessContext {
 
     /**
      * Creates new instance.
+     *
+     * <p> If the attributes is null or empty, returns an empty instance.
      *
      * <p> There are some careful points. First, if the attributes have {@code null} element, it is ignored.
      * Second, an attribute that context doesn't know is discarded — in other words, the attribute which
