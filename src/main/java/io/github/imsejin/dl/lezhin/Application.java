@@ -28,6 +28,7 @@ import io.github.imsejin.dl.lezhin.process.ProcessContext;
 import io.github.imsejin.dl.lezhin.process.Processor;
 import io.github.imsejin.dl.lezhin.process.impl.ConfigurationFileProcessor;
 import io.github.imsejin.dl.lezhin.process.impl.EpisodeAuthorityProcessor;
+import io.github.imsejin.dl.lezhin.process.impl.LoginProcessor;
 import io.github.imsejin.dl.lezhin.util.PathUtils;
 
 import java.nio.file.Path;
@@ -45,6 +46,7 @@ public final class Application {
 
         List<Processor> processors = List.of(
                 new ConfigurationFileProcessor(currentPath),
+                new LoginProcessor(),
                 new EpisodeAuthorityProcessor()
         );
 
