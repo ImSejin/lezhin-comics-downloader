@@ -20,9 +20,12 @@ import io.github.imsejin.common.annotation.ExcludeFromGeneratedJacocoReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 /**
  * @since 2.7.0
  */
+@ThreadSafe
 public final class Loggers {
 
     private static String loggerName = "NormalLogger";

@@ -25,6 +25,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
@@ -34,6 +35,7 @@ import static java.util.stream.Collectors.toUnmodifiableList;
 /**
  * @since 2.0.0
  */
+@ThreadSafe
 public final class ChromeBrowser {
 
     private static ChromeOptions options = new ChromeOptions().addArguments(ChromeOption.getArguments());

@@ -25,12 +25,14 @@ import io.github.imsejin.dl.lezhin.argument.impl.EpisodeRange;
 import io.github.imsejin.dl.lezhin.argument.impl.Language;
 import io.github.imsejin.dl.lezhin.argument.impl.SaveAsJpeg;
 import io.github.imsejin.dl.lezhin.attribute.Attribute;
+import io.github.imsejin.dl.lezhin.attribute.impl.Authentication;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -42,6 +44,7 @@ import static java.util.stream.Collectors.toUnmodifiableList;
 
 @Getter
 @ToString
+@ThreadSafe
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ProcessContext {
@@ -63,7 +66,9 @@ public final class ProcessContext {
 
     private DebugMode debugMode;
 
-    // Arguments from command line ---------------------------------------------------------------------
+    // From processors ---------------------------------------------------------------------------------
+
+    private Authentication authentication;
 
     private UUID accessToken;
 
@@ -109,6 +114,19 @@ public final class ProcessContext {
         return context;
     }
 
+    /**
+     * Returns an instance.
+     *
+     * <p> If the attributes are null or empty or have non-null one, returns new context.
+     * Otherwise returns the given context as it is.
+     *
+     * <p> A new context is merged with given context and attributes. if they have the same type of attribute,
+     * always overwrites one of the context with one of the attributes.
+     *
+     * @param context    process context
+     * @param attributes attributes
+     * @return new context if given attributes have a valid item
+     */
     public static ProcessContext of(ProcessContext context, Object... attributes) {
         if (ArrayUtils.isNullOrEmpty(attributes)) {
             return context;
