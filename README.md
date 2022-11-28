@@ -1,5 +1,5 @@
 <p align="center">
-    <img alt="Lezhin Comics Downloader" src="./src/main/resources/assets/lezhin-comics-downloader-logo.png" width="20%">
+    <img alt="Lezhin Comics Downloader" src="./asset/lezhin-comics-downloader-logo.png" width="20%">
 </p>
 
 <h1 align="center">Lezhin Comics Downloader</h1>
@@ -24,7 +24,7 @@
 
 # Preview
 
-<img alt="preview" src="./src/main/resources/assets/preview.gif">
+<img alt="preview" src="./asset/preview.gif">
 
 <p align="center">This is downloader that helps you to login and downloads the specified comic for all lezhin-comics even adults.</p>
 <p align="center">※ <i>The user is responsible for everything that happens using this program.</i></p>
@@ -69,7 +69,7 @@ java -jar {JAR filename} -l=<locale_language> -n=<content_name> [-r=<episode_ran
 - *<ins>content name</ins> (required)*: webtoon name you want to download.
 
 <p>
-    <img alt="comic name" src="./src/main/resources/assets/comic-name.png">
+    <img alt="comic name" src="./asset/comic-name.png">
 </p>
 
 - *<ins>episode range</ins> (optional)*: range of episodes you want to download.
