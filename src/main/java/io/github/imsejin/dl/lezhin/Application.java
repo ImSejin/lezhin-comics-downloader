@@ -26,8 +26,11 @@ import io.github.imsejin.dl.lezhin.argument.impl.SaveAsJpeg;
 import io.github.imsejin.dl.lezhin.exception.LezhinComicsDownloaderException;
 import io.github.imsejin.dl.lezhin.process.ProcessContext;
 import io.github.imsejin.dl.lezhin.process.Processor;
+import io.github.imsejin.dl.lezhin.process.impl.ConfigurationFileProcessor;
 import io.github.imsejin.dl.lezhin.process.impl.EpisodeAuthorityProcessor;
+import io.github.imsejin.dl.lezhin.util.PathUtils;
 
+import java.nio.file.Path;
 import java.util.List;
 
 public final class Application {
@@ -38,10 +41,12 @@ public final class Application {
 //        argumentsParser.parse(args);
         List<Argument> arguments = argumentsParser.parse("-l=en", "-n=name", "-d");
 
-        Processor episodeAuthorityProcessor = new EpisodeAuthorityProcessor();
-        Processor impl1 = context -> new DebugMode();
-        Processor impl2 = context -> new SaveAsJpeg();
-        List<Processor> processors = List.of(impl1, impl2);
+        Path currentPath = PathUtils.getCurrentPath();
+
+        List<Processor> processors = List.of(
+                new ConfigurationFileProcessor(currentPath),
+                new EpisodeAuthorityProcessor()
+        );
 
         ProcessContext context = ProcessContext.create(arguments.toArray());
         for (Processor processor : processors) {
