@@ -54,7 +54,7 @@ class ConfigurationFileProcessorSpec extends Specification {
 
         then:
         def e = thrown(InvalidConfigurationFileException)
-        e.message == "There is invalid value of name[username] in section[account]: "
+        e.message == "It is invalid value of name[username] in section[account]: "
     }
 
     def "Failed to process due to no name[password]"() {
@@ -72,7 +72,7 @@ class ConfigurationFileProcessorSpec extends Specification {
 
         then:
         def e = thrown(InvalidConfigurationFileException)
-        e.message == "There is invalid value of name[password] in section[account]: "
+        e.message == "It is invalid value of name[password] in section[account]: "
     }
 
     def "Processes configuration file"() {

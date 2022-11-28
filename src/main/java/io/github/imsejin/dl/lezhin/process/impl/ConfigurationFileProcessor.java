@@ -37,12 +37,12 @@ public class ConfigurationFileProcessor implements Processor {
 
         String username = section.get("username");
         if (StringUtils.isNullOrBlank(username)) {
-            throw new InvalidConfigurationFileException("There is invalid value of name[username] in section[account]: %s", username);
+            throw new InvalidConfigurationFileException("It is invalid value of name[username] in section[account]: %s", username);
         }
 
         String password = section.get("password");
         if (StringUtils.isNullOrBlank(password)) {
-            throw new InvalidConfigurationFileException("There is invalid value of name[password] in section[account]: %s", password);
+            throw new InvalidConfigurationFileException("It is invalid value of name[password] in section[account]: %s", password);
         }
 
         return new Authentication(username, password);
