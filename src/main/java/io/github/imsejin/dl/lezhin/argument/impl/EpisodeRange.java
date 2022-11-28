@@ -27,6 +27,9 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
+/**
+ * Range of episode to download
+ */
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = false)

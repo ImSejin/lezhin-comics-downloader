@@ -16,6 +16,7 @@
 
 package io.github.imsejin.dl.lezhin.process.impl;
 
+import io.github.imsejin.dl.lezhin.annotation.ProcessOrder;
 import io.github.imsejin.dl.lezhin.api.auth.model.Authority;
 import io.github.imsejin.dl.lezhin.api.auth.model.ServiceRequest;
 import io.github.imsejin.dl.lezhin.api.auth.service.AuthorityService;
@@ -23,6 +24,7 @@ import io.github.imsejin.dl.lezhin.exception.LezhinComicsDownloaderException;
 import io.github.imsejin.dl.lezhin.process.ProcessContext;
 import io.github.imsejin.dl.lezhin.process.Processor;
 
+@ProcessOrder(5)
 public class EpisodeAuthorityProcessor implements Processor {
 
     @Override

@@ -26,6 +26,9 @@ import org.apache.commons.cli.Option;
 
 import java.util.Locale;
 
+/**
+ * Language of lezhin platform
+ */
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = false)

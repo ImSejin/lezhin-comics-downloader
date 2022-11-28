@@ -25,6 +25,9 @@ import lombok.Setter;
 import lombok.ToString;
 import org.apache.commons.cli.Option;
 
+/**
+ * Webtoon name
+ */
 @Getter
 @Setter
 @ToString
