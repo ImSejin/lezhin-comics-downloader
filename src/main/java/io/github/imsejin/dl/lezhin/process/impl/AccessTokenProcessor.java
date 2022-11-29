@@ -77,6 +77,7 @@ public class AccessTokenProcessor implements Processor {
 
     @Override
     public UUID process(ProcessContext context) throws AccessTokenNotFoundException {
+        // TODO: But why can't I get access token at here?
         String accessToken1 = getAccessToken();
         return UUID.fromString(accessToken1);
         /*

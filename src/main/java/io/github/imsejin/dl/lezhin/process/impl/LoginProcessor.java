@@ -74,7 +74,9 @@ public class LoginProcessor implements Processor {
 
         validate(currentUrl);
 
-//        String accessToken = getAccessToken();
+        // TODO: I can get access token.
+        String accessToken = getAccessToken();
+        System.out.println("accessToken = " + accessToken);
 
         // Return value will be ignored by ProcessContext.
         return null;
