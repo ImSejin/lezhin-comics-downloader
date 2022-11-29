@@ -30,7 +30,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
-import static java.util.stream.Collectors.toUnmodifiableList;
+import static java.util.stream.Collectors.toList;
 
 /**
  * @since 2.0.0
@@ -191,7 +191,7 @@ public final class ChromeBrowser {
         private final String argument;
 
         public static List<String> getArguments() {
-            return Arrays.stream(values()).map(it -> it.argument).collect(toUnmodifiableList());
+            return Arrays.stream(values()).map(it -> it.argument).collect(toList());
         }
     }
 
