@@ -62,7 +62,11 @@ public final class Application {
                 .collect(toUnmodifiableSet());
         List<Class<? extends Processor>> orderedTypes = ProcessorOrderResolver.resolve(processorTypes);
 
-        ProcessorCreator processorCreator = new ProcessorCreator(currentPath, context.getLanguage().getValue());
+        // Prepares objects needed to instantiate the processors.
+        List<Object> beans = List.of(PathUtils.getCurrentPath(), context.getLanguage().getValue());
+
+        // Creates the processors with beans.
+        ProcessorCreator processorCreator = new ProcessorCreator(beans.toArray());
         List<Processor> processors = processorCreator.create(orderedTypes);
 
         try {

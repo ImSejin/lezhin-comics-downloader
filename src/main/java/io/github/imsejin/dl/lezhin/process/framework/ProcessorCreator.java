@@ -2,33 +2,33 @@ package io.github.imsejin.dl.lezhin.process.framework;
 
 import io.github.imsejin.common.util.CollectionUtils;
 import io.github.imsejin.common.util.ReflectionUtils;
+import io.github.imsejin.dl.lezhin.exception.ProcessorCreationFailureException;
 import io.github.imsejin.dl.lezhin.process.Processor;
-import lombok.RequiredArgsConstructor;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toUnmodifiableList;
+import static java.util.stream.Collectors.toMap;
 
-@RequiredArgsConstructor
 public final class ProcessorCreator {
 
-    private static final List<Field> FIELDS = Arrays.stream(ProcessorCreator.class.getDeclaredFields())
-            .filter(it -> !Modifier.isStatic(it.getModifiers()))
-            .collect(toUnmodifiableList());
+    private final Set<Object> beans = new HashSet<>();
 
-    private final Path basePath;
-
-    private final Locale locale;
+    public ProcessorCreator(Object... beans) {
+        for (Object bean : beans) {
+            if (bean != null) {
+                this.beans.add(bean);
+            }
+        }
+    }
 
     public List<Processor> create(List<Class<? extends Processor>> processorTypes) {
         if (CollectionUtils.isNullOrEmpty(processorTypes)) {
@@ -49,21 +49,36 @@ public final class ProcessorCreator {
 
     // -------------------------------------------------------------------------------------------------
 
-    private static Constructor<?> resolveConstructor(Class<? extends Processor> processorType) {
+    private Constructor<?> resolveConstructor(Class<? extends Processor> processorType) {
+        // Resolves a constructor that has less number of parameters first.
         List<Constructor<?>> constructors = Arrays.stream(processorType.getDeclaredConstructors())
                 .sorted(comparing(Constructor::getParameterCount)).collect(toList());
 
+        constructor_scope:
         for (Constructor<?> constructor : constructors) {
+            // Resolves a default constructor.
             if (constructor.getParameterCount() == 0) {
                 return constructor;
             }
 
-            // TODO: validate parameters of constructor.
-//            List<Class<?>> paramTypes = List.of(constructor.getParameterTypes());
-//            List<Field> resolvableFields = FIELDS.stream().filter(it -> paramTypes.contains(it.getType())).collect(toList());
+            param_scope:
+            for (Class<?> paramType : constructor.getParameterTypes()) {
+                for (Object bean : this.beans) {
+                    if (paramType.isAssignableFrom(bean.getClass())) {
+                        continue param_scope;
+                    }
+                }
+
+                // Failed to resolve this constructor and tries to resolve the next constructor.
+                continue constructor_scope;
+            }
+
+            // The parameters of this constructor are assignable from all beans.
+            return constructor;
         }
 
-        return constructors.get(0);
+        throw new ProcessorCreationFailureException("There is no matched bean for parameter of the processor: (processorType=%s, beans=%s)",
+                processorType, this.beans.stream().map(Object::getClass).collect(toList()));
     }
 
     private Processor createProcessor(Constructor<?> constructor) {
@@ -71,17 +86,27 @@ public final class ProcessorCreator {
             return (Processor) ReflectionUtils.instantiate(constructor);
         }
 
-        List<Object> arguments = new ArrayList<>();
         Class<?>[] paramTypes = constructor.getParameterTypes();
+        Object[] arguments = new Object[paramTypes.length];
 
-        for (Class<?> paramType : paramTypes) {
-            Field field = FIELDS.stream().filter(it -> paramType == it.getType()).findFirst().orElseThrow();
-            Object fieldValue = ReflectionUtils.getFieldValue(this, field);
+        Map<Class<?>, Object> beanTypeMap = this.beans.stream().collect(toMap(Object::getClass, it -> it));
 
-            arguments.add(fieldValue);
+        for (int i = 0; i < paramTypes.length; i++) {
+            Class<?> paramType = paramTypes[i];
+
+            // Picks a bean strictly.
+            Object bean = beanTypeMap.get(paramType);
+
+            // If no matched bean, picks a bean leniently.
+            if (bean == null) {
+                bean = this.beans.stream().filter(it -> paramType.isAssignableFrom(it.getClass()))
+                        .findFirst().orElseThrow();
+            }
+
+            arguments[i] = bean;
         }
 
-        return (Processor) ReflectionUtils.instantiate(constructor, arguments.toArray());
+        return (Processor) ReflectionUtils.instantiate(constructor, arguments);
     }
 
 }
