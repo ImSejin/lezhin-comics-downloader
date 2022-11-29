@@ -1,7 +1,7 @@
 package io.github.imsejin.dl.lezhin.process.impl;
 
 import io.github.imsejin.common.util.StringUtils;
-import io.github.imsejin.dl.lezhin.annotation.ProcessOrder;
+import io.github.imsejin.dl.lezhin.annotation.ProcessSpecification;
 import io.github.imsejin.dl.lezhin.browser.ChromeBrowser;
 import io.github.imsejin.dl.lezhin.common.Loggers;
 import io.github.imsejin.dl.lezhin.exception.LezhinComicsDownloaderException;
@@ -14,7 +14,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-@ProcessOrder(1)
+@ProcessSpecification(dependsOn = ConfigurationFileProcessor.class)
 public class LoginProcessor extends AbstractLocaleProcessor {
 
     private static final Duration TIMEOUT = Duration.ofSeconds(15);

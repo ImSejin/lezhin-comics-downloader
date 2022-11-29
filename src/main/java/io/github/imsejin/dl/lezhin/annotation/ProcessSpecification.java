@@ -9,12 +9,10 @@ import java.lang.annotation.Target;
 @Documented
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ProcessOrder {
+public @interface ProcessSpecification {
 
-    int HIGHEST_ORDER = 0;
+    Class<?> INDEPENDENT = void.class;
 
-    int LOWEST_ORDER = Integer.MAX_VALUE;
-
-    int value();
+    Class<?> dependsOn() default void.class;
 
 }

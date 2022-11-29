@@ -2,7 +2,7 @@ package io.github.imsejin.dl.lezhin.process.impl;
 
 import io.github.imsejin.common.util.IniUtils;
 import io.github.imsejin.common.util.StringUtils;
-import io.github.imsejin.dl.lezhin.annotation.ProcessOrder;
+import io.github.imsejin.dl.lezhin.annotation.ProcessSpecification;
 import io.github.imsejin.dl.lezhin.attribute.impl.Authentication;
 import io.github.imsejin.dl.lezhin.exception.ConfigurationFileNotFoundException;
 import io.github.imsejin.dl.lezhin.exception.InvalidConfigurationFileException;
@@ -15,7 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 
-@ProcessOrder(ProcessOrder.HIGHEST_ORDER)
+@ProcessSpecification
 public class ConfigurationFileProcessor implements Processor {
 
     private final Path filePath;
