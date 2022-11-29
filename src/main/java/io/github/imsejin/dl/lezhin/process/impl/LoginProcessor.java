@@ -48,19 +48,22 @@ public class LoginProcessor implements Processor {
     public Object process(ProcessContext context) throws LezhinComicsDownloaderException {
         // Resolves an implementation for the locale.
         Locale locale = context.getLanguage().getValue();
-        LoginProcessor processor = IMPLEMENTATION_MAP.get(locale);
+        LoginProcessor impl = IMPLEMENTATION_MAP.get(locale);
 
-        if (processor == null) {
+        if (impl == null) {
             throw new IllegalArgumentException("ProcessContext.language.value is not recognized: " + locale);
         }
 
         // Goes to login page.
-        processor.gotoLoginPage();
+        impl.gotoLoginPage();
+
         // Waits for DOM to complete the rendering.
         WebElement loginForm = waitForRenderingLoginPage();
+
         // Inputs authentication into the element.
         inputUsername(loginForm, context.getAuthentication().getUsername());
         inputPassword(loginForm, context.getAuthentication().getPassword());
+
         // Submits login form.
         submit(loginForm);
 
