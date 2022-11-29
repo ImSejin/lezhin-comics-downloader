@@ -29,6 +29,7 @@ import javax.annotation.concurrent.ThreadSafe;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -72,9 +73,8 @@ public final class ChromeBrowser {
      */
     public static void debugging() {
         List<String> arguments = ChromeOption.getArguments();
-        arguments.remove(ChromeOption.HEADLESS.argument);
-        arguments.remove(ChromeOption.NO_SANDBOX.argument);
-        arguments.remove(ChromeOption.DISABLE_GPU.argument);
+        Stream.of(ChromeOption.HEADLESS, ChromeOption.NO_SANDBOX, ChromeOption.DISABLE_GPU)
+                .map(ChromeOption::getArgument).forEach(arguments::remove);
 
         options = new ChromeOptions().addArguments(arguments);
     }
@@ -83,7 +83,7 @@ public final class ChromeBrowser {
         return SingletonLazyHolder.DRIVER;
     }
 
-    public static void softQuit() {
+    public static void quitIfInitialized() {
         if (ChromeBrowser.initialized) {
             SingletonLazyHolder.DRIVER.quit();
         }

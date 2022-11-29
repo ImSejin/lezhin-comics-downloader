@@ -65,9 +65,14 @@ public final class Application {
         ProcessorCreator processorCreator = new ProcessorCreator(currentPath, context.getLanguage().getValue());
         List<Processor> processors = processorCreator.create(orderedTypes);
 
-        for (Processor processor : processors) {
-            Object result = processor.process(context);
-            context = ProcessContext.of(context, result);
+        try {
+            for (Processor processor : processors) {
+                Object result = processor.process(context);
+                context = ProcessContext.of(context, result);
+            }
+        } catch (Exception e) {
+            ChromeBrowser.quitIfInitialized();
+            throw e;
         }
     }
 
