@@ -32,7 +32,8 @@ public final class ProcessorOrderResolver {
         Graph<Class<? extends Processor>> graph = createDependencyGraph(processorTypes);
 
         // Validates a dependency graph.
-        if (graph.getVertexSize() != graph.getPathLength() + 1) {
+        if (graph.getVertexSize() != graph.getPathLength() + 1
+                || graph.getAllVertices().stream().anyMatch(vertex -> graph.getAdjacentVertices(vertex).size() > 1)) {
             throw new InvalidProcessSpecificationException("Not linear dependency graph of process specification: " + graph);
         }
 
