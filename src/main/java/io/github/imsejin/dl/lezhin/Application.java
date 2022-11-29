@@ -28,14 +28,12 @@ import io.github.imsejin.dl.lezhin.argument.impl.Language;
 import io.github.imsejin.dl.lezhin.argument.impl.SaveAsJpeg;
 import io.github.imsejin.dl.lezhin.browser.ChromeBrowser;
 import io.github.imsejin.dl.lezhin.common.Loggers;
-import io.github.imsejin.dl.lezhin.exception.LezhinComicsDownloaderException;
 import io.github.imsejin.dl.lezhin.process.ProcessContext;
 import io.github.imsejin.dl.lezhin.process.Processor;
 import io.github.imsejin.dl.lezhin.process.framework.ProcessorCreator;
 import io.github.imsejin.dl.lezhin.process.framework.ProcessorOrderResolver;
 import io.github.imsejin.dl.lezhin.util.PathUtils;
 
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 
@@ -43,23 +41,24 @@ import static java.util.stream.Collectors.toUnmodifiableSet;
 
 public final class Application {
 
-    public static void main(String[] args) throws LezhinComicsDownloaderException {
+    public static void main(String[] args) {
         ArgumentsParser argumentsParser = new ArgumentsParser(
                 new Language(), new ContentName(), new EpisodeRange(), new SaveAsJpeg(), new DebugMode());
 //        List<Argument> arguments = argumentsParser.parse(args);
-        List<Argument> arguments = argumentsParser.parse("-l=en", "-n=appetite", "-d");
+        List<Argument> arguments = argumentsParser.parse("-l=ko", "-n=appetite", "-d");
 
-        Path currentPath = PathUtils.getCurrentPath();
         ProcessContext context = ProcessContext.create(arguments.toArray());
-
         if (context.getDebugMode().getValue()) {
             Loggers.debugging();
             ChromeBrowser.debugging();
         }
 
+        // Finds all types of implementation of the processor.
         Set<Class<? extends Processor>> processorTypes = ClassFinder.getAllSubtypes(Processor.class, SearchPolicy.CLASS)
                 .stream().filter(it -> it.getEnclosingClass() == null && !ClassUtils.isAbstractClass(it))
                 .collect(toUnmodifiableSet());
+
+        // Sorts order of the types.
         List<Class<? extends Processor>> orderedTypes = ProcessorOrderResolver.resolve(processorTypes);
 
         // Prepares objects needed to instantiate the processors.
