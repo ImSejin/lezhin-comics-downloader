@@ -5,9 +5,11 @@ import io.github.imsejin.dl.lezhin.annotation.ProcessSpecification;
 import io.github.imsejin.dl.lezhin.browser.ChromeBrowser;
 import io.github.imsejin.dl.lezhin.common.Loggers;
 import io.github.imsejin.dl.lezhin.exception.LezhinComicsDownloaderException;
+import io.github.imsejin.dl.lezhin.exception.LoginFailureException;
 import io.github.imsejin.dl.lezhin.process.ProcessContext;
 import io.github.imsejin.dl.lezhin.process.Processor;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -64,8 +66,12 @@ public class LoginProcessor implements Processor {
         inputUsername(loginForm, context.getAuthentication().getUsername());
         inputPassword(loginForm, context.getAuthentication().getPassword());
 
+        String currentUrl = ChromeBrowser.getDriver().getCurrentUrl();
+
         // Submits login form.
         submit(loginForm);
+
+        validate(currentUrl);
 
         // Return value will be ignored by ProcessContext.
         return null;
@@ -152,4 +158,26 @@ public class LoginProcessor implements Processor {
         submitButton.click();
     }
 
+    private static void validate(String currentUrl) {
+        ChromeDriver driver = ChromeBrowser.getDriver();
+
+        try {
+            // Waits for DOM to complete the rendering.
+            Loggers.getLogger().debug("Wait up to {} sec for main page to be rendered", TIMEOUT.getSeconds());
+            WebDriverWait wait = new WebDriverWait(driver, TIMEOUT);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(
+                    By.xpath("//main[@id='main' and @class='lzCntnr lzCntnr--home']")));
+        } catch (TimeoutException e) {
+            // When failed to login because of other problems.
+            if (!currentUrl.equals(driver.getCurrentUrl())) {
+                throw e;
+            }
+
+            // When failed to login because of invalid account information.
+            driver.executeScript("localStorage.setItem('errorCode', window.__LZ_ERROR_CODE__);");
+            String errorCode = driver.getLocalStorage().getItem("errorCode");
+
+            throw new LoginFailureException(errorCode);
+        }
+    }
 }
