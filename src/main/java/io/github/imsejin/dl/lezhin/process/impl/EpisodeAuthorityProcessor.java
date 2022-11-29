@@ -24,7 +24,7 @@ import io.github.imsejin.dl.lezhin.exception.LezhinComicsDownloaderException;
 import io.github.imsejin.dl.lezhin.process.ProcessContext;
 import io.github.imsejin.dl.lezhin.process.Processor;
 
-@ProcessSpecification(dependsOn = LoginProcessor.class)
+@ProcessSpecification(dependsOn = AccessTokenProcessor.class)
 public class EpisodeAuthorityProcessor implements Processor {
 
     @Override

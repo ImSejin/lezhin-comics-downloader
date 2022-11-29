@@ -4,6 +4,7 @@ import io.github.imsejin.common.tool.ClassFinder
 import io.github.imsejin.common.tool.ClassFinder.SearchPolicy
 import io.github.imsejin.common.util.ClassUtils
 import io.github.imsejin.dl.lezhin.process.Processor
+import io.github.imsejin.dl.lezhin.process.impl.AccessTokenProcessor
 import io.github.imsejin.dl.lezhin.process.impl.ConfigurationFileProcessor
 import io.github.imsejin.dl.lezhin.process.impl.EpisodeAuthorityProcessor
 import io.github.imsejin.dl.lezhin.process.impl.LoginProcessor
@@ -23,6 +24,7 @@ class ProcessorOrderResolverSpec extends Specification {
         orderedTypes == [
                 ConfigurationFileProcessor,
                 LoginProcessor,
+                AccessTokenProcessor,
                 EpisodeAuthorityProcessor,
         ]
     }
