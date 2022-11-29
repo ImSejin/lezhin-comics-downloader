@@ -16,6 +16,9 @@
 
 package io.github.imsejin.dl.lezhin;
 
+import io.github.imsejin.common.tool.ClassFinder;
+import io.github.imsejin.common.tool.ClassFinder.SearchPolicy;
+import io.github.imsejin.common.util.ClassUtils;
 import io.github.imsejin.dl.lezhin.argument.Argument;
 import io.github.imsejin.dl.lezhin.argument.ArgumentsParser;
 import io.github.imsejin.dl.lezhin.argument.impl.ContentName;
@@ -23,34 +26,44 @@ import io.github.imsejin.dl.lezhin.argument.impl.DebugMode;
 import io.github.imsejin.dl.lezhin.argument.impl.EpisodeRange;
 import io.github.imsejin.dl.lezhin.argument.impl.Language;
 import io.github.imsejin.dl.lezhin.argument.impl.SaveAsJpeg;
+import io.github.imsejin.dl.lezhin.browser.ChromeBrowser;
+import io.github.imsejin.dl.lezhin.common.Loggers;
 import io.github.imsejin.dl.lezhin.exception.LezhinComicsDownloaderException;
 import io.github.imsejin.dl.lezhin.process.ProcessContext;
 import io.github.imsejin.dl.lezhin.process.Processor;
-import io.github.imsejin.dl.lezhin.process.impl.ConfigurationFileProcessor;
-import io.github.imsejin.dl.lezhin.process.impl.EpisodeAuthorityProcessor;
-import io.github.imsejin.dl.lezhin.process.impl.LoginProcessor;
+import io.github.imsejin.dl.lezhin.process.framework.ProcessorCreator;
+import io.github.imsejin.dl.lezhin.process.framework.ProcessorOrderResolver;
 import io.github.imsejin.dl.lezhin.util.PathUtils;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Set;
+
+import static java.util.function.Predicate.not;
+import static java.util.stream.Collectors.toUnmodifiableSet;
 
 public final class Application {
 
     public static void main(String[] args) throws LezhinComicsDownloaderException {
         ArgumentsParser argumentsParser = new ArgumentsParser(
                 new Language(), new ContentName(), new EpisodeRange(), new SaveAsJpeg(), new DebugMode());
-//        argumentsParser.parse(args);
-        List<Argument> arguments = argumentsParser.parse("-l=en", "-n=name", "-d");
+//        List<Argument> arguments = argumentsParser.parse(args);
+        List<Argument> arguments = argumentsParser.parse("-l=en", "-n=appetite", "-d");
 
         Path currentPath = PathUtils.getCurrentPath();
-
-        List<Processor> processors = List.of(
-                new ConfigurationFileProcessor(currentPath),
-                new LoginProcessor(),
-                new EpisodeAuthorityProcessor()
-        );
-
         ProcessContext context = ProcessContext.create(arguments.toArray());
+
+        if (context.getDebugMode().getValue()) {
+            Loggers.debugging();
+            ChromeBrowser.debugging();
+        }
+
+        Set<Class<? extends Processor>> processorTypes = ClassFinder.getAllSubtypes(Processor.class, SearchPolicy.CLASS)
+                .stream().filter(not(ClassUtils::isAbstractClass)).collect(toUnmodifiableSet());
+        List<Class<? extends Processor>> orderedTypes = ProcessorOrderResolver.resolve(processorTypes);
+        ProcessorCreator processorCreator = new ProcessorCreator(currentPath, context.getLanguage().getValue());
+        List<Processor> processors = processorCreator.create(orderedTypes);
+
         for (Processor processor : processors) {
             Object result = processor.process(context);
             context = ProcessContext.of(context, result);
