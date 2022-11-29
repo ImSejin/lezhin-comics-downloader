@@ -11,10 +11,10 @@ import spock.lang.Specification
 
 class ProcessorOrderResolverSpec extends Specification {
 
-    def "test"() {
+    def "Resolves the order of process types"() {
         given:
         def processorTypes = ClassFinder.getAllSubtypes(Processor, SearchPolicy.CLASS)
-                .findAll { !ClassUtils.isAbstractClass(it) } as Set
+                .findAll { !ClassUtils.isAbstractClass(it) && it.enclosingClass == null } as Set
 
         when:
         def orderedTypes = ProcessorOrderResolver.resolve(processorTypes)

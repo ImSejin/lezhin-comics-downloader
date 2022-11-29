@@ -39,7 +39,6 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 
-import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toUnmodifiableSet;
 
 public final class Application {
@@ -59,8 +58,10 @@ public final class Application {
         }
 
         Set<Class<? extends Processor>> processorTypes = ClassFinder.getAllSubtypes(Processor.class, SearchPolicy.CLASS)
-                .stream().filter(not(ClassUtils::isAbstractClass)).collect(toUnmodifiableSet());
+                .stream().filter(it -> it.getEnclosingClass() == null && !ClassUtils.isAbstractClass(it))
+                .collect(toUnmodifiableSet());
         List<Class<? extends Processor>> orderedTypes = ProcessorOrderResolver.resolve(processorTypes);
+
         ProcessorCreator processorCreator = new ProcessorCreator(currentPath, context.getLanguage().getValue());
         List<Processor> processors = processorCreator.create(orderedTypes);
 

@@ -6,6 +6,7 @@ import io.github.imsejin.dl.lezhin.browser.ChromeBrowser;
 import io.github.imsejin.dl.lezhin.common.Loggers;
 import io.github.imsejin.dl.lezhin.exception.LezhinComicsDownloaderException;
 import io.github.imsejin.dl.lezhin.process.ProcessContext;
+import io.github.imsejin.dl.lezhin.process.Processor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -13,69 +14,104 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.Locale;
+import java.util.Map;
 
+/**
+ * Processor for login
+ *
+ * <p> This is the first place to run a chrome driver. First, {@link ChromeDriver} finds
+ * the root element that is {@code <form id="email" action="/login" method="post"></form>} and then
+ * it finds the three element in the root.
+ *
+ * <ol>
+ *     <li>{@code <input id="login-email">}</li>
+ *     <li>{@code <input id="login-password">}</li>
+ *     <li>{@code <button type="submit"></button>}</li>
+ * </ol>
+ *
+ * <p> {@link ChromeDriver} inputs username and password to the first and second element.
+ * When input tags are filled by username and password, it clicks the third element so that login.
+ */
 @ProcessSpecification(dependsOn = ConfigurationFileProcessor.class)
-public class LoginProcessor extends AbstractLocaleProcessor {
+public class LoginProcessor implements Processor {
 
     private static final Duration TIMEOUT = Duration.ofSeconds(15);
 
-    @Override
-    protected Object processForKorean(ProcessContext context) throws LezhinComicsDownloaderException {
-        ChromeDriver driver = ChromeBrowser.getDriver();
+    private static final Map<Locale, LoginProcessor> IMPLEMENTATION_MAP = Map.ofEntries(
+            Map.entry(Locale.KOREA, new KoreanImpl()),
+            Map.entry(Locale.US, new EnglishImpl()),
+            Map.entry(Locale.JAPAN, new JapaneseImpl())
+    );
 
-        // Go to login page.
-        visitLoginPage("https://www.lezhin.com/ko/login");
+    @Override
+    public Object process(ProcessContext context) throws LezhinComicsDownloaderException {
+        // Resolves an implementation for the locale.
+        Locale locale = context.getLanguage().getValue();
+        LoginProcessor processor = IMPLEMENTATION_MAP.get(locale);
+
+        if (processor == null) {
+            throw new IllegalArgumentException("ProcessContext.language.value is not recognized: " + locale);
+        }
+
+        // Goes to login page.
+        processor.gotoLoginPage();
         // Waits for DOM to complete the rendering.
         WebElement loginForm = waitForRenderingLoginPage();
         // Inputs authentication into the element.
         inputUsername(loginForm, context.getAuthentication().getUsername());
         inputPassword(loginForm, context.getAuthentication().getPassword());
+        // Submits login form.
+        submit(loginForm);
 
+        // Return value will be ignored by ProcessContext.
         return null;
+    }
+
+    void gotoLoginPage() {
+        throw new UnsupportedOperationException();
     }
 
     // -------------------------------------------------------------------------------------------------
 
-    @Override
-    protected Object processForEnglish(ProcessContext context) throws LezhinComicsDownloaderException {
-        ChromeDriver driver = ChromeBrowser.getDriver();
+    private static class KoreanImpl extends LoginProcessor {
+        @Override
+        void gotoLoginPage() {
+            ChromeDriver driver = ChromeBrowser.getDriver();
 
-        // Go to login page.
-        visitLoginPage("https://www.lezhinus.com/en/login");
-        // Waits for DOM to complete the rendering.
-        WebElement loginForm = waitForRenderingLoginPage();
-        // Inputs authentication into the element.
-        inputUsername(loginForm, context.getAuthentication().getUsername());
-        inputPassword(loginForm, context.getAuthentication().getPassword());
-
-        return null;
+            String loginPageUrl = "https://www.lezhin.com/ko/login";
+            Loggers.getLogger().info("Request login page: {}", loginPageUrl);
+            driver.get(loginPageUrl);
+        }
     }
 
     // -------------------------------------------------------------------------------------------------
 
-    @Override
-    protected Object processForJapanese(ProcessContext context) throws LezhinComicsDownloaderException {
-        ChromeDriver driver = ChromeBrowser.getDriver();
+    private static class EnglishImpl extends LoginProcessor {
+        @Override
+        void gotoLoginPage() {
+            ChromeDriver driver = ChromeBrowser.getDriver();
 
-        // Go to login page.
-        visitLoginPage("https://www.lezhin.jp/ja/login");
-        // Waits for DOM to complete the rendering.
-        WebElement loginForm = waitForRenderingLoginPage();
-        // Inputs authentication into the element.
-        inputUsername(loginForm, context.getAuthentication().getUsername());
-        inputPassword(loginForm, context.getAuthentication().getPassword());
-
-        return null;
+            String loginPageUrl = "https://www.lezhinus.com/en/login";
+            Loggers.getLogger().info("Request login page: {}", loginPageUrl);
+            driver.get(loginPageUrl);
+        }
     }
 
     // -------------------------------------------------------------------------------------------------
 
-    private static void visitLoginPage(String loginPageUrl) {
-        ChromeDriver driver = ChromeBrowser.getDriver();
+    private static class JapaneseImpl extends LoginProcessor {
+        @Override
+        void gotoLoginPage() {
+            ChromeDriver driver = ChromeBrowser.getDriver();
 
-        Loggers.getLogger().info("Request login page: {}", loginPageUrl);
-        driver.get(loginPageUrl);
+            String loginPageUrl = "https://www.lezhin.jp/ja/login";
+            Loggers.getLogger().info("Request login page: {}", loginPageUrl);
+            driver.get(loginPageUrl);
+        }
     }
+
+    // -------------------------------------------------------------------------------------------------
 
     private static WebElement waitForRenderingLoginPage() {
         ChromeDriver driver = ChromeBrowser.getDriver();
@@ -105,6 +141,12 @@ public class LoginProcessor extends AbstractLocaleProcessor {
         WebElement passwordInput = loginForm.findElement(By.xpath(".//input[@id='login-password']"));
         passwordInput.clear();
         passwordInput.sendKeys(password);
+    }
+
+    private static void submit(WebElement loginForm) {
+        Loggers.getLogger().debug("Try to login");
+        WebElement submitButton = loginForm.findElement(By.xpath(".//button[@type='submit']"));
+        submitButton.click();
     }
 
 }
