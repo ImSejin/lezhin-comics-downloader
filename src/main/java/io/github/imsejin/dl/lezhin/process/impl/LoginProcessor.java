@@ -177,8 +177,7 @@ public class LoginProcessor implements Processor {
             }
 
             // When failed to login because of invalid account information.
-            driver.executeScript("localStorage.setItem('errorCode', window.__LZ_ERROR_CODE__);");
-            String errorCode = driver.getLocalStorage().getItem("errorCode");
+            String errorCode = (String) driver.executeScript("return String(window.__LZ_ERROR_CODE__);");
 
             throw new LoginFailureException(errorCode);
         }

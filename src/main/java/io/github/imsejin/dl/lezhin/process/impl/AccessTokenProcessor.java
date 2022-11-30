@@ -16,7 +16,6 @@
 
 package io.github.imsejin.dl.lezhin.process.impl;
 
-import io.github.imsejin.common.util.StringUtils;
 import io.github.imsejin.dl.lezhin.annotation.ProcessSpecification;
 import io.github.imsejin.dl.lezhin.attribute.impl.AccessToken;
 import io.github.imsejin.dl.lezhin.browser.ChromeBrowser;
@@ -32,6 +31,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.regex.Pattern;
 import java.time.Duration;
 
 /**
@@ -93,10 +93,10 @@ public class AccessTokenProcessor implements Processor {
             throw new AccessTokenNotFoundException(e, "There is no access token");
         }
 
-        String innerText = script.getAttribute("innerText");
-        String token = StringUtils.find(innerText, "token: '([a-z0-9]{8}-(?:[a-z0-9]{4}-){3}[a-z0-9]{12})'", 1);
+        String token = String.valueOf(driver.executeScript("return window?.__LZ_CONFIG__?.token;"));
 
-        if (StringUtils.isNullOrBlank(token)) {
+        Pattern pattern = Pattern.compile("[a-z0-9]{8}-([a-z0-9]{4}-){3}[a-z0-9]{12}");
+        if (!pattern.matcher(token).matches()) {
             throw new AccessTokenNotFoundException("Invalid access token: %s", token);
         }
 
