@@ -2,6 +2,7 @@ package io.github.imsejin.dl.lezhin.process.impl;
 
 import io.github.imsejin.common.util.StringUtils;
 import io.github.imsejin.dl.lezhin.annotation.ProcessSpecification;
+import io.github.imsejin.dl.lezhin.attribute.impl.Authentication;
 import io.github.imsejin.dl.lezhin.browser.ChromeBrowser;
 import io.github.imsejin.dl.lezhin.common.Loggers;
 import io.github.imsejin.dl.lezhin.exception.LezhinComicsDownloaderException;
@@ -63,9 +64,11 @@ public class LoginProcessor implements Processor {
         WebElement loginForm = waitForRenderingLoginPage();
 
         // Inputs authentication into the element.
-        inputUsername(loginForm, context.getAuthentication().getUsername());
-        inputPassword(loginForm, context.getAuthentication().getPassword());
+        Authentication authentication = context.getAuthentication();
+        inputUsername(loginForm, authentication.getUsername());
+        inputPassword(loginForm, authentication.getPassword());
 
+        authentication.erasePassword();
         String currentUrl = ChromeBrowser.getDriver().getCurrentUrl();
 
         // Submits login form.

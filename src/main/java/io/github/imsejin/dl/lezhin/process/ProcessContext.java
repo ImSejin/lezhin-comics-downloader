@@ -95,7 +95,7 @@ public final class ProcessContext {
             return context;
         }
 
-        outer:
+        field_scope:
         for (Field field : FIELDS) {
             for (Object attribute : attributes) {
                 if (attribute == null) {
@@ -106,7 +106,7 @@ public final class ProcessContext {
                     ReflectionUtils.setFieldValue(context, field, attribute);
 
                     // Discards other attributes whose type is the same as the matched attribute.
-                    continue outer;
+                    continue field_scope;
                 }
             }
         }
