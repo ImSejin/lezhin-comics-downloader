@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @since 2.7.0
  */
+@Deprecated(forRemoval = true)
 public final class Loggers {
 
     private static String loggerName = "NormalLogger";

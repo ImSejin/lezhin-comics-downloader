@@ -18,16 +18,20 @@ package io.github.imsejin.dl.lezhin.process.impl;
 
 import io.github.imsejin.common.util.StringUtils;
 import io.github.imsejin.dl.lezhin.annotation.ProcessSpecification;
+import io.github.imsejin.dl.lezhin.browser.ChromeBrowser;
+import io.github.imsejin.dl.lezhin.common.Loggers;
 import io.github.imsejin.dl.lezhin.exception.AccessTokenNotFoundException;
 import io.github.imsejin.dl.lezhin.process.ProcessContext;
 import io.github.imsejin.dl.lezhin.process.Processor;
-import io.github.imsejin.lzcodl.common.Loggers;
-import io.github.imsejin.lzcodl.core.ChromeBrowser;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.UUID;
 
 /**
@@ -77,10 +81,6 @@ public class AccessTokenProcessor implements Processor {
 
     @Override
     public UUID process(ProcessContext context) throws AccessTokenNotFoundException {
-        // TODO: But why can't I get access token at here?
-        String accessToken1 = getAccessToken();
-        return UUID.fromString(accessToken1);
-        /*
         ChromeDriver driver = ChromeBrowser.getDriver();
 
         // Finds the script tag that has access token.
@@ -103,23 +103,6 @@ public class AccessTokenProcessor implements Processor {
         UUID accessToken = UUID.fromString(token);
         Loggers.getLogger().info("Successfully logged in: access token({})", accessToken);
 
-        return accessToken;
-         */
-    }
-
-    private static String getAccessToken() {
-        ChromeDriver driver = ChromeBrowser.getDriver();
-
-        // Finds the script tag that has access token.
-        WebElement script;
-        try {
-            script = driver.findElement(By.xpath("//script[not(@src) and contains(text(), '__LZ_ME__')]"));
-        } catch (NoSuchElementException e) {
-            throw new RuntimeException("Cannot find access token", e);
-        }
-
-        String accessToken = StringUtils.find(script.getAttribute("innerText"), "token: '([\\w-]+)'", 1);
-        Loggers.getLogger().info("Successfully logged in: access token({})", accessToken);
         return accessToken;
     }
 

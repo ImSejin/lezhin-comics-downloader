@@ -38,6 +38,7 @@ import static java.util.stream.Collectors.toList;
 /**
  * @since 2.0.0
  */
+@Deprecated(forRemoval = true)
 public final class ChromeBrowser {
 
     private static final String CHROME_DRIVER_PATHNAME;

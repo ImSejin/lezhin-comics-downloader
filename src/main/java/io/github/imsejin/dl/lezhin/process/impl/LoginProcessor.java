@@ -9,7 +9,6 @@ import io.github.imsejin.dl.lezhin.exception.LoginFailureException;
 import io.github.imsejin.dl.lezhin.process.ProcessContext;
 import io.github.imsejin.dl.lezhin.process.Processor;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -73,10 +72,6 @@ public class LoginProcessor implements Processor {
         submit(loginForm);
 
         validate(currentUrl);
-
-        // TODO: I can get access token.
-        String accessToken = getAccessToken();
-        System.out.println("accessToken = " + accessToken);
 
         // Return value will be ignored by ProcessContext.
         return null;
@@ -184,22 +179,6 @@ public class LoginProcessor implements Processor {
 
             throw new LoginFailureException(errorCode);
         }
-    }
-
-    private static String getAccessToken() {
-        ChromeDriver driver = ChromeBrowser.getDriver();
-
-        // Finds the script tag that has access token.
-        WebElement script;
-        try {
-            script = driver.findElement(By.xpath("//script[not(@src) and contains(text(), '__LZ_ME__')]"));
-        } catch (NoSuchElementException e) {
-            throw new RuntimeException("Cannot find access token", e);
-        }
-
-        String accessToken = StringUtils.find(script.getAttribute("innerText"), "token: '([\\w-]+)'", 1);
-        Loggers.getLogger().info("Successfully logged in: access token({})", accessToken);
-        return accessToken;
     }
 
 }
