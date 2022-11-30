@@ -25,6 +25,7 @@ import io.github.imsejin.dl.lezhin.argument.impl.EpisodeRange;
 import io.github.imsejin.dl.lezhin.argument.impl.Language;
 import io.github.imsejin.dl.lezhin.argument.impl.SaveAsJpeg;
 import io.github.imsejin.dl.lezhin.attribute.Attribute;
+import io.github.imsejin.dl.lezhin.attribute.impl.AccessToken;
 import io.github.imsejin.dl.lezhin.attribute.impl.Authentication;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -38,7 +39,6 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 import static java.util.stream.Collectors.toUnmodifiableList;
 
@@ -70,7 +70,7 @@ public final class ProcessContext {
 
     private Authentication authentication;
 
-    private UUID accessToken;
+    private AccessToken accessToken;
 
     private Authority authority;
 

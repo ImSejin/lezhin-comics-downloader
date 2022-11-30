@@ -18,6 +18,7 @@ package io.github.imsejin.dl.lezhin.process.impl;
 
 import io.github.imsejin.common.util.StringUtils;
 import io.github.imsejin.dl.lezhin.annotation.ProcessSpecification;
+import io.github.imsejin.dl.lezhin.attribute.impl.AccessToken;
 import io.github.imsejin.dl.lezhin.browser.ChromeBrowser;
 import io.github.imsejin.dl.lezhin.common.Loggers;
 import io.github.imsejin.dl.lezhin.exception.AccessTokenNotFoundException;
@@ -32,7 +33,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
-import java.util.UUID;
 
 /**
  * Processor for extraction of access token
@@ -80,7 +80,7 @@ import java.util.UUID;
 public class AccessTokenProcessor implements Processor {
 
     @Override
-    public UUID process(ProcessContext context) throws AccessTokenNotFoundException {
+    public AccessToken process(ProcessContext context) throws AccessTokenNotFoundException {
         ChromeDriver driver = ChromeBrowser.getDriver();
 
         // Finds the script tag that has access token.
@@ -100,8 +100,8 @@ public class AccessTokenProcessor implements Processor {
             throw new AccessTokenNotFoundException("Invalid access token: %s", token);
         }
 
-        UUID accessToken = UUID.fromString(token);
-        Loggers.getLogger().info("Successfully logged in: access token({})", accessToken);
+        AccessToken accessToken = new AccessToken(token);
+        Loggers.getLogger().info("Successfully logged in: access token({})", accessToken.getValue());
 
         return accessToken;
     }

@@ -29,7 +29,8 @@ public class EpisodeAuthorityProcessor implements Processor {
 
     @Override
     public Authority process(ProcessContext context) throws LezhinComicsDownloaderException {
-        AuthorityService service = new AuthorityService(context.getLanguage().getValue(), context.getAccessToken());
+        AuthorityService service = new AuthorityService(context.getLanguage().getValue(),
+                context.getAccessToken().getValue());
 
         ServiceRequest request = new ServiceRequest();
         request.setContentId(0L);
