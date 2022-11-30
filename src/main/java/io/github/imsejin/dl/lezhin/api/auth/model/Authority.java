@@ -16,6 +16,7 @@
 
 package io.github.imsejin.dl.lezhin.api.auth.model;
 
+import io.github.imsejin.dl.lezhin.attribute.Attribute;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -23,7 +24,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @RequiredArgsConstructor
-public class Authority {
+public class Authority implements Attribute {
 
     private final String policy;
 
