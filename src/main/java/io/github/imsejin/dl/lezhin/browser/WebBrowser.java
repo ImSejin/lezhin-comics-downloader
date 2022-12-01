@@ -36,6 +36,10 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import javax.annotation.concurrent.ThreadSafe;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Arrays;
@@ -55,6 +59,8 @@ public final class WebBrowser {
     public static final long DEFAULT_TIMEOUT_SECONDS = 15;
 
     public static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(DEFAULT_TIMEOUT_SECONDS);
+
+    public static final String INITIAL_URL = "data:,";
 
     private static ChromeOptions options = new ChromeOptions().addArguments(ChromeOption.getArguments());
 
@@ -140,9 +146,36 @@ public final class WebBrowser {
         }
     }
 
+    /**
+     * Goes to the uri.
+     *
+     * @param uri absolute or relative uri
+     * @since 3.0.0
+     */
+    public static void request(String uri) {
+        CHECK_INITIALIZATION.run();
+
+        URI u;
+        try {
+            String currentUrl = SingletonLazyHolder.DRIVER.getCurrentUrl();
+            if (INITIAL_URL.equals(currentUrl)) {
+                currentUrl = uri;
+            }
+
+            u = new URL(currentUrl).toURI();
+        } catch (MalformedURLException | URISyntaxException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+
+        String url = u.resolve(uri).toString();
+        SingletonLazyHolder.DRIVER.get(url);
+    }
+
     // Waiting -----------------------------------------------------------------------------------------
 
     /**
+     * Waits for the presence of element.
+     *
      * @param locator xpath used to find element
      * @return found element
      * @throws TimeoutException if timeout expires
@@ -155,6 +188,8 @@ public final class WebBrowser {
     }
 
     /**
+     * Waits for the visibility of element.
+     *
      * @param locator xpath used to find element
      * @return found element
      * @throws TimeoutException if timeout expires

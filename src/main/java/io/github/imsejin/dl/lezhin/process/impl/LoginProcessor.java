@@ -53,6 +53,9 @@ public class LoginProcessor implements Processor {
             throw new IllegalArgumentException("ProcessContext.language.value is not recognized: " + locale);
         }
 
+        // Starts to run web browser.
+        WebBrowser.run();
+
         // Goes to login page.
         impl.gotoLoginPage();
 
@@ -85,11 +88,10 @@ public class LoginProcessor implements Processor {
     private static class KoreanImpl extends LoginProcessor {
         @Override
         void gotoLoginPage() {
-            RemoteWebDriver driver = WebBrowser.getDriver();
-
             String loginPageUrl = "https://www.lezhin.com/ko/login";
+
             Loggers.getLogger().info("Request login page: {}", loginPageUrl);
-            driver.get(loginPageUrl);
+            WebBrowser.request(loginPageUrl);
         }
     }
 
@@ -98,11 +100,10 @@ public class LoginProcessor implements Processor {
     private static class EnglishImpl extends LoginProcessor {
         @Override
         void gotoLoginPage() {
-            RemoteWebDriver driver = WebBrowser.getDriver();
-
             String loginPageUrl = "https://www.lezhinus.com/en/login";
+
             Loggers.getLogger().info("Request login page: {}", loginPageUrl);
-            driver.get(loginPageUrl);
+            WebBrowser.request(loginPageUrl);
         }
     }
 
@@ -111,11 +112,10 @@ public class LoginProcessor implements Processor {
     private static class JapaneseImpl extends LoginProcessor {
         @Override
         void gotoLoginPage() {
-            RemoteWebDriver driver = WebBrowser.getDriver();
-
             String loginPageUrl = "https://www.lezhin.jp/ja/login";
+
             Loggers.getLogger().info("Request login page: {}", loginPageUrl);
-            driver.get(loginPageUrl);
+            WebBrowser.request(loginPageUrl);
         }
     }
 
