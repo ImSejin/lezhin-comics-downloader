@@ -72,4 +72,12 @@ public class Language extends Argument implements Attribute {
         }
     }
 
+    public String getDisplayLocale() {
+        if (this.value == null) {
+            return null;
+        }
+
+        return this.value.getLanguage() + '-' + this.value.getCountry();
+    }
+
 }
