@@ -18,7 +18,7 @@ package io.github.imsejin.dl.lezhin.process.impl;
 
 import io.github.imsejin.dl.lezhin.annotation.ProcessSpecification;
 import io.github.imsejin.dl.lezhin.attribute.impl.AccessToken;
-import io.github.imsejin.dl.lezhin.browser.ChromeBrowser;
+import io.github.imsejin.dl.lezhin.browser.WebBrowser;
 import io.github.imsejin.dl.lezhin.common.Loggers;
 import io.github.imsejin.dl.lezhin.exception.AccessTokenNotFoundException;
 import io.github.imsejin.dl.lezhin.process.ProcessContext;
@@ -26,13 +26,10 @@ import io.github.imsejin.dl.lezhin.process.Processor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.util.regex.Pattern;
-import java.time.Duration;
 
 /**
  * Processor for extraction of access token
@@ -81,22 +78,19 @@ public class AccessTokenProcessor implements Processor {
 
     @Override
     public AccessToken process(ProcessContext context) throws AccessTokenNotFoundException {
-        ChromeDriver driver = ChromeBrowser.getDriver();
+        RemoteWebDriver driver = WebBrowser.getDriver();
 
-        // Finds the script tag that has access token.
-        WebElement script;
         try {
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-            script = wait.until(ExpectedConditions.presenceOfElementLocated(
-                    By.xpath("//script[not(@src) and contains(text(), '__LZ_ME__')]")));
+            // Finds the script tag that has access token.
+            WebBrowser.waitForPresenceOfElement(By.xpath("//script[not(@src) and contains(text(), '__LZ_ME__')]"));
         } catch (NoSuchElementException | TimeoutException e) {
             throw new AccessTokenNotFoundException(e, "There is no access token");
         }
 
-        String token = String.valueOf(driver.executeScript("return window?.__LZ_CONFIG__?.token;"));
+        String token = WebBrowser.evaluate("window.__LZ_CONFIG__?.token", String.class);
 
         Pattern pattern = Pattern.compile("[a-z0-9]{8}-([a-z0-9]{4}-){3}[a-z0-9]{12}");
-        if (!pattern.matcher(token).matches()) {
+        if (token == null || !pattern.matcher(token).matches()) {
             throw new AccessTokenNotFoundException("Invalid access token: %s", token);
         }
 

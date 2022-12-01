@@ -26,7 +26,7 @@ import io.github.imsejin.dl.lezhin.argument.impl.DebugMode;
 import io.github.imsejin.dl.lezhin.argument.impl.EpisodeRange;
 import io.github.imsejin.dl.lezhin.argument.impl.Language;
 import io.github.imsejin.dl.lezhin.argument.impl.SaveAsJpeg;
-import io.github.imsejin.dl.lezhin.browser.ChromeBrowser;
+import io.github.imsejin.dl.lezhin.browser.WebBrowser;
 import io.github.imsejin.dl.lezhin.common.Loggers;
 import io.github.imsejin.dl.lezhin.process.ProcessContext;
 import io.github.imsejin.dl.lezhin.process.Processor;
@@ -50,7 +50,7 @@ public final class Application {
         ProcessContext context = ProcessContext.create(arguments.toArray());
         if (context.getDebugMode().getValue()) {
             Loggers.debugging();
-            ChromeBrowser.debugging();
+            WebBrowser.debugging();
         }
 
         // Finds all types of implementation of the processor.
@@ -74,7 +74,7 @@ public final class Application {
                 context = ProcessContext.of(context, result);
             }
         } catch (Exception e) {
-            ChromeBrowser.quitIfInitialized();
+            WebBrowser.quitIfInitialized();
             throw e;
         }
     }
