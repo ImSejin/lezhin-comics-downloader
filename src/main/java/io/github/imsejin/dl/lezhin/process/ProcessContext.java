@@ -32,6 +32,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.concurrent.ThreadSafe;
 import java.lang.reflect.Field;
@@ -88,7 +89,7 @@ public final class ProcessContext {
      * @param attributes attributes
      * @return new context
      */
-    public static ProcessContext create(Object... attributes) {
+    public static ProcessContext create(@Nullable Object... attributes) {
         ProcessContext context = new ProcessContext();
 
         if (ArrayUtils.isNullOrEmpty(attributes)) {
@@ -124,10 +125,10 @@ public final class ProcessContext {
      * always overwrites one of the context with one of the attributes.
      *
      * @param context    process context
-     * @param attributes attributes
-     * @return new context if given attributes have a valid item
+     * @param attributes attributes to overwrite the ones of the context
+     * @return new context if given attributes have a non-null item
      */
-    public static ProcessContext of(ProcessContext context, Object... attributes) {
+    public static ProcessContext of(ProcessContext context, @Nullable Object... attributes) {
         if (ArrayUtils.isNullOrEmpty(attributes)) {
             return context;
         }
@@ -138,7 +139,7 @@ public final class ProcessContext {
 
         Object[] originAttributes = FIELDS.stream().map(it -> ReflectionUtils.getFieldValue(context, it)).toArray();
 
-        // New attributes take precedence over the attributes of context.
+        // New attributes take precedence over the ones of context.
         Object[] prepended = ArrayUtils.prepend(originAttributes, attributes);
         return create(prepended);
     }

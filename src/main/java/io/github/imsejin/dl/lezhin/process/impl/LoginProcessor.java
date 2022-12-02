@@ -13,7 +13,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.util.Locale;
 import java.util.Map;
@@ -152,15 +151,13 @@ public class LoginProcessor implements Processor {
     }
 
     private static void validate(String currentUrl) {
-        RemoteWebDriver driver = WebBrowser.getDriver();
-
         try {
             // Waits for DOM to complete the rendering.
             Loggers.getLogger().debug("Wait up to {} sec for main page to be rendered", WebBrowser.DEFAULT_TIMEOUT_SECONDS);
             WebBrowser.waitForVisibilityOfElement(By.xpath("//main[@id='main' and @class='lzCntnr lzCntnr--home']"));
         } catch (TimeoutException e) {
             // When failed to login because of other problems.
-            if (!currentUrl.equals(driver.getCurrentUrl())) {
+            if (!WebBrowser.getDriver().getCurrentUrl().equals(currentUrl)) {
                 throw e;
             }
 

@@ -27,7 +27,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.util.regex.Pattern;
 
@@ -78,8 +77,6 @@ public class AccessTokenProcessor implements Processor {
 
     @Override
     public AccessToken process(ProcessContext context) throws AccessTokenNotFoundException {
-        RemoteWebDriver driver = WebBrowser.getDriver();
-
         try {
             // Finds the script tag that has access token.
             WebBrowser.waitForPresenceOfElement(By.xpath("//script[not(@src) and contains(text(), '__LZ_ME__')]"));

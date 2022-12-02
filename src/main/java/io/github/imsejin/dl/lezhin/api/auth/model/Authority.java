@@ -17,12 +17,14 @@
 package io.github.imsejin.dl.lezhin.api.auth.model;
 
 import io.github.imsejin.dl.lezhin.attribute.Attribute;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 @Getter
 @ToString
+@EqualsAndHashCode
 @RequiredArgsConstructor
 public class Authority implements Attribute {
 
