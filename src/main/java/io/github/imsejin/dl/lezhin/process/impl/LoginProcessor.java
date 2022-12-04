@@ -67,7 +67,7 @@ public class LoginProcessor implements Processor {
         inputPassword(loginForm, authentication.getPassword());
 
         authentication.erasePassword();
-        String currentUrl = WebBrowser.getDriver().getCurrentUrl();
+        String currentUrl = WebBrowser.getCurrentUrl();
 
         // Submits login form.
         submit(loginForm);

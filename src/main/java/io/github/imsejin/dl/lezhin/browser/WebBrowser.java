@@ -157,7 +157,7 @@ public final class WebBrowser {
 
         URI u;
         try {
-            String currentUrl = SingletonLazyHolder.DRIVER.getCurrentUrl();
+            String currentUrl = getCurrentUrl();
             if (INITIAL_URL.equals(currentUrl)) {
                 currentUrl = uri;
             }
@@ -169,6 +169,12 @@ public final class WebBrowser {
 
         String url = u.resolve(uri).toString();
         SingletonLazyHolder.DRIVER.get(url);
+    }
+
+    public static String getCurrentUrl() {
+        CHECK_INITIALIZATION.run();
+
+        return SingletonLazyHolder.DRIVER.getCurrentUrl();
     }
 
     // Waiting -----------------------------------------------------------------------------------------
