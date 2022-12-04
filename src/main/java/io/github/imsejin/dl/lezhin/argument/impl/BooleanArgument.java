@@ -21,6 +21,9 @@ import io.github.imsejin.dl.lezhin.argument.Argument;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+/**
+ * @since 3.0.0
+ */
 @Getter
 @EqualsAndHashCode(callSuper = false)
 abstract class BooleanArgument extends Argument {

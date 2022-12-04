@@ -27,6 +27,8 @@ import org.apache.commons.cli.Option;
 
 /**
  * Webtoon name
+ *
+ * @since 3.0.0
  */
 @Getter
 @Setter

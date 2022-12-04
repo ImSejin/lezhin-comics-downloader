@@ -29,6 +29,8 @@ import java.util.regex.Pattern;
 
 /**
  * Range of episode to download
+ *
+ * @since 3.0.0
  */
 @Getter
 @ToString

@@ -19,6 +19,9 @@ package io.github.imsejin.dl.lezhin.argument.impl;
 import io.github.imsejin.dl.lezhin.attribute.Attribute;
 import org.apache.commons.cli.Option;
 
+/**
+ * @since 3.0.0
+ */
 public class DebugMode extends BooleanArgument implements Attribute {
 
     @Override

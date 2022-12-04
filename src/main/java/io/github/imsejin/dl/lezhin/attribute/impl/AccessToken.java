@@ -7,6 +7,9 @@ import lombok.ToString;
 
 import java.util.UUID;
 
+/**
+ * @since 3.0.0
+ */
 @Getter
 @ToString
 @EqualsAndHashCode

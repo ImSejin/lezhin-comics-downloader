@@ -71,6 +71,8 @@ import java.util.regex.Pattern;
  *     ...
  *     </script>
  * }</pre>
+ *
+ * @since 3.0.0
  */
 @ProcessSpecification(dependsOn = LoginProcessor.class)
 public class AccessTokenProcessor implements Processor {

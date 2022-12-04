@@ -22,6 +22,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
+/**
+ * @since 3.0.0
+ */
 @Getter
 @ToString
 @EqualsAndHashCode

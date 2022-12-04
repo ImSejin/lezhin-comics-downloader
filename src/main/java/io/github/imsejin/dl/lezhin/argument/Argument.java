@@ -18,6 +18,9 @@ package io.github.imsejin.dl.lezhin.argument;
 
 import org.apache.commons.cli.Option;
 
+/**
+ * @since 3.0.0
+ */
 public abstract class Argument {
 
     public abstract Object getValue();

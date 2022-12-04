@@ -28,6 +28,8 @@ import java.util.Locale;
 
 /**
  * Language of lezhin platform
+ *
+ * @since 3.0.0
  */
 @Getter
 @ToString

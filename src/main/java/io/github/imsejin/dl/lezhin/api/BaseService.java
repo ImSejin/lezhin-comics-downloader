@@ -23,6 +23,9 @@ import java.time.Duration;
 import java.util.Locale;
 import java.util.UUID;
 
+/**
+ * @since 3.0.0
+ */
 public abstract class BaseService {
 
     private static final FabricatedHeadersInterceptor interceptor = new FabricatedHeadersInterceptor();

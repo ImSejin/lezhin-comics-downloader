@@ -21,6 +21,9 @@ import lombok.Setter;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * @since 3.0.0
+ */
 @Getter
 @Setter
 @ToString

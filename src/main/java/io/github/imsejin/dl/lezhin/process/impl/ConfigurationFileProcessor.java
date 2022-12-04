@@ -15,6 +15,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 
+/**
+ * @since 3.0.0
+ */
 @ProcessSpecification
 public class ConfigurationFileProcessor implements Processor {
 
