@@ -29,13 +29,13 @@ class AuthorityServiceSpec extends Specification {
         // First episode doesn't need access token in HTTP header.
         // https://www.lezhin.com/ko/comic/bff/p1
         def request = new ServiceRequest(contentId: 5474379383439360, episodeId: 6310446659534848, firstCheckType: 'P' as char)
-        def response = service.getAuthForViewEpisode(request)
+        def authority = service.getAuthForViewEpisode(request)
 
         then:
-        response != null
-        response.policy ==~ /[0-9A-Za-z]+/
-        response.signature ==~ /[0-9A-Za-z_~-]+/
-        response.keyPairId ==~ /[0-9A-Z]+/
+        authority != null
+        authority.policy ==~ /[0-9A-Za-z]+/
+        authority.signature ==~ /[0-9A-Za-z_~-]+/
+        authority.keyPairId ==~ /[0-9A-Z]+/
     }
 
 }
