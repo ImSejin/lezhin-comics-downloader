@@ -70,8 +70,9 @@ public final class Application {
 
         try {
             for (Processor processor : processors) {
-                Object result = processor.process(context);
-                context = ProcessContext.of(context, result);
+                Object attribute = processor.process(context);
+                context.add(attribute);
+//                context = ProcessContext.of(context, attribute);
             }
         } catch (Exception e) {
             WebBrowser.quitIfInitialized();
