@@ -17,9 +17,11 @@
 package io.github.imsejin.dl.lezhin.process.impl;
 
 import io.github.imsejin.dl.lezhin.annotation.ProcessSpecification;
+import io.github.imsejin.dl.lezhin.argument.impl.Language;
 import io.github.imsejin.dl.lezhin.browser.WebBrowser;
 import io.github.imsejin.dl.lezhin.common.Loggers;
 import io.github.imsejin.dl.lezhin.exception.AccessTokenNotFoundException;
+import io.github.imsejin.dl.lezhin.http.url.URIs;
 import io.github.imsejin.dl.lezhin.process.ProcessContext;
 import io.github.imsejin.dl.lezhin.process.Processor;
 
@@ -28,14 +30,25 @@ import io.github.imsejin.dl.lezhin.process.Processor;
  *
  * <p> When you see the content of lezhin platform not as usual, they show you a page of locale selection.
  * It is a obstacle to progress a process, so this processor requests that in advance.
+ *
+ * <pre>{@code
+ * $("#locale-form").on("submit", function (t) {
+ *   t.preventDefault();
+ *   var n = $(this).find("[name=locale]:checked").val();
+ *   location.href = "/".concat(e.a.get("language"), "/locale/")
+ *       .concat(n, "?redirect=").concat(encodeURIComponent(location.href))
+ * })
+ * }</pre>
+ *
+ * @since 3.0.0
  */
 @ProcessSpecification(dependsOn = AccessTokenProcessor.class)
 public class LocaleSelectionProcessor implements Processor {
 
     @Override
     public Void process(ProcessContext context) throws AccessTokenNotFoundException {
-        String localePath = String.format("/%s/locale/%s",
-                context.getLanguage().getValue().getLanguage(), context.getLanguage().asLocaleString());
+        Language language = context.getLanguage();
+        String localePath = URIs.LOCALE.get(language.getValue().getLanguage(), language.asLocaleString());
 
         Loggers.getLogger().debug("Change locale setting: {}", localePath);
         WebBrowser.request(localePath);

@@ -152,6 +152,17 @@ public final class WebBrowser {
      * @param uri absolute or relative uri
      * @since 3.0.0
      */
+    public static void request(URI uri) {
+        String uriString = uri.normalize().toString();
+        request(uriString);
+    }
+
+    /**
+     * Goes to the uri.
+     *
+     * @param uri absolute or relative uri
+     * @since 3.0.0
+     */
     public static void request(String uri) {
         CHECK_INITIALIZATION.run();
 

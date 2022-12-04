@@ -7,6 +7,7 @@ import io.github.imsejin.dl.lezhin.browser.WebBrowser;
 import io.github.imsejin.dl.lezhin.common.Loggers;
 import io.github.imsejin.dl.lezhin.exception.LezhinComicsDownloaderException;
 import io.github.imsejin.dl.lezhin.exception.LoginFailureException;
+import io.github.imsejin.dl.lezhin.http.url.URIs;
 import io.github.imsejin.dl.lezhin.process.ProcessContext;
 import io.github.imsejin.dl.lezhin.process.Processor;
 import org.openqa.selenium.By;
@@ -14,6 +15,7 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import java.net.URI;
 import java.util.Locale;
 import java.util.Map;
 
@@ -32,23 +34,25 @@ import java.util.Map;
  *
  * <p> {@link ChromeDriver} inputs username and password to the first and second element.
  * When input tags are filled by username and password, it clicks the third element so that login.
+ *
+ * @since 3.0.0
  */
 @ProcessSpecification(dependsOn = ConfigurationFileProcessor.class)
 public class LoginProcessor implements Processor {
 
-    private static final Map<Locale, LoginProcessor> IMPLEMENTATION_MAP = Map.ofEntries(
-            Map.entry(Locale.KOREA, new KoreanImpl()),
-            Map.entry(Locale.US, new EnglishImpl()),
-            Map.entry(Locale.JAPAN, new JapaneseImpl())
+    private static final Map<Locale, String> BASE_URL_MAP = Map.ofEntries(
+            Map.entry(Locale.KOREA, "https://www.lezhin.com/"),
+            Map.entry(Locale.US, "https://www.lezhinus.com/"),
+            Map.entry(Locale.JAPAN, "https://www.lezhin.jp/")
     );
 
     @Override
     public Object process(ProcessContext context) throws LezhinComicsDownloaderException {
         // Resolves an implementation for the locale.
         Locale locale = context.getLanguage().getValue();
-        LoginProcessor impl = IMPLEMENTATION_MAP.get(locale);
+        String baseUrl = BASE_URL_MAP.get(locale);
 
-        if (impl == null) {
+        if (baseUrl == null) {
             throw new IllegalArgumentException("ProcessContext.language.value is not recognized: " + locale);
         }
 
@@ -56,7 +60,7 @@ public class LoginProcessor implements Processor {
         WebBrowser.run();
 
         // Goes to login page.
-        impl.gotoLoginPage();
+        gotoLoginPage(baseUrl, locale);
 
         // Waits for DOM to complete the rendering.
         WebElement loginForm = waitForRenderingLoginPage();
@@ -78,44 +82,13 @@ public class LoginProcessor implements Processor {
         return null;
     }
 
-    void gotoLoginPage() {
-        throw new UnsupportedOperationException();
-    }
+    void gotoLoginPage(String baseUrl, Locale locale) {
+        URI loginPageUri = URI.create(baseUrl);
+        String path = URIs.LOGIN.get(locale.getLanguage());
+        loginPageUri = loginPageUri.resolve(path);
 
-    // -------------------------------------------------------------------------------------------------
-
-    private static class KoreanImpl extends LoginProcessor {
-        @Override
-        void gotoLoginPage() {
-            String loginPageUrl = "https://www.lezhin.com/ko/login";
-
-            Loggers.getLogger().info("Request login page: {}", loginPageUrl);
-            WebBrowser.request(loginPageUrl);
-        }
-    }
-
-    // -------------------------------------------------------------------------------------------------
-
-    private static class EnglishImpl extends LoginProcessor {
-        @Override
-        void gotoLoginPage() {
-            String loginPageUrl = "https://www.lezhinus.com/en/login";
-
-            Loggers.getLogger().info("Request login page: {}", loginPageUrl);
-            WebBrowser.request(loginPageUrl);
-        }
-    }
-
-    // -------------------------------------------------------------------------------------------------
-
-    private static class JapaneseImpl extends LoginProcessor {
-        @Override
-        void gotoLoginPage() {
-            String loginPageUrl = "https://www.lezhin.jp/ja/login";
-
-            Loggers.getLogger().info("Request login page: {}", loginPageUrl);
-            WebBrowser.request(loginPageUrl);
-        }
+        Loggers.getLogger().info("Request login page: {}", loginPageUri);
+        WebBrowser.request(loginPageUri);
     }
 
     // -------------------------------------------------------------------------------------------------
@@ -157,7 +130,7 @@ public class LoginProcessor implements Processor {
             WebBrowser.waitForVisibilityOfElement(By.xpath("//main[@id='main' and @class='lzCntnr lzCntnr--home']"));
         } catch (TimeoutException e) {
             // When failed to login because of other problems.
-            if (!WebBrowser.getDriver().getCurrentUrl().equals(currentUrl)) {
+            if (!WebBrowser.getCurrentUrl().equals(currentUrl)) {
                 throw e;
             }
 
