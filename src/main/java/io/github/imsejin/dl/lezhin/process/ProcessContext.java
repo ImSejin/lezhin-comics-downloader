@@ -27,6 +27,7 @@ import io.github.imsejin.dl.lezhin.argument.impl.SaveAsJpeg;
 import io.github.imsejin.dl.lezhin.attribute.Attribute;
 import io.github.imsejin.dl.lezhin.attribute.impl.AccessToken;
 import io.github.imsejin.dl.lezhin.attribute.impl.Authentication;
+import io.github.imsejin.dl.lezhin.attribute.impl.Content;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -78,6 +79,8 @@ public final class ProcessContext {
     private Authentication authentication;
 
     private AccessToken accessToken;
+
+    private Content content;
 
     private Authority authority;
 
