@@ -62,7 +62,7 @@ public final class Application {
         List<Class<? extends Processor>> orderedTypes = ProcessorOrderResolver.resolve(processorTypes);
 
         // Prepares objects needed to instantiate the processors.
-        List<Object> beans = List.of(PathUtils.getCurrentPath(), context.getLanguage().getValue());
+        List<Object> beans = List.of(PathUtils.getCurrentPath());
 
         // Creates the processors with beans.
         ProcessorCreator processorCreator = new ProcessorCreator(beans.toArray());
