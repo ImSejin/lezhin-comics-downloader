@@ -82,7 +82,9 @@ public class LoginProcessor implements Processor {
         return null;
     }
 
-    void gotoLoginPage(String baseUrl, Locale locale) {
+    // -------------------------------------------------------------------------------------------------
+
+    private static void gotoLoginPage(String baseUrl, Locale locale) {
         URI loginPageUri = URI.create(baseUrl);
         String path = URIs.LOGIN.get(locale.getLanguage());
         loginPageUri = loginPageUri.resolve(path);
@@ -90,8 +92,6 @@ public class LoginProcessor implements Processor {
         Loggers.getLogger().info("Request login page: {}", loginPageUri);
         WebBrowser.request(loginPageUri);
     }
-
-    // -------------------------------------------------------------------------------------------------
 
     private static WebElement waitForRenderingLoginPage() {
         Loggers.getLogger().debug("Wait up to {} sec for login element to be rendered", WebBrowser.DEFAULT_TIMEOUT_SECONDS);
