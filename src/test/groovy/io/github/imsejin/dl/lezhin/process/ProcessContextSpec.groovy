@@ -90,4 +90,31 @@ class ProcessContextSpec extends Specification {
         new Language(value: "ja") | new ContentName(value: "zeta")    | new EpisodeRange(value: "1~10") | new SaveAsJpeg(value: "true")  | new DebugMode(value: "true")
     }
 
+    def "Adds attributes"() {
+        given:
+        def context = ProcessContext.create(originAttributes.values() as Object[])
+
+        when:
+        context.add(newAttributes.values() as Object[])
+
+        then:
+        newAttributes.keySet().forEach {
+            assert context[it] == newAttributes[it]
+        }
+        (originAttributes.keySet() - newAttributes.keySet()).forEach {
+            assert context[it] == originAttributes[it]
+        }
+        (originAttributes.keySet().intersect(newAttributes.keySet())).forEach {
+            assert context[it] == newAttributes[it]
+            assert context[it] != originAttributes[it]
+        }
+
+        where:
+        originAttributes                                                                         || newAttributes
+        [language: new Language(value: "ko"), contentName: new ContentName(value: "alpha")]      || [contentName: new ContentName(value: "beta")]
+        [episodeRange: new EpisodeRange(value: "")]                                              || [episodeRange: new EpisodeRange(value: "1~10"), saveAsJpeg: new SaveAsJpeg(value: "true")]
+        [language: new Language(value: "en"), debugMode: new DebugMode(value: "true")]           || [episodeRange: new EpisodeRange(value: "~8")]
+        [contentName: new ContentName(value: "beta"), episodeRange: new EpisodeRange(value: "")] || [saveAsJpeg: new SaveAsJpeg(value: "true"), debugMode: new DebugMode(value: "false")]
+    }
+
 }

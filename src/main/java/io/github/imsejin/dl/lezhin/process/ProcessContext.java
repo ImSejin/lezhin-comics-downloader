@@ -38,11 +38,17 @@ import javax.annotation.concurrent.ThreadSafe;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 
 import static java.util.stream.Collectors.toUnmodifiableList;
 
+/**
+ * @since 3.0.0
+ */
 @Getter
 @ToString
 @ThreadSafe
@@ -75,6 +81,8 @@ public final class ProcessContext {
 
     private Authority authority;
 
+    // -------------------------------------------------------------------------------------------------
+
     /**
      * Creates new instance.
      *
@@ -92,7 +100,7 @@ public final class ProcessContext {
     public static ProcessContext create(@Nullable Object... attributes) {
         ProcessContext context = new ProcessContext();
 
-        if (ArrayUtils.isNullOrEmpty(attributes)) {
+        if (hasNoAttribute(attributes)) {
             return context;
         }
 
@@ -103,7 +111,7 @@ public final class ProcessContext {
                     continue;
                 }
 
-                if (field.getType().isAssignableFrom(attribute.getClass())) {
+                if (field.getType().isInstance(attribute)) {
                     ReflectionUtils.setFieldValue(context, field, attribute);
 
                     // Discards other attributes whose type is the same as the matched attribute.
@@ -121,7 +129,7 @@ public final class ProcessContext {
      * <p> If the attributes are null or empty or have non-null one, returns new context.
      * Otherwise returns the given context as it is.
      *
-     * <p> A new context is merged with given context and attributes. if they have the same type of attribute,
+     * <p> New context is merged with given context and attributes. if they have the same type of attribute,
      * always overwrites one of the context with one of the attributes.
      *
      * @param context    process context
@@ -129,11 +137,7 @@ public final class ProcessContext {
      * @return new context if given attributes have a non-null item
      */
     public static ProcessContext of(ProcessContext context, @Nullable Object... attributes) {
-        if (ArrayUtils.isNullOrEmpty(attributes)) {
-            return context;
-        }
-
-        if (Arrays.stream(attributes).allMatch(Objects::isNull)) {
+        if (hasNoAttribute(attributes)) {
             return context;
         }
 
@@ -142,6 +146,64 @@ public final class ProcessContext {
         // New attributes take precedence over the ones of context.
         Object[] prepended = ArrayUtils.prepend(originAttributes, attributes);
         return create(prepended);
+    }
+
+    /**
+     * Adds the attributes.
+     *
+     * @param attributes attributes to overwrite the ones of the context
+     */
+    public void add(@Nullable Object... attributes) {
+        if (hasNoAttribute(attributes)) {
+            return;
+        }
+
+        Map<Field, Object> originAttributeMap = new HashMap<>();
+        for (Field field : FIELDS) {
+            Object originAttribute = ReflectionUtils.getFieldValue(this, field);
+            originAttributeMap.put(field, originAttribute);
+        }
+
+        field_scope:
+        for (Entry<Field, Object> entry : originAttributeMap.entrySet()) {
+            for (Object attribute : attributes) {
+                if (attribute == null) {
+                    continue;
+                }
+
+                Field field = entry.getKey();
+                if (!field.getType().isInstance(attribute)) {
+                    continue;
+                }
+
+                // If a matched attribute is found and it is equal to the original attribute,
+                // it is unnecessary to assign new attribute.
+                Object originAttribute = entry.getValue();
+                if (attribute.equals(originAttribute)) {
+                    continue field_scope;
+                }
+
+                // New attributes take precedence over the ones of context.
+                ReflectionUtils.setFieldValue(this, field, attribute);
+
+                // Discards other attributes whose type is the same as the matched attribute.
+                continue field_scope;
+            }
+        }
+    }
+
+    // -------------------------------------------------------------------------------------------------
+
+    private static boolean hasNoAttribute(@Nullable Object[] attributes) {
+        if (ArrayUtils.isNullOrEmpty(attributes)) {
+            return true;
+        }
+
+        if (Arrays.stream(attributes).allMatch(Objects::isNull)) {
+            return true;
+        }
+
+        return false;
     }
 
 }
