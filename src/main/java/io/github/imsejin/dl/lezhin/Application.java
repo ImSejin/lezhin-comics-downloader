@@ -25,7 +25,7 @@ import io.github.imsejin.dl.lezhin.argument.impl.ContentName;
 import io.github.imsejin.dl.lezhin.argument.impl.DebugMode;
 import io.github.imsejin.dl.lezhin.argument.impl.EpisodeRange;
 import io.github.imsejin.dl.lezhin.argument.impl.Language;
-import io.github.imsejin.dl.lezhin.argument.impl.SaveAsJpeg;
+import io.github.imsejin.dl.lezhin.argument.impl.ImageFormat;
 import io.github.imsejin.dl.lezhin.browser.WebBrowser;
 import io.github.imsejin.dl.lezhin.common.Loggers;
 import io.github.imsejin.dl.lezhin.process.ProcessContext;
@@ -43,7 +43,7 @@ public final class Application {
 
     public static void main(String[] args) {
         ArgumentsParser argumentsParser = new ArgumentsParser(
-                new Language(), new ContentName(), new EpisodeRange(), new SaveAsJpeg(), new DebugMode());
+                new Language(), new ContentName(), new EpisodeRange(), new ImageFormat(), new DebugMode());
 //        List<Argument> arguments = argumentsParser.parse(args);
         List<Argument> arguments = argumentsParser.parse("-l=en", "-n=appetite", "-d");
 
