@@ -20,7 +20,7 @@ import io.github.imsejin.dl.lezhin.argument.impl.ContentName
 import io.github.imsejin.dl.lezhin.argument.impl.DebugMode
 import io.github.imsejin.dl.lezhin.argument.impl.EpisodeRange
 import io.github.imsejin.dl.lezhin.argument.impl.Language
-import io.github.imsejin.dl.lezhin.argument.impl.SaveAsJpeg
+import io.github.imsejin.dl.lezhin.argument.impl.ImageFormat
 import io.github.imsejin.dl.lezhin.exception.DuplicatedArgumentException
 import io.github.imsejin.dl.lezhin.exception.ParsingArgumentException
 import org.apache.commons.cli.Option
@@ -86,7 +86,7 @@ class ArgumentsParserSpec extends Specification {
 
     def "Parses actual program arguments"() {
         given:
-        def arguments = [new Language(), new ContentName(), new EpisodeRange(), new SaveAsJpeg(), new DebugMode()]
+        def arguments = [new Language(), new ContentName(), new EpisodeRange(), new ImageFormat(), new DebugMode()]
 
         when:
         def parser = new ArgumentsParser(arguments as Argument[])
@@ -100,12 +100,12 @@ class ArgumentsParserSpec extends Specification {
 
         where:
         programArgs                   | expected
-        "-l=ko -n=alpha"              | [new Language(value: "ko"), new ContentName(value: "alpha"), new EpisodeRange(value: ""), new SaveAsJpeg(value: "false"), new DebugMode(value: "false")]
-        "-l=en -n=beta -r=8~"         | [new Language(value: "en"), new ContentName(value: "beta"), new EpisodeRange(value: "8~"), new SaveAsJpeg(value: "false"), new DebugMode(value: "false")]
-        "-l=ja -n=gamma -j"           | [new Language(value: "ja"), new ContentName(value: "gamma"), new EpisodeRange(value: ""), new SaveAsJpeg(value: "true"), new DebugMode(value: "false")]
-        "-l=ko -n=delta -d"           | [new Language(value: "ko"), new ContentName(value: "delta"), new EpisodeRange(value: ""), new SaveAsJpeg(value: "false"), new DebugMode(value: "true")]
-        "-l=en -n=epsilon -r=~25 -j"  | [new Language(value: "en"), new ContentName(value: "epsilon"), new EpisodeRange(value: "~25"), new SaveAsJpeg(value: "true"), new DebugMode(value: "false")]
-        "-l=ja -n=zeta -r=1~10 -j -d" | [new Language(value: "ja"), new ContentName(value: "zeta"), new EpisodeRange(value: "1~10"), new SaveAsJpeg(value: "true"), new DebugMode(value: "true")]
+        "-l=ko -n=alpha"              | [new Language(value: "ko"), new ContentName(value: "alpha"), new EpisodeRange(value: ""), new ImageFormat(value: "false"), new DebugMode(value: "false")]
+        "-l=en -n=beta -r=8~"         | [new Language(value: "en"), new ContentName(value: "beta"), new EpisodeRange(value: "8~"), new ImageFormat(value: "false"), new DebugMode(value: "false")]
+        "-l=ja -n=gamma -j"           | [new Language(value: "ja"), new ContentName(value: "gamma"), new EpisodeRange(value: ""), new ImageFormat(value: "true"), new DebugMode(value: "false")]
+        "-l=ko -n=delta -d"           | [new Language(value: "ko"), new ContentName(value: "delta"), new EpisodeRange(value: ""), new ImageFormat(value: "false"), new DebugMode(value: "true")]
+        "-l=en -n=epsilon -r=~25 -j"  | [new Language(value: "en"), new ContentName(value: "epsilon"), new EpisodeRange(value: "~25"), new ImageFormat(value: "true"), new DebugMode(value: "false")]
+        "-l=ja -n=zeta -r=1~10 -j -d" | [new Language(value: "ja"), new ContentName(value: "zeta"), new EpisodeRange(value: "1~10"), new ImageFormat(value: "true"), new DebugMode(value: "true")]
     }
 
 }

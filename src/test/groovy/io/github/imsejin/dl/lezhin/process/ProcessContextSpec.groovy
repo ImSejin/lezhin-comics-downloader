@@ -19,15 +19,15 @@ package io.github.imsejin.dl.lezhin.process
 import io.github.imsejin.dl.lezhin.argument.impl.ContentName
 import io.github.imsejin.dl.lezhin.argument.impl.DebugMode
 import io.github.imsejin.dl.lezhin.argument.impl.EpisodeRange
+import io.github.imsejin.dl.lezhin.argument.impl.ImageFormat
 import io.github.imsejin.dl.lezhin.argument.impl.Language
-import io.github.imsejin.dl.lezhin.argument.impl.SaveAsJpeg
 import spock.lang.Specification
 
 class ProcessContextSpec extends Specification {
 
     def "Creates new context with attributes"() {
         given:
-        def attributes = [language, contentName, episodeRange, saveAsJpeg, debugMode]
+        def attributes = [language, contentName, episodeRange, imageFormat, debugMode]
 
         when:
         def context = ProcessContext.create(attributes as Object[])
@@ -37,14 +37,14 @@ class ProcessContextSpec extends Specification {
         context.language === language
         context.contentName === contentName
         context.episodeRange === episodeRange
-        context.saveAsJpeg === saveAsJpeg
+        context.imageFormat === imageFormat
         context.debugMode === debugMode
 
         where:
-        language                  | contentName                       | episodeRange                    | saveAsJpeg                     | debugMode
-        new Language(value: "ko") | new ContentName(value: "alpha")   | new EpisodeRange(value: "")     | new SaveAsJpeg(value: "false") | new DebugMode(value: "false")
-        new Language(value: "en") | new ContentName(value: "epsilon") | new EpisodeRange(value: "~25")  | new SaveAsJpeg(value: "true")  | new DebugMode(value: "false")
-        new Language(value: "ja") | new ContentName(value: "zeta")    | new EpisodeRange(value: "1~10") | new SaveAsJpeg(value: "true")  | new DebugMode(value: "true")
+        language                  | contentName                       | episodeRange                    | imageFormat                     | debugMode
+        new Language(value: "ko") | new ContentName(value: "alpha")   | new EpisodeRange(value: "")     | new ImageFormat(value: "false") | new DebugMode(value: "false")
+        new Language(value: "en") | new ContentName(value: "epsilon") | new EpisodeRange(value: "~25")  | new ImageFormat(value: "true")  | new DebugMode(value: "false")
+        new Language(value: "ja") | new ContentName(value: "zeta")    | new EpisodeRange(value: "1~10") | new ImageFormat(value: "true")  | new DebugMode(value: "true")
     }
 
     def "Returns given context with redundant attributes"() {
@@ -68,7 +68,7 @@ class ProcessContextSpec extends Specification {
 
     def "Creates new context with other context"() {
         given:
-        def attributes = [language, contentName, episodeRange, saveAsJpeg, debugMode]
+        def attributes = [language, contentName, episodeRange, imageFormat, debugMode]
         def context = ProcessContext.create(attributes as Object[])
 
         when:
@@ -80,14 +80,14 @@ class ProcessContextSpec extends Specification {
         newContext.language === language
         newContext.contentName === contentName
         newContext.episodeRange === episodeRange
-        newContext.saveAsJpeg === saveAsJpeg
+        newContext.imageFormat === imageFormat
         newContext.debugMode === debugMode
 
         where:
-        language                  | contentName                       | episodeRange                    | saveAsJpeg                     | debugMode
-        new Language(value: "ko") | new ContentName(value: "alpha")   | new EpisodeRange(value: "")     | new SaveAsJpeg(value: "false") | new DebugMode(value: "false")
-        new Language(value: "en") | new ContentName(value: "epsilon") | new EpisodeRange(value: "~25")  | new SaveAsJpeg(value: "true")  | new DebugMode(value: "false")
-        new Language(value: "ja") | new ContentName(value: "zeta")    | new EpisodeRange(value: "1~10") | new SaveAsJpeg(value: "true")  | new DebugMode(value: "true")
+        language                  | contentName                       | episodeRange                    | imageFormat                     | debugMode
+        new Language(value: "ko") | new ContentName(value: "alpha")   | new EpisodeRange(value: "")     | new ImageFormat(value: "false") | new DebugMode(value: "false")
+        new Language(value: "en") | new ContentName(value: "epsilon") | new EpisodeRange(value: "~25")  | new ImageFormat(value: "true")  | new DebugMode(value: "false")
+        new Language(value: "ja") | new ContentName(value: "zeta")    | new EpisodeRange(value: "1~10") | new ImageFormat(value: "true")  | new DebugMode(value: "true")
     }
 
     def "Adds attributes"() {
@@ -112,9 +112,9 @@ class ProcessContextSpec extends Specification {
         where:
         originAttributes                                                                         || newAttributes
         [language: new Language(value: "ko"), contentName: new ContentName(value: "alpha")]      || [contentName: new ContentName(value: "beta")]
-        [episodeRange: new EpisodeRange(value: "")]                                              || [episodeRange: new EpisodeRange(value: "1~10"), saveAsJpeg: new SaveAsJpeg(value: "true")]
+        [episodeRange: new EpisodeRange(value: "")]                                              || [episodeRange: new EpisodeRange(value: "1~10"), imageFormat: new ImageFormat(value: "true")]
         [language: new Language(value: "en"), debugMode: new DebugMode(value: "true")]           || [episodeRange: new EpisodeRange(value: "~8")]
-        [contentName: new ContentName(value: "beta"), episodeRange: new EpisodeRange(value: "")] || [saveAsJpeg: new SaveAsJpeg(value: "true"), debugMode: new DebugMode(value: "false")]
+        [contentName: new ContentName(value: "beta"), episodeRange: new EpisodeRange(value: "")] || [imageFormat: new ImageFormat(value: "true"), debugMode: new DebugMode(value: "false")]
     }
 
 }

@@ -23,7 +23,7 @@ import io.github.imsejin.dl.lezhin.argument.impl.ContentName;
 import io.github.imsejin.dl.lezhin.argument.impl.DebugMode;
 import io.github.imsejin.dl.lezhin.argument.impl.EpisodeRange;
 import io.github.imsejin.dl.lezhin.argument.impl.Language;
-import io.github.imsejin.dl.lezhin.argument.impl.SaveAsJpeg;
+import io.github.imsejin.dl.lezhin.argument.impl.ImageFormat;
 import io.github.imsejin.dl.lezhin.attribute.Attribute;
 import io.github.imsejin.dl.lezhin.attribute.impl.AccessToken;
 import io.github.imsejin.dl.lezhin.attribute.impl.Authentication;
@@ -70,7 +70,7 @@ public final class ProcessContext {
 
     private EpisodeRange episodeRange;
 
-    private SaveAsJpeg saveAsJpeg;
+    private ImageFormat imageFormat;
 
     private DebugMode debugMode;
 
