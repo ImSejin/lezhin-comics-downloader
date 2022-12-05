@@ -21,9 +21,21 @@ import io.github.imsejin.dl.lezhin.argument.impl.DebugMode
 import io.github.imsejin.dl.lezhin.argument.impl.EpisodeRange
 import io.github.imsejin.dl.lezhin.argument.impl.ImageFormat
 import io.github.imsejin.dl.lezhin.argument.impl.Language
+import io.github.imsejin.dl.lezhin.attribute.Attribute
 import spock.lang.Specification
 
 class ProcessContextSpec extends Specification {
+
+    def "Defines all attributes of context"() {
+        given:
+        def fields = ProcessContext.FIELDS
+        def types = fields.collect { it.type }
+
+        expect: "All attributes must be unique."
+        !types.isEmpty()
+        types.grep(Attribute) == types
+        types.unique(false) == types
+    }
 
     def "Creates new context with attributes"() {
         given:

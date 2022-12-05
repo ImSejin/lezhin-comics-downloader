@@ -34,6 +34,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.VisibleForTesting;
 
 import javax.annotation.concurrent.ThreadSafe;
 import java.lang.reflect.Field;
@@ -57,7 +58,8 @@ import static java.util.stream.Collectors.toUnmodifiableList;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ProcessContext {
 
-    private static final List<Field> FIELDS = Arrays.stream(ProcessContext.class.getDeclaredFields())
+    @VisibleForTesting
+    static final List<Field> FIELDS = Arrays.stream(ProcessContext.class.getDeclaredFields())
             .filter(it -> Attribute.class.isAssignableFrom(it.getType()))
             .filter(it -> !Modifier.isStatic(it.getModifiers()))
             .collect(toUnmodifiableList());
