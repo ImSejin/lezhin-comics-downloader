@@ -35,7 +35,7 @@ class ProcessorCreatorSpec extends Specification {
         def processors = creator.create(types)
 
         then:
-        processors.collect { it.class } == types
+        processors*.class == types
     }
 
 }

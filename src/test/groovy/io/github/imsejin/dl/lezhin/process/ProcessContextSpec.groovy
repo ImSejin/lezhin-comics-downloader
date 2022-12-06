@@ -29,7 +29,7 @@ class ProcessContextSpec extends Specification {
     def "Defines all attributes of context"() {
         given:
         def fields = ProcessContext.FIELDS
-        def types = fields.collect { it.type }
+        def types = fields*.type
 
         expect: "All attributes must be unique."
         !types.isEmpty()
