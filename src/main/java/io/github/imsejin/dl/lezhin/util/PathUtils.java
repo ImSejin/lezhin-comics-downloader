@@ -17,8 +17,10 @@
 package io.github.imsejin.dl.lezhin.util;
 
 import io.github.imsejin.common.annotation.ExcludeFromGeneratedJacocoReport;
+import io.github.imsejin.dl.lezhin.exception.DirectoryCreationException;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 public final class PathUtils {
@@ -33,6 +35,19 @@ public final class PathUtils {
             return Path.of(".").toRealPath();
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    public static boolean createDirectoryIfNotExists(Path dir) throws DirectoryCreationException {
+        if (Files.isDirectory(dir)) {
+            return false;
+        }
+
+        try {
+            Files.createDirectory(dir);
+            return true;
+        } catch (IOException e) {
+            throw new DirectoryCreationException(e, "Failed to create directory: %s", dir);
         }
     }
 
