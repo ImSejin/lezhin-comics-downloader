@@ -19,14 +19,14 @@ package io.github.imsejin.dl.lezhin.process.impl;
 import io.github.imsejin.common.util.FilenameUtils;
 import io.github.imsejin.dl.lezhin.annotation.ProcessSpecification;
 import io.github.imsejin.dl.lezhin.attribute.impl.Content.Artist;
+import io.github.imsejin.dl.lezhin.attribute.impl.DirectoryPath;
 import io.github.imsejin.dl.lezhin.common.Loggers;
 import io.github.imsejin.dl.lezhin.exception.DirectoryCreationException;
 import io.github.imsejin.dl.lezhin.process.ProcessContext;
 import io.github.imsejin.dl.lezhin.process.Processor;
+import io.github.imsejin.dl.lezhin.util.PathUtils;
 import lombok.RequiredArgsConstructor;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static java.util.stream.Collectors.joining;
@@ -38,12 +38,12 @@ import static java.util.stream.Collectors.joining;
  */
 @RequiredArgsConstructor
 @ProcessSpecification(dependsOn = ContentInformationProcessor.class)
-public class ContentDirectoryProcessor implements Processor {
+public class DirectoryCreationProcessor implements Processor {
 
     private final Path basePath;
 
     @Override
-    public Void process(ProcessContext context) throws DirectoryCreationException {
+    public DirectoryPath process(ProcessContext context) throws DirectoryCreationException {
         String contentTitle = context.getContent().getDisplay().getTitle();
         String artists = context.getContent().getArtists().stream().map(Artist::getName)
                 .collect(joining(", "));
@@ -51,17 +51,12 @@ public class ContentDirectoryProcessor implements Processor {
 
         Path targetPath = this.basePath.resolve(directoryName);
 
-        if (!Files.isDirectory(targetPath)) {
+        boolean created = PathUtils.createDirectoryIfNotExists(targetPath);
+        if (created) {
             Loggers.getLogger().debug("Create directory: {}", targetPath);
-
-            try {
-                Files.createDirectory(targetPath);
-            } catch (IOException e) {
-                throw new DirectoryCreationException(e, "Failed to create directory: %s", targetPath);
-            }
         }
 
-        return null;
+        return new DirectoryPath(targetPath);
     }
 
 }

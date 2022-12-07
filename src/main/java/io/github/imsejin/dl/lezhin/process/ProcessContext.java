@@ -22,12 +22,13 @@ import io.github.imsejin.dl.lezhin.api.auth.model.Authority;
 import io.github.imsejin.dl.lezhin.argument.impl.ContentName;
 import io.github.imsejin.dl.lezhin.argument.impl.DebugMode;
 import io.github.imsejin.dl.lezhin.argument.impl.EpisodeRange;
-import io.github.imsejin.dl.lezhin.argument.impl.Language;
 import io.github.imsejin.dl.lezhin.argument.impl.ImageFormat;
+import io.github.imsejin.dl.lezhin.argument.impl.Language;
 import io.github.imsejin.dl.lezhin.attribute.Attribute;
 import io.github.imsejin.dl.lezhin.attribute.impl.AccessToken;
 import io.github.imsejin.dl.lezhin.attribute.impl.Authentication;
 import io.github.imsejin.dl.lezhin.attribute.impl.Content;
+import io.github.imsejin.dl.lezhin.attribute.impl.DirectoryPath;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -83,6 +84,8 @@ public final class ProcessContext {
     private AccessToken accessToken;
 
     private Content content;
+
+    private DirectoryPath directoryPath;
 
     private Authority authority;
 
