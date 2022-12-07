@@ -73,7 +73,8 @@ public final class WebBrowser {
         try {
             throw new WebBrowserNotRunningException("WebBrowser is not initialized yet");
         } catch (WebBrowserNotRunningException e) {
-            Loggers.getLogger().error("Failed to check initialization of WebBrowser", e);
+//            Loggers.getLogger().error("Failed to check initialization of WebBrowser", e);
+            throw new IllegalStateException("Failed to check initialization of WebBrowser", e);
         }
     };
 

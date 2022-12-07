@@ -69,13 +69,15 @@ public class LoginProcessor implements Processor {
         inputUsername(loginForm, authentication.getUsername());
         inputPassword(loginForm, authentication.getPassword());
 
+        // Erases the password from memory for security.
         authentication.erasePassword();
-        String currentUrl = WebBrowser.getCurrentUrl();
+
+        String loginPageUrl = WebBrowser.getCurrentUrl();
 
         // Submits login form.
         submit(loginForm);
 
-        validate(currentUrl);
+        validate(loginPageUrl);
 
         // Return value will be ignored by ProcessContext.
         return null;
@@ -122,14 +124,14 @@ public class LoginProcessor implements Processor {
         submitButton.click();
     }
 
-    private static void validate(String currentUrl) throws LoginFailureException {
+    private static void validate(String loginPageUrl) throws LoginFailureException {
         try {
             // Waits for DOM to complete the rendering.
             Loggers.getLogger().debug("Wait up to {} sec for main page to be rendered", WebBrowser.DEFAULT_TIMEOUT_SECONDS);
             WebBrowser.waitForVisibilityOfElement(By.xpath("//main[@id='main' and @class='lzCntnr lzCntnr--home']"));
         } catch (TimeoutException e) {
             // When failed to login because of other problems.
-            if (!WebBrowser.getCurrentUrl().equals(currentUrl)) {
+            if (!WebBrowser.getCurrentUrl().equals(loginPageUrl)) {
                 throw new LoginFailureException(e, "Failed to login");
             }
 

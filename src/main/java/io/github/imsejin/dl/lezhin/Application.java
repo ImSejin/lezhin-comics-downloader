@@ -53,6 +53,21 @@ public final class Application {
             WebBrowser.debugging();
         }
 
+        List<Processor> processors = createProcessors();
+
+        try {
+            for (Processor processor : processors) {
+                Object attribute = processor.process(context);
+                context.add(attribute);
+//                context = ProcessContext.of(context, attribute);
+            }
+        } catch (Exception e) {
+            WebBrowser.quitIfInitialized();
+            Loggers.getLogger().error("Failed to perform a process", e);
+        }
+    }
+
+    private static List<Processor> createProcessors() {
         // Finds all types of implementation of the processor.
         Set<Class<? extends Processor>> processorTypes = ClassFinder.getAllSubtypes(Processor.class, SearchPolicy.CLASS)
                 .stream().filter(it -> it.getEnclosingClass() == null && !ClassUtils.isAbstractClass(it))
@@ -67,17 +82,7 @@ public final class Application {
         // Creates the processors with beans.
         ProcessorCreator processorCreator = new ProcessorCreator(beans.toArray());
         List<Processor> processors = processorCreator.create(orderedTypes);
-
-        try {
-            for (Processor processor : processors) {
-                Object attribute = processor.process(context);
-                context.add(attribute);
-//                context = ProcessContext.of(context, attribute);
-            }
-        } catch (Exception e) {
-            WebBrowser.quitIfInitialized();
-            throw e;
-        }
+        return processors;
     }
 
 }
