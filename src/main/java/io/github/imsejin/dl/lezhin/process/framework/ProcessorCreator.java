@@ -2,7 +2,7 @@ package io.github.imsejin.dl.lezhin.process.framework;
 
 import io.github.imsejin.common.util.CollectionUtils;
 import io.github.imsejin.common.util.ReflectionUtils;
-import io.github.imsejin.dl.lezhin.exception.ProcessorCreationFailureException;
+import io.github.imsejin.dl.lezhin.exception.ProcessorCreationException;
 import io.github.imsejin.dl.lezhin.process.Processor;
 
 import java.lang.reflect.Constructor;
@@ -30,7 +30,7 @@ public final class ProcessorCreator {
         }
     }
 
-    public List<Processor> create(List<Class<? extends Processor>> processorTypes) {
+    public List<Processor> create(List<Class<? extends Processor>> processorTypes) throws ProcessorCreationException {
         if (CollectionUtils.isNullOrEmpty(processorTypes)) {
             return Collections.emptyList();
         }
@@ -49,7 +49,7 @@ public final class ProcessorCreator {
 
     // -------------------------------------------------------------------------------------------------
 
-    private Constructor<?> resolveConstructor(Class<? extends Processor> processorType) {
+    private Constructor<?> resolveConstructor(Class<? extends Processor> processorType) throws ProcessorCreationException {
         // Resolves a constructor that has less number of parameters first.
         List<Constructor<?>> constructors = Arrays.stream(processorType.getDeclaredConstructors())
                 .sorted(comparing(Constructor::getParameterCount)).collect(toList());
@@ -77,7 +77,7 @@ public final class ProcessorCreator {
             return constructor;
         }
 
-        throw new ProcessorCreationFailureException("There is no matched bean for parameter of the processor: (processorType=%s, beans=%s)",
+        throw new ProcessorCreationException("There is no matched bean for parameter of the processor: (processorType=%s, beans=%s)",
                 processorType, this.beans.stream().map(Object::getClass).collect(toList()));
     }
 

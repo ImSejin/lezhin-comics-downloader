@@ -5,7 +5,7 @@ import io.github.imsejin.dl.lezhin.annotation.ProcessSpecification;
 import io.github.imsejin.dl.lezhin.attribute.impl.Authentication;
 import io.github.imsejin.dl.lezhin.browser.WebBrowser;
 import io.github.imsejin.dl.lezhin.common.Loggers;
-import io.github.imsejin.dl.lezhin.exception.LoginFailureException;
+import io.github.imsejin.dl.lezhin.exception.LoginException;
 import io.github.imsejin.dl.lezhin.http.url.URIs;
 import io.github.imsejin.dl.lezhin.process.ProcessContext;
 import io.github.imsejin.dl.lezhin.process.Processor;
@@ -46,7 +46,7 @@ public class LoginProcessor implements Processor {
     );
 
     @Override
-    public Void process(ProcessContext context) throws LoginFailureException {
+    public Void process(ProcessContext context) throws LoginException {
         // Resolves an implementation for the locale.
         Locale locale = context.getLanguage().getValue();
         String baseUrl = BASE_URL_MAP.get(locale);
@@ -124,7 +124,7 @@ public class LoginProcessor implements Processor {
         submitButton.click();
     }
 
-    private static void validate(String loginPageUrl) throws LoginFailureException {
+    private static void validate(String loginPageUrl) throws LoginException {
         try {
             // Waits for DOM to complete the rendering.
             Loggers.getLogger().debug("Wait up to {} sec for main page to be rendered", WebBrowser.DEFAULT_TIMEOUT_SECONDS);
@@ -132,13 +132,13 @@ public class LoginProcessor implements Processor {
         } catch (TimeoutException e) {
             // When failed to login because of other problems.
             if (!WebBrowser.getCurrentUrl().equals(loginPageUrl)) {
-                throw new LoginFailureException(e, "Failed to login");
+                throw new LoginException(e, "Failed to login");
             }
 
             // When failed to login because of invalid account information.
             String errorCode = WebBrowser.evaluate("window.__LZ_ERROR_CODE__", String.class);
 
-            throw new LoginFailureException(errorCode);
+            throw new LoginException(errorCode);
         }
     }
 

@@ -20,7 +20,6 @@ import io.github.imsejin.common.annotation.ExcludeFromGeneratedJacocoReport;
 import io.github.imsejin.common.assertion.Asserts;
 import io.github.imsejin.common.constant.OS;
 import io.github.imsejin.common.util.ClassUtils;
-import io.github.imsejin.dl.lezhin.common.Loggers;
 import io.github.imsejin.dl.lezhin.exception.WebBrowserNotRunningException;
 import io.github.imsejin.dl.lezhin.util.PathUtils;
 import lombok.Getter;
@@ -66,15 +65,8 @@ public final class WebBrowser {
     private static ChromeOptions options = new ChromeOptions().addArguments(ChromeOption.getArguments());
 
     private static final Runnable CHECK_INITIALIZATION = () -> {
-        if (isRunning()) {
-            return;
-        }
-
-        try {
+        if (!isRunning()) {
             throw new WebBrowserNotRunningException("WebBrowser is not initialized yet");
-        } catch (WebBrowserNotRunningException e) {
-//            Loggers.getLogger().error("Failed to check initialization of WebBrowser", e);
-            throw new IllegalStateException("Failed to check initialization of WebBrowser", e);
         }
     };
 

@@ -43,7 +43,7 @@ public class ArgumentsParser {
 
     private final List<Argument> arguments;
 
-    public ArgumentsParser(Argument... arguments) {
+    public ArgumentsParser(Argument... arguments) throws DuplicatedArgumentException {
         Options options = new Options();
 
         for (Argument argument : arguments) {
@@ -66,8 +66,9 @@ public class ArgumentsParser {
      *
      * @param args program arguments
      * @return arguments
+     * @throws ParsingArgumentException if failed to parse argument
      */
-    public List<Argument> parse(String... args) {
+    public List<Argument> parse(String... args) throws ParsingArgumentException {
         CommandLine cmd;
 
         try {

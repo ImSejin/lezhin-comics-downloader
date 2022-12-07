@@ -2,7 +2,7 @@ package io.github.imsejin.dl.lezhin.process.framework
 
 import io.github.imsejin.dl.lezhin.process.impl.AccessTokenProcessor
 import io.github.imsejin.dl.lezhin.process.impl.ConfigurationFileProcessor
-import io.github.imsejin.dl.lezhin.process.impl.ContentDirectoryProcessor
+import io.github.imsejin.dl.lezhin.process.impl.DirectoryCreationProcessor
 import io.github.imsejin.dl.lezhin.process.impl.ContentInformationProcessor
 import io.github.imsejin.dl.lezhin.process.impl.EpisodeAuthorityProcessor
 import io.github.imsejin.dl.lezhin.process.impl.LocaleSelectionProcessor
@@ -28,7 +28,7 @@ class ProcessorCreatorSpec extends Specification {
         given:
         def beans = [Path].collect { Mock(it) }
         def types = [ConfigurationFileProcessor, LoginProcessor, AccessTokenProcessor, LocaleSelectionProcessor,
-                     ContentInformationProcessor, ContentDirectoryProcessor, EpisodeAuthorityProcessor]
+                     ContentInformationProcessor, DirectoryCreationProcessor, EpisodeAuthorityProcessor]
 
         when:
         def creator = new ProcessorCreator(beans as Object[])

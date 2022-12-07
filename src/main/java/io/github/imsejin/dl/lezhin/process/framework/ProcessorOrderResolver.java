@@ -22,7 +22,8 @@ import static java.util.stream.Collectors.toUnmodifiableList;
 
 public final class ProcessorOrderResolver {
 
-    public static List<Class<? extends Processor>> resolve(Set<Class<? extends Processor>> processorTypes) {
+    public static List<Class<? extends Processor>> resolve(Set<Class<? extends Processor>> processorTypes)
+            throws ProcessorNotSpecifyException, InvalidProcessSpecificationException {
         if (CollectionUtils.isNullOrEmpty(processorTypes)) {
             return Collections.emptyList();
         }
@@ -32,8 +33,7 @@ public final class ProcessorOrderResolver {
         Graph<Class<? extends Processor>> graph = createDependencyGraph(processorTypes);
 
         // Validates a dependency graph.
-        if (graph.getVertexSize() != graph.getPathLength() + 1
-                || graph.getAllVertices().stream().anyMatch(vertex -> graph.getAdjacentVertices(vertex).size() > 1)) {
+        if (graph.getVertexSize() != graph.getPathLength() + 1) {
             throw new InvalidProcessSpecificationException("Not linear dependency graph of process specification: " + graph);
         }
 
@@ -47,7 +47,8 @@ public final class ProcessorOrderResolver {
 
     // -------------------------------------------------------------------------------------------------
 
-    private static void validate(Set<Class<? extends Processor>> processorTypes) {
+    private static void validate(Set<Class<? extends Processor>> processorTypes)
+            throws ProcessorNotSpecifyException, InvalidProcessSpecificationException {
         Collection<Class<? extends Processor>> rootSet = new ArrayList<>();
 
         for (Class<? extends Processor> processorType : processorTypes) {

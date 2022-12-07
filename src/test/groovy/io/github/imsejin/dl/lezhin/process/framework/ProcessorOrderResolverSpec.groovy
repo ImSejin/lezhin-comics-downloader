@@ -6,7 +6,7 @@ import io.github.imsejin.common.util.ClassUtils
 import io.github.imsejin.dl.lezhin.process.Processor
 import io.github.imsejin.dl.lezhin.process.impl.AccessTokenProcessor
 import io.github.imsejin.dl.lezhin.process.impl.ConfigurationFileProcessor
-import io.github.imsejin.dl.lezhin.process.impl.ContentDirectoryProcessor
+import io.github.imsejin.dl.lezhin.process.impl.DirectoryCreationProcessor
 import io.github.imsejin.dl.lezhin.process.impl.ContentInformationProcessor
 import io.github.imsejin.dl.lezhin.process.impl.EpisodeAuthorityProcessor
 import io.github.imsejin.dl.lezhin.process.impl.LocaleSelectionProcessor
@@ -31,7 +31,7 @@ class ProcessorOrderResolverSpec extends Specification {
                 AccessTokenProcessor,
                 LocaleSelectionProcessor,
                 ContentInformationProcessor,
-                ContentDirectoryProcessor,
+                DirectoryCreationProcessor,
                 EpisodeAuthorityProcessor,
         ]
     }

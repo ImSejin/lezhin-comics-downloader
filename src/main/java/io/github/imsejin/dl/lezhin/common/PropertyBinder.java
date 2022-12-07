@@ -17,8 +17,12 @@
 package io.github.imsejin.dl.lezhin.common;
 
 import io.github.imsejin.dl.lezhin.api.auth.model.Authority;
+import io.github.imsejin.dl.lezhin.api.auth.model.ServiceRequest;
 import io.github.imsejin.dl.lezhin.api.auth.service.AuthorityService.AuthData;
+import io.github.imsejin.dl.lezhin.attribute.impl.Content;
+import io.github.imsejin.dl.lezhin.attribute.impl.Content.Episode;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper
@@ -27,5 +31,12 @@ public interface PropertyBinder {
     PropertyBinder INSTANCE = Mappers.getMapper(PropertyBinder.class);
 
     Authority toAuthority(AuthData source);
+
+    @Mapping(target = "contentId", source = "content.id")
+    @Mapping(target = "episodeId", source = "episode.id")
+    @Mapping(target = "purchased", ignore = true)
+    @Mapping(target = "q", ignore = true)
+    @Mapping(target = "firstCheckType", constant = "'P'")
+    ServiceRequest toServiceRequest(Content content, Episode episode);
 
 }

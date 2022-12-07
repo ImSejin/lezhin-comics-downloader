@@ -24,10 +24,11 @@ import io.github.imsejin.dl.lezhin.argument.ArgumentsParser;
 import io.github.imsejin.dl.lezhin.argument.impl.ContentName;
 import io.github.imsejin.dl.lezhin.argument.impl.DebugMode;
 import io.github.imsejin.dl.lezhin.argument.impl.EpisodeRange;
-import io.github.imsejin.dl.lezhin.argument.impl.Language;
 import io.github.imsejin.dl.lezhin.argument.impl.ImageFormat;
+import io.github.imsejin.dl.lezhin.argument.impl.Language;
 import io.github.imsejin.dl.lezhin.browser.WebBrowser;
 import io.github.imsejin.dl.lezhin.common.Loggers;
+import io.github.imsejin.dl.lezhin.exception.LezhinComicsDownloaderException;
 import io.github.imsejin.dl.lezhin.process.ProcessContext;
 import io.github.imsejin.dl.lezhin.process.Processor;
 import io.github.imsejin.dl.lezhin.process.framework.ProcessorCreator;
@@ -42,20 +43,20 @@ import static java.util.stream.Collectors.toUnmodifiableSet;
 public final class Application {
 
     public static void main(String[] args) {
-        ArgumentsParser argumentsParser = new ArgumentsParser(
-                new Language(), new ContentName(), new EpisodeRange(), new ImageFormat(), new DebugMode());
-//        List<Argument> arguments = argumentsParser.parse(args);
-        List<Argument> arguments = argumentsParser.parse("-l=en", "-n=appetite", "-d");
-
-        ProcessContext context = ProcessContext.create(arguments.toArray());
-        if (context.getDebugMode().getValue()) {
-            Loggers.debugging();
-            WebBrowser.debugging();
-        }
-
-        List<Processor> processors = createProcessors();
-
         try {
+            ArgumentsParser argumentsParser = new ArgumentsParser(
+                    new Language(), new ContentName(), new EpisodeRange(), new ImageFormat(), new DebugMode());
+//            List<Argument> arguments = argumentsParser.parse(args);
+            List<Argument> arguments = argumentsParser.parse("-l=en", "-n=appetite", "-d");
+
+            ProcessContext context = ProcessContext.create(arguments.toArray());
+            if (context.getDebugMode().getValue()) {
+                Loggers.debugging();
+                WebBrowser.debugging();
+            }
+
+            List<Processor> processors = createProcessors();
+
             for (Processor processor : processors) {
                 Object attribute = processor.process(context);
                 context.add(attribute);
@@ -67,7 +68,9 @@ public final class Application {
         }
     }
 
-    private static List<Processor> createProcessors() {
+    // -------------------------------------------------------------------------------------------------
+
+    private static List<Processor> createProcessors() throws LezhinComicsDownloaderException {
         // Finds all types of implementation of the processor.
         Set<Class<? extends Processor>> processorTypes = ClassFinder.getAllSubtypes(Processor.class, SearchPolicy.CLASS)
                 .stream().filter(it -> it.getEnclosingClass() == null && !ClassUtils.isAbstractClass(it))
@@ -81,8 +84,7 @@ public final class Application {
 
         // Creates the processors with beans.
         ProcessorCreator processorCreator = new ProcessorCreator(beans.toArray());
-        List<Processor> processors = processorCreator.create(orderedTypes);
-        return processors;
+        return processorCreator.create(orderedTypes);
     }
 
 }

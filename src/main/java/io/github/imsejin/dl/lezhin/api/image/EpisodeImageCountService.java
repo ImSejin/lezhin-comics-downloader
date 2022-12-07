@@ -62,7 +62,7 @@ public class EpisodeImageCountService extends BaseService {
         this.serviceInterface = retrofit.create(ServiceInterface.class);
     }
 
-    public Map<Integer, Integer> getImageCountMap(String contentAlias) {
+    public Map<String, Integer> getImageCountMap(String contentAlias) {
         Call<List<EpisodeModel>> call = this.serviceInterface.getEpisodes(contentAlias);
 
         Response<List<EpisodeModel>> response;
@@ -77,8 +77,8 @@ public class EpisodeImageCountService extends BaseService {
             throw new IllegalArgumentException("Failed to get number of episode images: " + contentAlias);
         }
 
-        Map<Integer, Integer> imageCountMap = models.stream()
-                .collect(toMap(EpisodeModel::getSeq, EpisodeModel::getImageCount));
+        Map<String, Integer> imageCountMap = models.stream()
+                .collect(toMap(EpisodeModel::getName, EpisodeModel::getImageCount));
         return Collections.unmodifiableMap(imageCountMap);
     }
 
