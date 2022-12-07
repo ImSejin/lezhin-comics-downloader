@@ -70,7 +70,10 @@ public enum URIs {
 
     LIBRARY_CONTENT("/{language}/library/comic/{locale}/{comicName}"),
 
-    LIBRARY_EPISODE("/{language}/library/comic/{locale}/{comicName}/{episodeName}");
+    LIBRARY_EPISODE("/{language}/library/comic/{locale}/{comicName}/{episodeName}"),
+
+    EPISODE_IMAGE("/v2/comics/{contentId}/episodes/{episodeId}/contents/scrolls/{index}.webp?purchased={purchased}&q=30&Policy={policy}&Signature={signature}&Key-Pair-Id={keyPairId}")
+    ;
 
     private static final Pattern PATTERN = Pattern.compile("\\{(.+?)}", Pattern.MULTILINE);
 
