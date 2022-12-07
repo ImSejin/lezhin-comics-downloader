@@ -16,9 +16,9 @@
 
 package io.github.imsejin.dl.lezhin.exception;
 
-public class ProcessorCreationFailureException extends LezhinComicsDownloaderException {
+public class ProcessorCreationException extends LezhinComicsDownloaderException {
 
-    public ProcessorCreationFailureException(String format, Object... args) {
+    public ProcessorCreationException(String format, Object... args) {
         super(format, args);
     }
 

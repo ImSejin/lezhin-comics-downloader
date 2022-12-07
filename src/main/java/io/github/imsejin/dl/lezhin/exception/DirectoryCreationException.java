@@ -16,9 +16,9 @@
 
 package io.github.imsejin.dl.lezhin.exception;
 
-public class DirectoryCreationFailureException extends LezhinComicsDownloaderException {
+public class DirectoryCreationException extends LezhinComicsDownloaderException {
 
-    public DirectoryCreationFailureException(Throwable cause, String format, Object... args) {
+    public DirectoryCreationException(Throwable cause, String format, Object... args) {
         super(cause, format, args);
     }
 

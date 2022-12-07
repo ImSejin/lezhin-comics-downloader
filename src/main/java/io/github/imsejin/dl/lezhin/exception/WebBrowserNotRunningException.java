@@ -16,10 +16,10 @@
 
 package io.github.imsejin.dl.lezhin.exception;
 
-public class WebBrowserNotRunningException extends LezhinComicsDownloaderException {
+public class WebBrowserNotRunningException extends RuntimeException {
 
     public WebBrowserNotRunningException(String format, Object... args) {
-        super(format, args);
+        super(String.format(format, args));
     }
 
 }

@@ -19,13 +19,13 @@ package io.github.imsejin.dl.lezhin.exception;
 /**
  * @since 2.7.0
  */
-public class LoginFailureException extends LezhinComicsDownloaderException {
+public class LoginException extends LezhinComicsDownloaderException {
 
-    public LoginFailureException(String errorCode) {
+    public LoginException(String errorCode) {
         super("Failed to login: %s", convertErrorCode(errorCode));
     }
 
-    public LoginFailureException(Throwable cause, String format, Object... args) {
+    public LoginException(Throwable cause, String format, Object... args) {
         super(cause, format, args);
     }
 

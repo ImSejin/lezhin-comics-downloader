@@ -20,7 +20,7 @@ import io.github.imsejin.common.util.FilenameUtils;
 import io.github.imsejin.dl.lezhin.annotation.ProcessSpecification;
 import io.github.imsejin.dl.lezhin.attribute.impl.Content.Artist;
 import io.github.imsejin.dl.lezhin.common.Loggers;
-import io.github.imsejin.dl.lezhin.exception.DirectoryCreationFailureException;
+import io.github.imsejin.dl.lezhin.exception.DirectoryCreationException;
 import io.github.imsejin.dl.lezhin.process.ProcessContext;
 import io.github.imsejin.dl.lezhin.process.Processor;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +43,7 @@ public class ContentDirectoryProcessor implements Processor {
     private final Path basePath;
 
     @Override
-    public Void process(ProcessContext context) throws DirectoryCreationFailureException {
+    public Void process(ProcessContext context) throws DirectoryCreationException {
         String contentTitle = context.getContent().getDisplay().getTitle();
         String artists = context.getContent().getArtists().stream().map(Artist::getName)
                 .collect(joining(", "));
@@ -57,7 +57,7 @@ public class ContentDirectoryProcessor implements Processor {
             try {
                 Files.createDirectory(targetPath);
             } catch (IOException e) {
-                throw new DirectoryCreationFailureException(e, "Failed to create directory: %s", targetPath);
+                throw new DirectoryCreationException(e, "Failed to create directory: %s", targetPath);
             }
         }
 
