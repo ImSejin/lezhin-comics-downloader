@@ -5,7 +5,6 @@ import io.github.imsejin.dl.lezhin.annotation.ProcessSpecification;
 import io.github.imsejin.dl.lezhin.attribute.impl.Authentication;
 import io.github.imsejin.dl.lezhin.browser.WebBrowser;
 import io.github.imsejin.dl.lezhin.common.Loggers;
-import io.github.imsejin.dl.lezhin.exception.LezhinComicsDownloaderException;
 import io.github.imsejin.dl.lezhin.exception.LoginFailureException;
 import io.github.imsejin.dl.lezhin.http.url.URIs;
 import io.github.imsejin.dl.lezhin.process.ProcessContext;
@@ -47,13 +46,13 @@ public class LoginProcessor implements Processor {
     );
 
     @Override
-    public Object process(ProcessContext context) throws LezhinComicsDownloaderException {
+    public Void process(ProcessContext context) throws LoginFailureException {
         // Resolves an implementation for the locale.
         Locale locale = context.getLanguage().getValue();
         String baseUrl = BASE_URL_MAP.get(locale);
 
         if (baseUrl == null) {
-            throw new IllegalArgumentException("ProcessContext.language.value is not recognized: " + locale);
+            throw new AssertionError("ProcessContext.language.value is not recognized: " + locale);
         }
 
         // Starts to run web browser.
@@ -123,7 +122,7 @@ public class LoginProcessor implements Processor {
         submitButton.click();
     }
 
-    private static void validate(String currentUrl) {
+    private static void validate(String currentUrl) throws LoginFailureException {
         try {
             // Waits for DOM to complete the rendering.
             Loggers.getLogger().debug("Wait up to {} sec for main page to be rendered", WebBrowser.DEFAULT_TIMEOUT_SECONDS);
@@ -131,7 +130,7 @@ public class LoginProcessor implements Processor {
         } catch (TimeoutException e) {
             // When failed to login because of other problems.
             if (!WebBrowser.getCurrentUrl().equals(currentUrl)) {
-                throw e;
+                throw new LoginFailureException(e, "Failed to login");
             }
 
             // When failed to login because of invalid account information.

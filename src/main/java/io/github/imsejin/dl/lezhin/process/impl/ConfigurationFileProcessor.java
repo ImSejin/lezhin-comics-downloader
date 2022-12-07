@@ -6,7 +6,6 @@ import io.github.imsejin.dl.lezhin.annotation.ProcessSpecification;
 import io.github.imsejin.dl.lezhin.attribute.impl.Authentication;
 import io.github.imsejin.dl.lezhin.exception.ConfigurationFileNotFoundException;
 import io.github.imsejin.dl.lezhin.exception.InvalidConfigurationFileException;
-import io.github.imsejin.dl.lezhin.exception.LezhinComicsDownloaderException;
 import io.github.imsejin.dl.lezhin.process.ProcessContext;
 import io.github.imsejin.dl.lezhin.process.Processor;
 import org.ini4j.Ini;
@@ -27,8 +26,17 @@ public class ConfigurationFileProcessor implements Processor {
         this.filePath = basePath.resolve("config.ini");
     }
 
+    /**
+     * Performs a process of authentication from configuration file.
+     *
+     * @param context process context
+     * @return authentication
+     * @throws ConfigurationFileNotFoundException if configuration file is not found
+     * @throws InvalidConfigurationFileException  if configuration file is not specified properly
+     */
     @Override
-    public Authentication process(ProcessContext context) throws LezhinComicsDownloaderException {
+    public Authentication process(ProcessContext context)
+            throws ConfigurationFileNotFoundException, InvalidConfigurationFileException {
         if (!Files.isRegularFile(this.filePath)) {
             throw new ConfigurationFileNotFoundException("There is no configuration file: %s", this.filePath);
         }

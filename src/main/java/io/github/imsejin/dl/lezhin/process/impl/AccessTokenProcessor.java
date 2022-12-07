@@ -77,6 +77,13 @@ import java.util.regex.Pattern;
 @ProcessSpecification(dependsOn = LoginProcessor.class)
 public class AccessTokenProcessor implements Processor {
 
+    /**
+     * Performs a process of access token.
+     *
+     * @param context process context
+     * @return access token
+     * @throws AccessTokenNotFoundException if access token is not found
+     */
     @Override
     public AccessToken process(ProcessContext context) throws AccessTokenNotFoundException {
         try {

@@ -22,7 +22,7 @@ import io.github.imsejin.dl.lezhin.argument.impl.Language;
 import io.github.imsejin.dl.lezhin.attribute.impl.Content;
 import io.github.imsejin.dl.lezhin.browser.WebBrowser;
 import io.github.imsejin.dl.lezhin.common.Loggers;
-import io.github.imsejin.dl.lezhin.exception.AccessTokenNotFoundException;
+import io.github.imsejin.dl.lezhin.exception.LezhinComicsDownloaderException;
 import io.github.imsejin.dl.lezhin.http.url.URIs;
 import io.github.imsejin.dl.lezhin.process.ProcessContext;
 import io.github.imsejin.dl.lezhin.process.Processor;
@@ -39,7 +39,7 @@ import java.util.Locale;
 public class ContentInformationProcessor implements Processor {
 
     @Override
-    public Content process(ProcessContext context) throws AccessTokenNotFoundException {
+    public Content process(ProcessContext context) throws LezhinComicsDownloaderException {
         Locale locale = context.getLanguage().getValue();
 
         // Goes to page of the content.

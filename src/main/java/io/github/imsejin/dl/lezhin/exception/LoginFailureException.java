@@ -25,6 +25,10 @@ public class LoginFailureException extends LezhinComicsDownloaderException {
         super("Failed to login: %s", convertErrorCode(errorCode));
     }
 
+    public LoginFailureException(Throwable cause, String format, Object... args) {
+        super(cause, format, args);
+    }
+
     /**
      * Converts error code to error message.
      *

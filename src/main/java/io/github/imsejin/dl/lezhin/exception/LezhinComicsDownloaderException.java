@@ -16,7 +16,7 @@
 
 package io.github.imsejin.dl.lezhin.exception;
 
-public abstract class LezhinComicsDownloaderException extends RuntimeException {
+public abstract class LezhinComicsDownloaderException extends Exception {
 
     protected LezhinComicsDownloaderException(String format, Object... args) {
         super(String.format(format, args));

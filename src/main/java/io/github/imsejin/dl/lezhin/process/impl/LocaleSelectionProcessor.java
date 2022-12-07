@@ -20,7 +20,7 @@ import io.github.imsejin.dl.lezhin.annotation.ProcessSpecification;
 import io.github.imsejin.dl.lezhin.argument.impl.Language;
 import io.github.imsejin.dl.lezhin.browser.WebBrowser;
 import io.github.imsejin.dl.lezhin.common.Loggers;
-import io.github.imsejin.dl.lezhin.exception.AccessTokenNotFoundException;
+import io.github.imsejin.dl.lezhin.exception.LezhinComicsDownloaderException;
 import io.github.imsejin.dl.lezhin.http.url.URIs;
 import io.github.imsejin.dl.lezhin.process.ProcessContext;
 import io.github.imsejin.dl.lezhin.process.Processor;
@@ -46,7 +46,7 @@ import io.github.imsejin.dl.lezhin.process.Processor;
 public class LocaleSelectionProcessor implements Processor {
 
     @Override
-    public Void process(ProcessContext context) throws AccessTokenNotFoundException {
+    public Void process(ProcessContext context) throws LezhinComicsDownloaderException {
         Language language = context.getLanguage();
         String localePath = URIs.LOCALE.get(language.getValue().getLanguage(), language.asLocaleString());
 

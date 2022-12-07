@@ -19,10 +19,19 @@ package io.github.imsejin.dl.lezhin.process;
 import io.github.imsejin.dl.lezhin.exception.LezhinComicsDownloaderException;
 
 /**
+ * Handler of its own process.
+ *
  * @since 3.0.0
  */
 public interface Processor {
 
+    /**
+     * Performs a process.
+     *
+     * @param context process context
+     * @return result of the process
+     * @throws LezhinComicsDownloaderException if the process failed
+     */
     Object process(ProcessContext context) throws LezhinComicsDownloaderException;
 
 }
