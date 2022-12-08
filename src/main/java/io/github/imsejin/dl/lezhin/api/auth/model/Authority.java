@@ -37,4 +37,9 @@ public class Authority implements Attribute {
 
     private final String keyPairId;
 
+    public boolean isExpired() {
+        // TODO: Decode policy and find policy.expiredAt
+        return false;
+    }
+
 }

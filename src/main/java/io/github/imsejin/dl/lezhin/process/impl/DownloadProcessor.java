@@ -23,7 +23,10 @@ import io.github.imsejin.dl.lezhin.api.auth.model.ServiceRequest;
 import io.github.imsejin.dl.lezhin.api.auth.service.AuthorityService;
 import io.github.imsejin.dl.lezhin.api.image.EpisodeImageCountService;
 import io.github.imsejin.dl.lezhin.argument.impl.EpisodeRange;
+import io.github.imsejin.dl.lezhin.argument.impl.Language;
 import io.github.imsejin.dl.lezhin.attribute.impl.Content.Episode;
+import io.github.imsejin.dl.lezhin.browser.WebBrowser;
+import io.github.imsejin.dl.lezhin.common.Loggers;
 import io.github.imsejin.dl.lezhin.common.PropertyBinder;
 import io.github.imsejin.dl.lezhin.exception.DirectoryCreationException;
 import io.github.imsejin.dl.lezhin.http.url.URIs;
@@ -34,7 +37,12 @@ import me.tongfei.progressbar.ConsoleProgressBarConsumer;
 import me.tongfei.progressbar.ProgressBar;
 import me.tongfei.progressbar.ProgressBarBuilder;
 import me.tongfei.progressbar.ProgressBarStyle;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
 
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
@@ -64,8 +72,8 @@ public class DownloadProcessor implements Processor {
     public DownloadProcessor() {
         this.implementationMap = Map.ofEntries(
                 Map.entry(Locale.KOREA, new KoreanImpl()),
-                Map.entry(Locale.US, new KoreanImpl()),
-                Map.entry(Locale.JAPAN, new KoreanImpl())
+                Map.entry(Locale.US, new EnglishImpl()),
+                Map.entry(Locale.JAPAN, new EnglishImpl())
         );
     }
 
@@ -113,16 +121,13 @@ public class DownloadProcessor implements Processor {
                     String fileName = String.format("%03d.%s", n, context.getImageFormat().getValue());
                     Path dest = episodeDirectoryPath.resolve(fileName);
 
-                    URIs.EPISODE_IMAGE.get(String.valueOf(context.getContent().getId()), String.valueOf(episode.getId()), String.valueOf(sequence), "true",
-                            authority.getPolicy(), authority.getSignature(), authority.getKeyPairId());
-
                     // Tries to download high-resolution image for only paid users.
-                    URL url = null;//this.urlFactory.image(episode, n, true);
+                    URL url = getImageUrl(context, episode, authority, n, true);
                     boolean success = downloadImage(url, dest);
 
                     // Try to download low-resolution image for all users.
                     if (!success) {
-                        url = null;//this.urlFactory.image(episode, n, false);
+                        url = getImageUrl(context, episode, authority, n, false);
                         success = downloadImage(url, dest);
 
                         // If failed to download, skips this image.
@@ -139,30 +144,17 @@ public class DownloadProcessor implements Processor {
         return null;
     }
 
-    private void downloadImages(ProcessContext context, int imageCount, Path episodeDirectoryPath, String taskName) {
-        try (ProgressBar progressBar = createProgressBar(taskName, imageCount)) {
-            // Downloads all images of the episode.
-            IntStream.rangeClosed(1, imageCount).parallel().forEach(n -> {
-                String fileName = String.format("%03d.%s", n, context.getImageFormat().getValue());
-                Path dest = episodeDirectoryPath.resolve(fileName);
+    private URL getImageUrl(ProcessContext context, Episode episode, Authority authority, int num, boolean purchased) {
+        String uriString = URIs.EPISODE_IMAGE.get(context.getContent().getId(), episode.getId(), num, purchased,
+                authority.getPolicy(), authority.getSignature(), authority.getKeyPairId());
+        try {
+            if (authority.isExpired()) {
+                throw new IllegalStateException("Authority for viewing episode is expired: " + authority);
+            }
 
-                // Tries to download high-resolution image for only paid users.
-                URL url = null;//this.urlFactory.image(episode, n, true);
-                boolean success = downloadImage(url, dest);
-
-                // Try to download low-resolution image for all users.
-                if (!success) {
-                    url = null;//this.urlFactory.image(episode, n, false);
-                    success = downloadImage(url, dest);
-
-                    // If failed to download, skips this image.
-                    if (!success) {
-                        return;
-                    }
-                }
-
-                progressBar.step();
-            });
+            return URI.create(uriString).toURL();
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -192,6 +184,35 @@ public class DownloadProcessor implements Processor {
         @Override
         int getImageCountOfEpisode(ProcessContext context, Episode episode) {
             return this.imageCountMap.get(episode.getName());
+        }
+    }
+
+    private static final class EnglishImpl extends DownloadProcessor {
+        @Override
+        int getImageCountOfEpisode(ProcessContext context, Episode episode) {
+            // 서비스 종료된 웹툰이면 '내 서재'로 접근한다.
+            Language language = context.getLanguage();
+//            URI episodeUrl = args.isExpiredComic()
+//                    ? URIs.LIBRARY_EPISODE.get(language.getValue(), language.getLocale(), args.getComicName(), episode.getName())
+//                    : URIs.EPISODE.get(language.getValue(), args.getComicName(), episode.getName());
+
+//            Loggers.getLogger().debug("Request episode page: {}", episodeUrl);
+//            WebBrowser.request(episodeUrl);
+
+            try {
+                // Waits for DOM to complete the rendering.
+                Loggers.getLogger().debug("Wait up to {} sec for images to be rendered", WebBrowser.DEFAULT_TIMEOUT_SECONDS);
+                WebElement scrollList = WebBrowser.waitForVisibilityOfElement(By.id("scroll-list"));
+
+                List<WebElement> images = scrollList.findElements(
+                        By.xpath(".//div[@class='cut' and not(contains(@class, 'cutLicense')) and @data-cut-index and @data-cut-type='cut']"));
+
+                // Successful
+                return images.size();
+            } catch (NoSuchElementException ex) {
+                // Failed
+                return 0;
+            }
         }
     }
 

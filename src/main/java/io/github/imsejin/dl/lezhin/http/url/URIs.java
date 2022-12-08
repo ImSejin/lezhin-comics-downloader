@@ -56,7 +56,7 @@ public enum URIs {
      *     /ko/comic/redhood
      * }</pre>
      */
-    CONTENT("/{language}/comic/{comicName}"),
+    CONTENT("/{language}/comic/{contentName}"),
 
     /**
      * Episode page that shows its cuts(images).
@@ -68,12 +68,12 @@ public enum URIs {
      */
     EPISODE("/{language}/comic/{comicName}/{episodeName}"),
 
-    LIBRARY_CONTENT("/{language}/library/comic/{locale}/{comicName}"),
+    LIBRARY_CONTENT("/{language}/library/comic/{locale}/{contentName}"),
 
-    LIBRARY_EPISODE("/{language}/library/comic/{locale}/{comicName}/{episodeName}"),
+    LIBRARY_EPISODE("/{language}/library/comic/{locale}/{contentName}/{episodeName}"),
 
-    EPISODE_IMAGE("/v2/comics/{contentId}/episodes/{episodeId}/contents/scrolls/{index}.webp?purchased={purchased}&q=30&Policy={policy}&Signature={signature}&Key-Pair-Id={keyPairId}")
-    ;
+    EPISODE_IMAGE("/v2/comics/{contentId}/episodes/{episodeId}/contents/scrolls/{num}.{imageFormat}" +
+            "?purchased={purchased}&q=30&Policy={policy}&Signature={signature}&Key-Pair-Id={keyPairId}");
 
     private static final Pattern PATTERN = Pattern.compile("\\{(.+?)}", Pattern.MULTILINE);
 
@@ -85,7 +85,7 @@ public enum URIs {
      * @param params parameters
      * @return URI string
      */
-    public String get(String... params) {
+    public String get(Object... params) {
         if (ArrayUtils.isNullOrEmpty(params)) {
             return this.template;
         }
@@ -95,7 +95,8 @@ public enum URIs {
         // Converts all variables to parameters.
         String uri = this.template;
         for (int i = 0; i < params.length && matcher.find(); i++) {
-            uri = uri.replaceAll("\\{" + matcher.group(1) + '}', params[i]);
+            String param = String.valueOf(params[i]);
+            uri = uri.replaceAll("\\{" + matcher.group(1) + '}', param);
         }
 
         // Validates all variables in URI are converted to parameters.
