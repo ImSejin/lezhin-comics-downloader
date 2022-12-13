@@ -16,7 +16,11 @@
 
 package io.github.imsejin.dl.lezhin.api;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import io.github.imsejin.dl.lezhin.http.interceptor.FabricatedHeadersInterceptor;
+import lombok.AccessLevel;
+import lombok.Getter;
 import okhttp3.OkHttpClient;
 
 import java.time.Duration;
@@ -30,6 +34,15 @@ public abstract class BaseService {
 
     private static final FabricatedHeadersInterceptor interceptor = new FabricatedHeadersInterceptor();
 
+    @Getter(AccessLevel.PROTECTED)
+    private static final Gson gson = new GsonBuilder()
+            .disableJdkUnsafe()
+            // com.google.gson.stream.MalformedJsonException:
+            // Use JsonReader.setLenient(true) to accept malformed JSON at line 1 column 1 path $
+            .setLenient()
+            .create();
+
+    @Getter(AccessLevel.PROTECTED)
     private static final OkHttpClient httpClient = new OkHttpClient.Builder()
             .readTimeout(Duration.ofSeconds(15))
             .writeTimeout(Duration.ofSeconds(15))
@@ -39,10 +52,6 @@ public abstract class BaseService {
     public BaseService(Locale locale, UUID accessToken) {
         interceptor.setLocale(locale);
         interceptor.setAccessToken(accessToken);
-    }
-
-    public OkHttpClient getHttpClient() {
-        return httpClient;
     }
 
 }

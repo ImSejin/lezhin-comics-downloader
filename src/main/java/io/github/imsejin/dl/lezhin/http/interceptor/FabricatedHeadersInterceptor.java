@@ -39,10 +39,14 @@ public class FabricatedHeadersInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         Locale locale = this.locale.get();
 
-        Request.Builder requestBuilder = chain.request()
+        Request.Builder builder = chain.request()
                 .newBuilder()
-                .addHeader("accept", "application/json, text/plain, */*")
-                .addHeader("accept-encoding", "gzip, deflate, br")
+                .addHeader("accept", "application/json; charset=utf-8")
+                // DO NOT ADD HEADER "accept-encoding: gzip, deflate, br".
+                // java.lang.IllegalStateException:
+                // Expected BEGIN_ARRAY but was STRING at line 1 column 1 path $
+                //
+                // .addHeader("accept-encoding", "gzip, deflate, br")
                 .addHeader("cache-control", "no-cache")
                 .addHeader("pragma", "no-cache")
                 // Fabricated user agent.
@@ -55,12 +59,12 @@ public class FabricatedHeadersInterceptor implements Interceptor {
 
         UUID accessToken = this.accessToken.get();
         if (!accessToken.equals(new UUID(0, 0))) {
-            requestBuilder.addHeader("authorization", "Bearer " + accessToken);
+            builder.addHeader("authorization", "Bearer " + accessToken);
         }
 
-        Request request = requestBuilder.build();
+        Request fabricatedRequest = builder.build();
 
-        return chain.proceed(request);
+        return chain.proceed(fabricatedRequest);
     }
 
     public void setLocale(Locale locale) {

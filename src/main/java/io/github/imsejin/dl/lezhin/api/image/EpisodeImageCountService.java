@@ -20,11 +20,11 @@ import com.google.gson.annotations.SerializedName;
 import io.github.imsejin.common.util.CollectionUtils;
 import io.github.imsejin.dl.lezhin.api.BaseService;
 import io.github.imsejin.dl.lezhin.attribute.impl.Content.Episode;
+import io.github.imsejin.dl.lezhin.common.Loggers;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -52,17 +52,17 @@ public class EpisodeImageCountService extends BaseService {
         // Supported on only korea platform.
         super(Locale.KOREA, accessToken);
 
-        OkHttpClient httpClient = super.getHttpClient();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.lezhin.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(httpClient)
+                .addConverterFactory(GsonConverterFactory.create(BaseService.getGson()))
+                .client(BaseService.getHttpClient())
                 .build();
 
         this.serviceInterface = retrofit.create(ServiceInterface.class);
     }
 
     public Map<String, Integer> getImageCountMap(String contentAlias) {
+        Loggers.getLogger().debug("Request: https://api.lezhin.com/episodes/{}", contentAlias);
         Call<List<EpisodeModel>> call = this.serviceInterface.getEpisodes(contentAlias);
 
         Response<List<EpisodeModel>> response;
@@ -83,6 +83,7 @@ public class EpisodeImageCountService extends BaseService {
     }
 
     public int getImageCount(String contentAlias, Episode episode) {
+        Loggers.getLogger().debug("Request: https://api.lezhin.com/episodes/{}/{}", contentAlias, episode.getName());
         Call<EpisodeModel> call = this.serviceInterface.getEpisode(contentAlias, episode.getName());
 
         Response<EpisodeModel> response;

@@ -18,8 +18,9 @@ package io.github.imsejin.dl.lezhin.api.auth.service;
 
 import com.google.gson.annotations.SerializedName;
 import io.github.imsejin.dl.lezhin.api.BaseService;
-import io.github.imsejin.dl.lezhin.api.auth.model.ServiceRequest;
 import io.github.imsejin.dl.lezhin.api.auth.model.Authority;
+import io.github.imsejin.dl.lezhin.api.auth.model.ServiceRequest;
+import io.github.imsejin.dl.lezhin.common.Loggers;
 import io.github.imsejin.dl.lezhin.common.PropertyBinder;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -56,6 +57,13 @@ public class AuthorityService extends BaseService {
     }
 
     public Authority getAuthForViewEpisode(ServiceRequest request) {
+        Loggers.getLogger().debug("Request: https://www.lezhin.com/lz-api/v2/cloudfront/signed-url/generate" +
+                        "?contentId={}&episodeId={}&purchased={}&q={}&firstCheckType={}",
+                request.getContentId(),
+                request.getEpisodeId(),
+                request.isPurchased(),
+                request.getQ(),
+                request.getFirstCheckType());
         Call<AuthResponse> call = this.serviceInterface.getAuthForViewEpisode(
                 request.getContentId(),
                 request.getEpisodeId(),
