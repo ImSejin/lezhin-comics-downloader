@@ -29,6 +29,7 @@ import io.github.imsejin.dl.lezhin.attribute.impl.AccessToken;
 import io.github.imsejin.dl.lezhin.attribute.impl.Authentication;
 import io.github.imsejin.dl.lezhin.attribute.impl.Content;
 import io.github.imsejin.dl.lezhin.attribute.impl.DirectoryPath;
+import io.github.imsejin.dl.lezhin.attribute.impl.HttpHosts;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -80,6 +81,8 @@ public final class ProcessContext {
     // From processors ---------------------------------------------------------------------------------
 
     private Authentication authentication;
+
+    private HttpHosts httpHosts;
 
     private AccessToken accessToken;
 
