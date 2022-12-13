@@ -21,9 +21,12 @@ import io.github.imsejin.dl.lezhin.api.auth.model.ServiceRequest;
 import io.github.imsejin.dl.lezhin.api.auth.service.AuthorityService.AuthData;
 import io.github.imsejin.dl.lezhin.attribute.impl.Content;
 import io.github.imsejin.dl.lezhin.attribute.impl.Content.Episode;
+import io.github.imsejin.dl.lezhin.attribute.impl.HttpHosts;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+
+import java.util.Map;
 
 @Mapper
 public interface PropertyBinder {
@@ -38,5 +41,13 @@ public interface PropertyBinder {
     @Mapping(target = "q", ignore = true)
     @Mapping(target = "firstCheckType", constant = "'P'")
     ServiceRequest toServiceRequest(Content content, Episode episode);
+
+    @Mapping(target = "api", source = "config.apiUrl")
+    @Mapping(target = "cdn", source = "config.cdnUrl")
+    @Mapping(target = "contentsCdn", source = "config.contentsCdnUrl")
+    @Mapping(target = "reco", source = "config.recoUrl")
+    @Mapping(target = "pay", source = "config.payUrl")
+    @Mapping(target = "panther", source = "config.pantherUrl")
+    HttpHosts toHttpHosts(Map<String, String> config);
 
 }
