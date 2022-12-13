@@ -62,12 +62,12 @@ class PropertyBinderSpec extends Specification {
 
         then:
         httpHosts
-        httpHosts.api == "https://api.lezhin.com"
-        httpHosts.cdn == "https://ccdn.lezhin.com"
-        httpHosts.contentsCdn == "https://rcdn.lezhin.com"
-        httpHosts.reco == "https://dondog.lezhin.com"
-        httpHosts.pay == "https://pay.lezhin.com"
-        httpHosts.panther == "https://panther.lezhin.com"
+        httpHosts.api == "https://api.lezhin.com/"
+        httpHosts.cdn == "https://ccdn.lezhin.com/"
+        httpHosts.contentsCdn == "https://rcdn.lezhin.com/"
+        httpHosts.reco == "https://dondog.lezhin.com/"
+        httpHosts.pay == "https://pay.lezhin.com/"
+        httpHosts.panther == "https://panther.lezhin.com/"
     }
 
 }

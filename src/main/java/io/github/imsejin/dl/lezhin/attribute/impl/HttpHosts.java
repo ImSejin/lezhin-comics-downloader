@@ -55,7 +55,12 @@ public final class HttpHosts implements Attribute {
                 .isNotEmpty()
                 .hasText();
 
-        if (url.matches("^https?://[\\w.]+")) {
+        // Base URL for Retrofit must end with forward slash(/).
+        if (!url.endsWith("/")) {
+            url += '/';
+        }
+
+        if (url.matches("^https?://[\\w.]+/$")) {
             return url;
         }
 
