@@ -16,6 +16,7 @@
 
 package io.github.imsejin.dl.lezhin.process.impl;
 
+import io.github.imsejin.common.assertion.Asserts;
 import io.github.imsejin.common.util.JsonUtils;
 import io.github.imsejin.dl.lezhin.annotation.ProcessSpecification;
 import io.github.imsejin.dl.lezhin.argument.impl.Language;
@@ -52,7 +53,8 @@ public class ContentInformationProcessor implements Processor {
         // Checks expiration of the content.
         String currentUrl = WebBrowser.getCurrentUrl();
         String expirationPath = URIs.EXPIRATION.get(locale.getLanguage());
-        if (currentUrl.endsWith(expirationPath)) {
+        boolean expired = currentUrl.endsWith(expirationPath);
+        if (expired) {
             Loggers.getLogger().info("Comic is expired -> try to find it in 'My Library'");
             jsonString = getJsonInMyLibrary(context);
         } else {
@@ -63,7 +65,13 @@ public class ContentInformationProcessor implements Processor {
             jsonString = WebBrowser.evaluate("JSON.stringify(window.__LZ_PRODUCT__.product)", String.class);
         }
 
-        return JsonUtils.toObject(jsonString, Content.class);
+        Content content = JsonUtils.toObject(jsonString, Content.class);
+        Asserts.that(content)
+                .isNotNull()
+                .describedAs("Content.properties.expired is expected to be '{0}'", expired)
+                .returns(expired, it -> it.getProperties().isExpired());
+
+        return content;
     }
 
     // -------------------------------------------------------------------------------------------------

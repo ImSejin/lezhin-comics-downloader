@@ -48,14 +48,14 @@ import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-import static java.util.Collections.reverseOrder;
+import static java.util.Comparator.comparingInt;
+import static java.util.stream.Collectors.toUnmodifiableList;
 
 /**
  * Processor for downloading images
@@ -65,28 +65,23 @@ import static java.util.Collections.reverseOrder;
 @ProcessSpecification(dependsOn = DirectoryCreationProcessor.class)
 public class DownloadProcessor implements Processor {
 
-    private final Map<Locale, DownloadProcessor> implementationMap;
-
-    private AuthorityService service;
-
-    public DownloadProcessor() {
-        this.implementationMap = Map.ofEntries(
-                Map.entry(Locale.KOREA, new KoreanImpl()),
-                Map.entry(Locale.US, new EnglishImpl()),
-                Map.entry(Locale.JAPAN, new EnglishImpl())
-        );
-    }
+    private static final Map<Locale, DownloadProcessor> IMPLEMENTATION_MAP = Map.ofEntries(
+            Map.entry(Locale.KOREA, new KoreanImpl()),
+            Map.entry(Locale.US, new EnglishImpl()),
+            Map.entry(Locale.JAPAN, new EnglishImpl())
+    );
 
     @Override
     public Void process(ProcessContext context) throws DirectoryCreationException {
-        List<Episode> episodes = new ArrayList<>(context.getContent().getEpisodes());
-        episodes.sort(reverseOrder());
+        Locale locale = context.getLanguage().getValue();
 
-        this.service = new AuthorityService(context.getLanguage().getValue(), context.getAccessToken().getValue());
-
-        DownloadProcessor impl = this.implementationMap.get(context.getLanguage().getValue());
-
+        DownloadProcessor impl = IMPLEMENTATION_MAP.get(locale);
         impl.prepare(context);
+
+        AuthorityService service = new AuthorityService(locale, context.getAccessToken().getValue());
+
+        List<Episode> episodes = context.getContent().getEpisodes().stream()
+                .sorted(comparingInt(Episode::getSeq)).collect(toUnmodifiableList());
 
         int[] range = calculateRange(context.getEpisodeRange(), episodes.size());
         for (int i : range) {
@@ -110,11 +105,10 @@ public class DownloadProcessor implements Processor {
             Path episodeDirectoryPath = context.getDirectoryPath().getValue().resolve(directoryName);
             PathUtils.createDirectoryIfNotExists(episodeDirectoryPath);
 
-
             String taskName = String.format("%s ep.%d", context.getContent().getAlias(), sequence);
             try (ProgressBar progressBar = createProgressBar(taskName, imageCount)) {
                 ServiceRequest serviceRequest = PropertyBinder.INSTANCE.toServiceRequest(context.getContent(), episode);
-                Authority authority = this.service.getAuthForViewEpisode(serviceRequest);
+                Authority authority = service.getAuthForViewEpisode(serviceRequest);
 
                 // Downloads all images of the episode.
                 IntStream.rangeClosed(1, imageCount).parallel().forEach(n -> {
@@ -142,20 +136,6 @@ public class DownloadProcessor implements Processor {
         }
 
         return null;
-    }
-
-    private URL getImageUrl(ProcessContext context, Episode episode, Authority authority, int num, boolean purchased) {
-        String uriString = URIs.EPISODE_IMAGE.get(context.getContent().getId(), episode.getId(), num, purchased,
-                authority.getPolicy(), authority.getSignature(), authority.getKeyPairId());
-        try {
-            if (authority.isExpired()) {
-                throw new IllegalStateException("Authority for viewing episode is expired: " + authority);
-            }
-
-            return URI.create(uriString).toURL();
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
     }
 
     // -------------------------------------------------------------------------------------------------
@@ -232,6 +212,20 @@ public class DownloadProcessor implements Processor {
                 return IntStream.range(episodeRange.getStartNumber() - 1, episodeRange.getEndNumber()).toArray();
             default:
                 throw new AssertionError("Never happened");
+        }
+    }
+
+    private URL getImageUrl(ProcessContext context, Episode episode, Authority authority, int num, boolean purchased) {
+        String uriString = URIs.EPISODE_IMAGE.get(context.getContent().getId(), episode.getId(), num, purchased,
+                authority.getPolicy(), authority.getSignature(), authority.getKeyPairId());
+        try {
+            if (authority.isExpired()) {
+                throw new IllegalStateException("Authority for viewing episode is expired: " + authority);
+            }
+
+            return URI.create(uriString).toURL();
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
