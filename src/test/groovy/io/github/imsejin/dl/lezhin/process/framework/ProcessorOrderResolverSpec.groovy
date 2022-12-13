@@ -6,9 +6,10 @@ import io.github.imsejin.common.util.ClassUtils
 import io.github.imsejin.dl.lezhin.process.Processor
 import io.github.imsejin.dl.lezhin.process.impl.AccessTokenProcessor
 import io.github.imsejin.dl.lezhin.process.impl.ConfigurationFileProcessor
-import io.github.imsejin.dl.lezhin.process.impl.DirectoryCreationProcessor
 import io.github.imsejin.dl.lezhin.process.impl.ContentInformationProcessor
-import io.github.imsejin.dl.lezhin.process.impl.EpisodeAuthorityProcessor
+import io.github.imsejin.dl.lezhin.process.impl.DirectoryCreationProcessor
+import io.github.imsejin.dl.lezhin.process.impl.DownloadProcessor
+import io.github.imsejin.dl.lezhin.process.impl.HttpHostsProcessor
 import io.github.imsejin.dl.lezhin.process.impl.LocaleSelectionProcessor
 import io.github.imsejin.dl.lezhin.process.impl.LoginProcessor
 import spock.lang.Specification
@@ -28,11 +29,12 @@ class ProcessorOrderResolverSpec extends Specification {
         orderedTypes == [
                 ConfigurationFileProcessor,
                 LoginProcessor,
+                HttpHostsProcessor,
                 AccessTokenProcessor,
                 LocaleSelectionProcessor,
                 ContentInformationProcessor,
                 DirectoryCreationProcessor,
-                EpisodeAuthorityProcessor,
+                DownloadProcessor,
         ]
     }
 
