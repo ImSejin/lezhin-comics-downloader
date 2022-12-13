@@ -101,13 +101,13 @@ public class AuthorityService extends BaseService {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class AuthResponse {
         @SerializedName("code")
-        Integer code;
+        private Integer code;
 
         @SerializedName("description")
-        String description;
+        private String description;
 
         @SerializedName("data")
-        AuthData authData;
+        private AuthData authData;
     }
 
     @Getter
@@ -115,19 +115,19 @@ public class AuthorityService extends BaseService {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class AuthData {
         @SerializedName("Policy")
-        String policy;
+        private String policy;
 
         @SerializedName("Signature")
-        String signature;
+        private String signature;
 
         @SerializedName("Key-Pair-Id")
-        String keyPairId;
+        private String keyPairId;
 
         @SerializedName("expiredAt")
-        Long expiredAt;
+        private Long expiredAt;
 
         @SerializedName("now")
-        Long now;
+        private Long now;
     }
 
 }
