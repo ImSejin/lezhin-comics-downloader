@@ -16,8 +16,6 @@
 
 package io.github.imsejin.dl.lezhin;
 
-import io.github.imsejin.common.tool.ClassFinder;
-import io.github.imsejin.common.tool.ClassFinder.SearchPolicy;
 import io.github.imsejin.common.util.ClassUtils;
 import io.github.imsejin.dl.lezhin.argument.Argument;
 import io.github.imsejin.dl.lezhin.argument.ArgumentsParser;
@@ -34,7 +32,9 @@ import io.github.imsejin.dl.lezhin.process.Processor;
 import io.github.imsejin.dl.lezhin.process.framework.ProcessorCreator;
 import io.github.imsejin.dl.lezhin.process.framework.ProcessorOrderResolver;
 import io.github.imsejin.dl.lezhin.util.PathUtils;
+import org.reflections.Reflections;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -44,6 +44,7 @@ public final class Application {
 
     public static void main(String[] args) {
         try {
+            System.out.println(Arrays.toString(args));
             ArgumentsParser argumentsParser = new ArgumentsParser(
                     new Language(), new ContentName(), new EpisodeRange(), new ImageFormat(), new DebugMode());
             List<Argument> arguments = argumentsParser.parse(args);
@@ -54,13 +55,18 @@ public final class Application {
                 WebBrowser.debugging();
             }
 
+            Loggers.getLogger().info("arguments: {}", arguments);
+
             List<Processor> processors = createProcessors();
 
             for (Processor processor : processors) {
+                Loggers.getLogger().info("processor: {}", processor);
                 Object attribute = processor.process(context);
                 context.add(attribute);
 //                context = ProcessContext.of(context, attribute);
             }
+
+            Loggers.getLogger().info("complete");
         } catch (Exception e) {
             WebBrowser.quitIfInitialized();
             Loggers.getLogger().error("Failed to perform a process", e);
@@ -71,7 +77,7 @@ public final class Application {
 
     private static List<Processor> createProcessors() throws LezhinComicsDownloaderException {
         // Finds all types of implementation of the processor.
-        Set<Class<? extends Processor>> processorTypes = ClassFinder.getAllSubtypes(Processor.class, SearchPolicy.CLASS)
+        Set<Class<? extends Processor>> processorTypes = new Reflections(Application.class).getSubTypesOf(Processor.class)
                 .stream().filter(it -> it.getEnclosingClass() == null && !ClassUtils.isAbstractClass(it))
                 .collect(toUnmodifiableSet());
 
