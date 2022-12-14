@@ -20,6 +20,7 @@ import io.github.imsejin.common.annotation.ExcludeFromGeneratedJacocoReport;
 import io.github.imsejin.common.assertion.Asserts;
 import io.github.imsejin.common.constant.OS;
 import io.github.imsejin.common.util.ClassUtils;
+import io.github.imsejin.dl.lezhin.exception.ChromeDriverNotFoundException;
 import io.github.imsejin.dl.lezhin.exception.WebBrowserNotRunningException;
 import io.github.imsejin.dl.lezhin.util.PathUtils;
 import lombok.Getter;
@@ -40,6 +41,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Arrays;
@@ -101,6 +103,10 @@ public final class WebBrowser {
 
         Path currentPath = PathUtils.getCurrentPath();
         Path chromeDriverPath = currentPath.resolve(fileName);
+
+        if (!Files.isRegularFile(chromeDriverPath)) {
+            throw new ChromeDriverNotFoundException("There is no chromedriver: %s", chromeDriverPath);
+        }
 
         // Sets up pathname of web driver.
         System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, chromeDriverPath.toString());
