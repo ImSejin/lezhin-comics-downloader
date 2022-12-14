@@ -46,8 +46,7 @@ public final class Application {
         try {
             ArgumentsParser argumentsParser = new ArgumentsParser(
                     new Language(), new ContentName(), new EpisodeRange(), new ImageFormat(), new DebugMode());
-//            List<Argument> arguments = argumentsParser.parse(args);
-            List<Argument> arguments = argumentsParser.parse("-l=en", "-n=appetite", "-d");
+            List<Argument> arguments = argumentsParser.parse(args);
 
             ProcessContext context = ProcessContext.create(arguments.toArray());
             if (context.getDebugMode().getValue()) {

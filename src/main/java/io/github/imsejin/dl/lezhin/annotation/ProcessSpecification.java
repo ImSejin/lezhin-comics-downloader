@@ -18,4 +18,6 @@ public @interface ProcessSpecification {
 
     Class<?> dependsOn() default void.class;
 
+//    boolean async() default false;
+
 }

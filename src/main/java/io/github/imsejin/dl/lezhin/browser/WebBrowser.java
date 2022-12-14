@@ -178,7 +178,7 @@ public final class WebBrowser {
             throw new IllegalArgumentException(e.getMessage(), e);
         }
 
-        String url = u.resolve(uri).toString();
+        String url = u.resolve(uri).normalize().toString();
         SingletonLazyHolder.DRIVER.get(url);
     }
 

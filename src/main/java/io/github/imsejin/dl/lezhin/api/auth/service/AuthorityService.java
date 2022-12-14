@@ -46,7 +46,7 @@ public class AuthorityService extends BaseService {
     public AuthorityService(Locale locale, UUID accessToken) {
         super(locale, accessToken);
 
-        OkHttpClient httpClient = super.getHttpClient();
+        OkHttpClient httpClient = BaseService.getHttpClient();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://www.lezhin.com/lz-api/v2/cloudfront/signed-url/")
                 .addConverterFactory(GsonConverterFactory.create())
