@@ -18,7 +18,6 @@ package io.github.imsejin.dl.lezhin.process;
 
 import io.github.imsejin.common.util.ArrayUtils;
 import io.github.imsejin.common.util.ReflectionUtils;
-import io.github.imsejin.dl.lezhin.api.auth.model.Authority;
 import io.github.imsejin.dl.lezhin.argument.impl.ContentName;
 import io.github.imsejin.dl.lezhin.argument.impl.DebugMode;
 import io.github.imsejin.dl.lezhin.argument.impl.EpisodeRange;
@@ -30,6 +29,7 @@ import io.github.imsejin.dl.lezhin.attribute.impl.Authentication;
 import io.github.imsejin.dl.lezhin.attribute.impl.Content;
 import io.github.imsejin.dl.lezhin.attribute.impl.DirectoryPath;
 import io.github.imsejin.dl.lezhin.attribute.impl.HttpHosts;
+import io.github.imsejin.dl.lezhin.attribute.impl.PurchasedEpisodes;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -90,7 +90,7 @@ public final class ProcessContext {
 
     private DirectoryPath directoryPath;
 
-    private Authority authority;
+    private PurchasedEpisodes purchasedEpisodes;
 
     // -------------------------------------------------------------------------------------------------
 
