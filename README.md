@@ -1,5 +1,5 @@
 <p align="center">
-    <img alt="Lezhin Comics Downloader" src="./src/main/resources/assets/lezhin-comics-downloader-logo.png" width="20%">
+    <img alt="Lezhin Comics Downloader" src="./asset/lezhin-comics-downloader-logo.png" width="20%">
 </p>
 
 <h1 align="center">Lezhin Comics Downloader</h1>
@@ -13,7 +13,7 @@
     <a href="https://app.codacy.com/gh/ImSejin/lezhin-comics-downloader/dashboard">
         <img alt="Codacy grade" src="https://img.shields.io/codacy/grade/1a2400c31a8346ddbf108fb3ac78f481?label=codacy%3A%20code%20quality&style=flat-square">
     </a>
-    <img alt="jdk8" src="https://img.shields.io/badge/jdk-8-orange?style=flat-square">
+    <img alt="jdk11" src="https://img.shields.io/badge/jdk-11-orange?style=flat-square">
     <br/>
     <img alt="GitHub All Releases" src="https://img.shields.io/github/downloads/imsejin/lezhin-comics-downloader/total?style=flat-square">
     <img alt="GitHub Releases" src="https://img.shields.io/github/downloads/imsejin/lezhin-comics-downloader/latest/total?style=flat-square">
@@ -24,7 +24,7 @@
 
 # Preview
 
-<img alt="preview" src="./src/main/resources/assets/preview.gif">
+<img alt="preview" src="./asset/preview.gif">
 
 <p align="center">This is downloader that helps you to login and downloads the specified comic for all lezhin-comics even adults.</p>
 <p align="center">※ <i>The user is responsible for everything that happens using this program.</i></p>
@@ -40,13 +40,16 @@
 
    (The first line is the version. e.g. 83.0.4103.116)
 
-3. Download the `chrome driver` that matches <ins>its version</ins> and your device OS [here](https://chromedriver.chromium.org/downloads) and decompress it.
+3. Download the `chrome driver` that matches <ins>its version</ins> and your device
+   OS [here](https://chromedriver.chromium.org/downloads) and decompress it.
 
-4. Check if JRE(or JDK) version is greater than or equal to 8 or install it.
+4. Check if your JRE(or JDK) version is 11 or higher. If you don't have, install it.
 
-5. Download the latest released `lezhin-comics-downloader.jar` [here](https://github.com/ImSejin/lezhin-comics-downloader/releases).
+5. Download the latest
+   released `lezhin-comics-downloader.jar` [here](https://github.com/ImSejin/lezhin-comics-downloader/releases).
 
-6. Download `config.ini` [here](https://raw.githubusercontent.com/ImSejin/lezhin-comics-downloader/master/config.ini) and write your account in the file.
+6. Download `config.ini` [here](https://raw.githubusercontent.com/ImSejin/lezhin-comics-downloader/master/config.ini)
+   and write your account in the file.
 
 7. Place three files in the same path.
 
@@ -57,26 +60,26 @@
 ## Usage
 
 ```bash
-java -jar {JAR filename} -l=<language> -n=<comic_name> [-r=<episode_range> -j -d]
+java -jar {JAR filename} -l=<locale_language> -n=<content_name> [-r=<episode_range> -j -d]
 ```
 
-- *<ins>language</ins> (required)*: language of lezhin platform you want to see.
-  
-  - **ko** : korean
-  - **en** : english
-  - **ja** : japanese
-  
-- *<ins>comic name</ins> (required)*: webtoon name you want to download.
+- *<ins>locale language</ins> (required)*: language of lezhin platform you want to download the webtoon on.
+
+    - **ko** : korean
+    - **en** : english
+    - **ja** : japanese
+
+- *<ins>content name</ins> (required)*: webtoon name you want to download.
 
 <p>
-    <img alt="comic name" src="./src/main/resources/assets/comic-name.png">
+    <img alt="comic name" src="./asset/comic-name.png">
 </p>
 
 - *<ins>episode range</ins> (optional)*: range of episodes you want to download.
-  - __skipped__ : all episodes
-  - __n~__ : from ep.N to the last episode
-  - __~n__ : from the first episode to ep.N
-  - __m~n__ : from ep.M to ep.N
+    - __skipped__ : all episodes
+    - __n~__ : from ep.N to the last episode
+    - __~n__ : from the first episode to ep.N
+    - __m~n__ : from ep.M to ep.N
 - <ins>jpg</ins> (optional): save images as JPEG format (default: WEBP format).
 - <ins>debug</ins> (optional): enables debugging mode.
 
@@ -125,4 +128,3 @@ Downloads the episodes of the comic named appetite from ep.1 to ep.10.
 ```
 
 Then you will get a file `lezhin-comics-downloader-{version}.jar`.
-

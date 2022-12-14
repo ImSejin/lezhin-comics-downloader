@@ -1,0 +1,289 @@
+{
+  "id": 5943773066559488,
+  "display": {
+    "title": "엘리베이터에서 하룻밤",
+    "schedule": "완결",
+    "synopsis": "계약 만료를 앞둔 계약직 말단 사원 이도는 크리스마스 이브 날 잡힌 회식이 괜시리 쓸쓸하기만 하다. 하지만 크리스마스에 눈이 온다면, 그리고 사랑이 이루어진다면...? 세상에 수많은 if가 있지만 이보다 더 로맨틱할 순 없다. 김지효 작가가 그리는 뜻밖의 크리스마스 러브 스토리 <엘리베이터에서 하룻밤>",
+    "notice": ""
+  },
+  "properties": {
+    "days": [
+      "1"
+    ],
+    "hasSide": false,
+    "hasBgm": false,
+    "expired": false,
+    "notForSale": false,
+    "coin": 3,
+    "point": 0,
+    "tags": [
+      "썸",
+      "상사",
+      "드라마",
+      "로맨스"
+    ],
+    "tagProperties": [
+      {
+        "tagId": 2146,
+        "divisionId": 6,
+        "genreId": 0,
+        "type": "normal",
+        "dictionary": true,
+        "adult": false,
+        "enabled": true,
+        "tag": "썸",
+        "name": "썸",
+        "lang": "KO"
+      },
+      {
+        "tagId": 2310,
+        "divisionId": 6,
+        "genreId": 0,
+        "type": "normal",
+        "dictionary": true,
+        "adult": false,
+        "enabled": true,
+        "tag": "상사",
+        "name": "상사",
+        "lang": "KO"
+      },
+      {
+        "tagId": 1171,
+        "divisionId": 1,
+        "genreId": 28,
+        "type": "meta",
+        "dictionary": true,
+        "adult": false,
+        "enabled": true,
+        "tag": "drama",
+        "name": "드라마",
+        "lang": "KO"
+      },
+      {
+        "tagId": 1192,
+        "divisionId": 1,
+        "genreId": 58,
+        "type": "meta",
+        "dictionary": true,
+        "adult": false,
+        "enabled": true,
+        "tag": "romance",
+        "name": "로맨스",
+        "lang": "KO"
+      }
+    ],
+    "isPrint": false,
+    "isCrossView": false,
+    "isVeiled": false
+  },
+  "artists": [
+    {
+      "id": "kim_ji_hyo",
+      "name": "김지효",
+      "role": "writer",
+      "email": null
+    }
+  ],
+  "badge": "",
+  "firstEpisodeId": 5668435598114816,
+  "lastEpisodeId": 5156581780094976,
+  "publishedEpisodeSize": 5,
+  "freedEpisodeSize": 2,
+  "contentType": "comic",
+  "lastEpisodePublishedAt": 1514095200000,
+  "publishedAt": 1512313200000,
+  "newPublishedAt": 1512313200000,
+  "updatedAt": 1651553929740,
+  "alias": "christmas_in_the_elevator",
+  "state": "completed",
+  "imageCounts": {
+    "banners": 0
+  },
+  "related": [
+    {
+      "id": 4907714540535808,
+      "type": "comic",
+      "title": "안나 이야기",
+      "alias": "story_of_anna",
+      "rating": 1,
+      "genres": [
+        {
+          "id": "romance",
+          "name": "로맨스"
+        }
+      ],
+      "badge": "",
+      "artists": [
+        {
+          "id": "kim_ji_hyo",
+          "name": "김지효",
+          "role": "writer",
+          "email": null
+        }
+      ],
+      "updatedAt": 1661050242781,
+      "webp": "https://ccdn.lezhin.com/v2/comics/4907714540535808/images/tall.webp?updated=1661050242781&width=240",
+      "jpg": "https://ccdn.lezhin.com/v2/comics/4907714540535808/images/tall.jpg?updated=1661050242781&width=240",
+      "lang": "ko",
+      "url": "/ko/comic/story_of_anna"
+    },
+    {
+      "id": 5320790438576128,
+      "type": "comic",
+      "title": "생쥐와 소녀",
+      "alias": "mouse_and_the_girl",
+      "rating": 15,
+      "genres": [
+        {
+          "id": "fantasy",
+          "name": "판타지"
+        }
+      ],
+      "badge": "e",
+      "artists": [
+        {
+          "id": "kim_ji_hyo",
+          "name": "김지효",
+          "role": "writer",
+          "email": null
+        }
+      ],
+      "updatedAt": 1651553862912,
+      "webp": "https://ccdn.lezhin.com/v2/comics/5320790438576128/images/tall.webp?updated=1651553862912&width=240",
+      "jpg": "https://ccdn.lezhin.com/v2/comics/5320790438576128/images/tall.jpg?updated=1651553862912&width=240",
+      "lang": "ko",
+      "url": "/ko/comic/mouse_and_the_girl"
+    },
+    {
+      "id": 5664587191156736,
+      "type": "comic",
+      "title": "기생충",
+      "alias": "parasite",
+      "rating": 15,
+      "genres": [
+        {
+          "id": "romance",
+          "name": "로맨스"
+        }
+      ],
+      "badge": "",
+      "artists": [
+        {
+          "id": "kim_ji_hyo",
+          "name": "김지효",
+          "role": "writer",
+          "email": null
+        }
+      ],
+      "updatedAt": 1651545710702,
+      "webp": "https://ccdn.lezhin.com/v2/comics/5664587191156736/images/tall.webp?updated=1651545710702&width=240",
+      "jpg": "https://ccdn.lezhin.com/v2/comics/5664587191156736/images/tall.jpg?updated=1651545710702&width=240",
+      "lang": "ko",
+      "url": "/ko/comic/parasite"
+    }
+  ],
+  "genres": [
+    "romance"
+  ],
+  "rating": "15",
+  "ratings": {
+    "_z_base": 1,
+    "jp_base": 1,
+    "kr_base": 15
+  },
+  "completedAt": 1519225200000,
+  "locale": "ko-KR",
+  "isAdult": false,
+  "episodes": [
+    {
+      "id": 5156581780094976,
+      "name": "e1",
+      "display": {
+        "title": "에필로그",
+        "type": "e",
+        "displayName": "에필로그"
+      },
+      "properties": {
+        "expired": false,
+        "notForSale": false
+      },
+      "coin": 0,
+      "freedAt": 1514127600000,
+      "openedAt": 1514127600000,
+      "publishedAt": 1514127600000,
+      "updatedAt": 1512042698558,
+      "seq": 5
+    },
+    {
+      "id": 5313384744615936,
+      "name": "3",
+      "display": {
+        "title": "메리크리스마스",
+        "type": "g",
+        "displayName": "03"
+      },
+      "properties": {
+        "expired": false,
+        "notForSale": false
+      },
+      "coin": 3,
+      "publishedAt": 1513522800000,
+      "updatedAt": 1512042687123,
+      "seq": 4
+    },
+    {
+      "id": 5176088900796416,
+      "name": "2",
+      "display": {
+        "title": "전야제",
+        "type": "g",
+        "displayName": "02"
+      },
+      "properties": {
+        "expired": false,
+        "notForSale": false
+      },
+      "coin": 3,
+      "publishedAt": 1512918000000,
+      "updatedAt": 1512042678946,
+      "seq": 3
+    },
+    {
+      "id": 5396364351635456,
+      "name": "1",
+      "display": {
+        "title": "회식",
+        "type": "g",
+        "displayName": "01"
+      },
+      "properties": {
+        "expired": false,
+        "notForSale": false
+      },
+      "coin": 3,
+      "publishedAt": 1512313200000,
+      "updatedAt": 1512285305534,
+      "seq": 2
+    },
+    {
+      "id": 5668435598114816,
+      "name": "p1",
+      "display": {
+        "title": "프롤로그",
+        "type": "p",
+        "displayName": "프롤로그"
+      },
+      "properties": {
+        "expired": false,
+        "notForSale": false
+      },
+      "coin": 0,
+      "freedAt": 1512313200000,
+      "openedAt": 1512313200000,
+      "publishedAt": 1512313200000,
+      "updatedAt": 1512285078479,
+      "seq": 1
+    }
+  ],
+  "notification": false
+}

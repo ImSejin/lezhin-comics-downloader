@@ -1,51 +1,40 @@
-target/
 bin/
-L_*/
 .gitconfig
-!.mvn/wrapper/maven-wrapper.jar
 *.log
 *.conf*
 
+# Downloaded Directories -------------------------------------------------------
+L_*/
 
-#################################
-#         Chrome driver         #
-#################################
-chromedriver*
+# Chrome Driver ----------------------------------------------------------------
+chromedriver
+chromedriver.exe
 !src/test/**/chrome-driver/**/chromedriver*
 src/test/**/chrome-driver/**/chromedriver-m1-*
 src/test/**/google-chrome/**/googlechrome-m1-*
-#################################
 
+# Maven ------------------------------------------------------------------------
+target/
+!.mvn/wrapper/maven-wrapper.jar
 
-#################################
-#              STS              #
-#################################
+# Spring Tool Suite ------------------------------------------------------------
 .apt_generated
 .classpath
 .factorypath
 .project
 .settings
 .springBeans
-#################################
 
-
-#################################
-#         IntelliJ IDEA         #
-#################################
+# IntelliJ IDEA ----------------------------------------------------------------
 .idea
 *.iws
 *.iml
 *.ipr
-#################################
 
-
-#################################
-#           NetBeans            #
-#################################
+# NetBeans ---------------------------------------------------------------------
 nbproject/private/
 build/
 nbbuild/
 dist/
 nbdist/
 .nb-gradle/
-#################################
