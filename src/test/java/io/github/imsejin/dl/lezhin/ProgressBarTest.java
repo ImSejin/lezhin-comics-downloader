@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.imsejin.lzcodl.core;
+package io.github.imsejin.dl.lezhin;
 
 import me.tongfei.progressbar.ConsoleProgressBarConsumer;
 import me.tongfei.progressbar.ProgressBar;
