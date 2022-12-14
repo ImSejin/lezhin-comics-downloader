@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.imsejin.dl.lezhin.api.image;
+package io.github.imsejin.dl.lezhin.api.image.service;
 
 import com.google.gson.annotations.SerializedName;
 import io.github.imsejin.common.util.CollectionUtils;

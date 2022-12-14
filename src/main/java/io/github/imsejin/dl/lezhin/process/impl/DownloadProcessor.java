@@ -21,7 +21,7 @@ import io.github.imsejin.dl.lezhin.annotation.ProcessSpecification;
 import io.github.imsejin.dl.lezhin.api.auth.model.Authority;
 import io.github.imsejin.dl.lezhin.api.auth.model.ServiceRequest;
 import io.github.imsejin.dl.lezhin.api.auth.service.AuthorityService;
-import io.github.imsejin.dl.lezhin.api.image.EpisodeImageCountService;
+import io.github.imsejin.dl.lezhin.api.image.service.EpisodeImageCountService;
 import io.github.imsejin.dl.lezhin.argument.impl.EpisodeRange;
 import io.github.imsejin.dl.lezhin.argument.impl.Language;
 import io.github.imsejin.dl.lezhin.attribute.impl.Content.Episode;
