@@ -8,6 +8,7 @@ import io.github.imsejin.dl.lezhin.process.impl.DownloadProcessor
 import io.github.imsejin.dl.lezhin.process.impl.HttpHostsProcessor
 import io.github.imsejin.dl.lezhin.process.impl.LocaleSelectionProcessor
 import io.github.imsejin.dl.lezhin.process.impl.LoginProcessor
+import io.github.imsejin.dl.lezhin.process.impl.PurchasedEpisodesProcessor
 import spock.lang.Specification
 
 import java.nio.file.Path
@@ -29,7 +30,8 @@ class ProcessorCreatorSpec extends Specification {
         given:
         def beans = [Path].collect { Mock(it) }
         def types = [ConfigurationFileProcessor, LoginProcessor, HttpHostsProcessor, AccessTokenProcessor,
-                     LocaleSelectionProcessor, ContentInformationProcessor, DirectoryCreationProcessor, DownloadProcessor]
+                     LocaleSelectionProcessor, ContentInformationProcessor, PurchasedEpisodesProcessor,
+                     DirectoryCreationProcessor, DownloadProcessor]
 
         when:
         def creator = new ProcessorCreator(beans as Object[])

@@ -12,6 +12,7 @@ import io.github.imsejin.dl.lezhin.process.impl.DownloadProcessor
 import io.github.imsejin.dl.lezhin.process.impl.HttpHostsProcessor
 import io.github.imsejin.dl.lezhin.process.impl.LocaleSelectionProcessor
 import io.github.imsejin.dl.lezhin.process.impl.LoginProcessor
+import io.github.imsejin.dl.lezhin.process.impl.PurchasedEpisodesProcessor
 import spock.lang.Specification
 
 class ProcessorOrderResolverSpec extends Specification {
@@ -33,6 +34,7 @@ class ProcessorOrderResolverSpec extends Specification {
                 AccessTokenProcessor,
                 LocaleSelectionProcessor,
                 ContentInformationProcessor,
+                PurchasedEpisodesProcessor,
                 DirectoryCreationProcessor,
                 DownloadProcessor,
         ]

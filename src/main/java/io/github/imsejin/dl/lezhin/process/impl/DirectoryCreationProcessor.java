@@ -37,7 +37,7 @@ import static java.util.stream.Collectors.joining;
  * @since 3.0.0
  */
 @RequiredArgsConstructor
-@ProcessSpecification(dependsOn = ContentInformationProcessor.class)
+@ProcessSpecification(dependsOn = PurchasedEpisodesProcessor.class)
 public class DirectoryCreationProcessor implements Processor {
 
     private final Path basePath;
