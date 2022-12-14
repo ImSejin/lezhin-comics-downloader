@@ -8,6 +8,8 @@ import io.github.imsejin.dl.lezhin.attribute.impl.Content.Episode
 import io.github.imsejin.dl.lezhin.attribute.impl.Content.Properties
 import spock.lang.Specification
 
+import java.nio.charset.StandardCharsets
+
 import static java.util.stream.Collectors.joining
 
 class ContentInformationProcessorSpec extends Specification {
@@ -18,7 +20,7 @@ class ContentInformationProcessorSpec extends Specification {
                 .getResourceAsStream("json/ko-christmas_in_the_elevator.json")
 
         when:
-        def jsonString = new BufferedReader(new InputStreamReader(inputStream)).lines().collect(joining())
+        def jsonString = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).lines().collect(joining())
         def actual = JsonUtils.toObject(jsonString, Content)
 
         then:
