@@ -100,6 +100,11 @@
             <artifactId>converter-gson</artifactId>
             <version>${reftrofit.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.squareup.retrofit2</groupId>
+            <artifactId>converter-scalars</artifactId>
+            <version>${reftrofit.version}</version>
+        </dependency>
 
         <!-- Selenium -->
         <dependency>
