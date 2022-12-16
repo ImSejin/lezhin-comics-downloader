@@ -13,7 +13,7 @@ class PropertyBinderSpec extends Specification {
         def episode = new Episode(id: 5598233223495680)
 
         when:
-        def serviceRequest = PropertyBinder.INSTANCE.toServiceRequest(content, episode)
+        def serviceRequest = PropertyBinder.INSTANCE.toServiceRequest(content, episode, false)
 
         then:
         serviceRequest
