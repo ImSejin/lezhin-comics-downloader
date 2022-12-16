@@ -37,10 +37,9 @@ public interface PropertyBinder {
 
     @Mapping(target = "contentId", source = "content.id")
     @Mapping(target = "episodeId", source = "episode.id")
-    @Mapping(target = "purchased", ignore = true)
     @Mapping(target = "q", ignore = true)
     @Mapping(target = "firstCheckType", constant = "'P'")
-    ServiceRequest toServiceRequest(Content content, Episode episode);
+    ServiceRequest toServiceRequest(Content content, Episode episode, boolean purchased);
 
     @Mapping(target = "api", source = "config.apiUrl")
     @Mapping(target = "cdn", source = "config.cdnUrl")

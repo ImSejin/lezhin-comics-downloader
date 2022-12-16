@@ -89,8 +89,8 @@ public class DownloadProcessor implements Processor {
 
             // You can access episode you bought and free episode only.
             // If you didn't buy it when accessing an expired content, you can't access even free episode.
-            if (!(context.getPurchasedEpisodes().contains(episode.getId())
-                    || (episode.isFree() && !context.getContent().getProperties().isExpired()))) {
+            boolean purchased = context.getPurchasedEpisodes().contains(episode.getId());
+            if (!(purchased || (episode.isFree() && !context.getContent().getProperties().isExpired()))) {
                 continue;
             }
 
@@ -109,27 +109,22 @@ public class DownloadProcessor implements Processor {
 
             String taskName = String.format("%s ep.%d", context.getContent().getAlias(), sequence);
             try (ProgressBar progressBar = createProgressBar(taskName, imageCount)) {
-                ServiceRequest serviceRequest = PropertyBinder.INSTANCE.toServiceRequest(context.getContent(), episode);
+                ServiceRequest serviceRequest = PropertyBinder.INSTANCE.toServiceRequest(context.getContent(), episode, purchased);
                 Authority authority = service.getAuthForViewEpisode(serviceRequest);
 
-                // Downloads all images of the episode.
+                // Downloads all images of the episode in parallel.
                 IntStream.rangeClosed(1, imageCount).parallel().forEach(n -> {
                     String fileName = String.format("%03d.%s", n, context.getImageFormat().getValue());
                     Path dest = episodeDirectoryPath.resolve(fileName);
 
-                    // Tries to download high-resolution image for only paid users.
-                    URL url = getImageUrl(context, episode, authority, n, true);
+                    // Tries to download a image of the specific resolution.
+                    // The resolution depends on whether you paid for this episode or not.
+                    URL url = getImageUrl(context, episode, authority, n, purchased);
                     boolean success = downloadImage(url, dest);
 
-                    // Try to download low-resolution image for all users.
+                    // If failed to download, skips this image.
                     if (!success) {
-                        url = getImageUrl(context, episode, authority, n, false);
-                        success = downloadImage(url, dest);
-
-                        // If failed to download, skips this image.
-                        if (!success) {
-                            return;
-                        }
+                        return;
                     }
 
                     progressBar.step();
