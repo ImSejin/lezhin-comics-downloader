@@ -1,8 +1,15 @@
 # Table of Contents
 
+- [v3.0.2](#v302):
 - [v3.0.1](#v301): 2022-12-16
 - [v3.0.0](#v300): 2022-12-14
 - [v2.9.0](#v290): 2022-02-20
+
+# v3.0.2
+
+## Troubleshooting
+
+- 🐞 Fix: creation of directory containing invalid character
 
 # v3.0.1
 
