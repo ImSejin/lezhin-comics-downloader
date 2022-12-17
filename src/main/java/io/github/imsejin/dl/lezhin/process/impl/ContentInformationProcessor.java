@@ -92,7 +92,6 @@ public class ContentInformationProcessor implements Processor {
         WebBrowser.waitForVisibilityOfElement(By.xpath(
                 "//ul[@id='library-episode-list' and @class='epsList']"));
 
-        // 웹툰의 정보가 window 객체의 필드로 정의되어 있어, 이를 가져오기 위해 로컬스토리지에 저장한다.
         return WebBrowser.evaluate("JSON.stringify(window.__LZ_PRODUCT__.product)", String.class);
     }
 
