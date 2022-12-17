@@ -17,6 +17,7 @@
 package io.github.imsejin.dl.lezhin.argument.impl
 
 import spock.lang.Specification
+import spock.lang.Subject
 
 import static io.github.imsejin.dl.lezhin.argument.impl.EpisodeRange.RangeType.ALL
 import static io.github.imsejin.dl.lezhin.argument.impl.EpisodeRange.RangeType.FROM_BEGINNING
@@ -24,6 +25,7 @@ import static io.github.imsejin.dl.lezhin.argument.impl.EpisodeRange.RangeType.O
 import static io.github.imsejin.dl.lezhin.argument.impl.EpisodeRange.RangeType.SOME
 import static io.github.imsejin.dl.lezhin.argument.impl.EpisodeRange.RangeType.TO_END
 
+@Subject(EpisodeRange)
 class EpisodeRangeSpec extends Specification {
 
     def "Sets the value"() {

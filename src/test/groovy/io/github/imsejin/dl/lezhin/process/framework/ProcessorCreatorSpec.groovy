@@ -10,9 +10,11 @@ import io.github.imsejin.dl.lezhin.process.impl.LocaleSelectionProcessor
 import io.github.imsejin.dl.lezhin.process.impl.LoginProcessor
 import io.github.imsejin.dl.lezhin.process.impl.PurchasedEpisodesProcessor
 import spock.lang.Specification
+import spock.lang.Subject
 
 import java.nio.file.Path
 
+@Subject(ProcessorCreator)
 class ProcessorCreatorSpec extends Specification {
 
     def "Returns empty processors"() {

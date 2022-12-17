@@ -1,7 +1,9 @@
 package io.github.imsejin.dl.lezhin.util
 
 import spock.lang.Specification
+import spock.lang.Subject
 
+@Subject(FileNameUtils)
 class FileNameUtilsSpec extends Specification {
 
     def "Replaces forbidden characters"() {

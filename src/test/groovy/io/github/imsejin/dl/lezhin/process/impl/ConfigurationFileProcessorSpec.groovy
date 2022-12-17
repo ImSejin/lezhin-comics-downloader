@@ -4,11 +4,13 @@ import io.github.imsejin.dl.lezhin.exception.ConfigurationFileNotFoundException
 import io.github.imsejin.dl.lezhin.exception.InvalidConfigurationFileException
 import io.github.imsejin.dl.lezhin.process.ProcessContext
 import spock.lang.Specification
+import spock.lang.Subject
 import spock.lang.TempDir
 
 import java.nio.file.Files
 import java.nio.file.Path
 
+@Subject(ConfigurationFileProcessor)
 class ConfigurationFileProcessorSpec extends Specification {
 
     @TempDir

@@ -4,7 +4,9 @@ import io.github.imsejin.dl.lezhin.api.auth.service.AuthorityService.AuthData
 import io.github.imsejin.dl.lezhin.attribute.impl.Content
 import io.github.imsejin.dl.lezhin.attribute.impl.Content.Episode
 import spock.lang.Specification
+import spock.lang.Subject
 
+@Subject(PropertyBinder)
 class PropertyBinderSpec extends Specification {
 
     def "Converts into ServiceRequest"() {

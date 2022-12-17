@@ -1,6 +1,5 @@
 package io.github.imsejin.dl.lezhin.process.framework
 
-
 import io.github.imsejin.common.util.ClassUtils
 import io.github.imsejin.dl.lezhin.Application
 import io.github.imsejin.dl.lezhin.process.Processor
@@ -15,7 +14,9 @@ import io.github.imsejin.dl.lezhin.process.impl.LoginProcessor
 import io.github.imsejin.dl.lezhin.process.impl.PurchasedEpisodesProcessor
 import org.reflections.Reflections
 import spock.lang.Specification
+import spock.lang.Subject
 
+@Subject(ProcessorOrderResolver)
 class ProcessorOrderResolverSpec extends Specification {
 
     def "Resolves the order of process types"() {
