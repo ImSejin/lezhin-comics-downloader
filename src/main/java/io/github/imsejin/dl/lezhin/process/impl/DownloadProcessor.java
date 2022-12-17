@@ -32,6 +32,7 @@ import io.github.imsejin.dl.lezhin.exception.DirectoryCreationException;
 import io.github.imsejin.dl.lezhin.http.url.URIs;
 import io.github.imsejin.dl.lezhin.process.ProcessContext;
 import io.github.imsejin.dl.lezhin.process.Processor;
+import io.github.imsejin.dl.lezhin.util.FileNameUtils;
 import io.github.imsejin.dl.lezhin.util.PathUtils;
 import me.tongfei.progressbar.ConsoleProgressBarConsumer;
 import me.tongfei.progressbar.ProgressBar;
@@ -101,9 +102,12 @@ public class DownloadProcessor implements Processor {
                 continue;
             }
 
-            // Creates a directory with the name of episode.
             int sequence = i + 1;
             String directoryName = String.format("%04d - %s", sequence, episode.getDisplay().getTitle());
+            directoryName = FileNameUtils.sanitize(directoryName);
+            directoryName = FileNameUtils.replaceForbiddenCharacters(directoryName);
+
+            // Creates a directory with the name of episode.
             Path episodeDirectoryPath = context.getDirectoryPath().getValue().resolve(directoryName);
             PathUtils.createDirectoryIfNotExists(episodeDirectoryPath);
 
