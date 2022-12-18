@@ -16,7 +16,6 @@
 
 package io.github.imsejin.dl.lezhin.process.impl;
 
-import io.github.imsejin.common.util.FilenameUtils;
 import io.github.imsejin.dl.lezhin.annotation.ProcessSpecification;
 import io.github.imsejin.dl.lezhin.attribute.impl.Content.Artist;
 import io.github.imsejin.dl.lezhin.attribute.impl.DirectoryPath;
@@ -24,6 +23,7 @@ import io.github.imsejin.dl.lezhin.common.Loggers;
 import io.github.imsejin.dl.lezhin.exception.DirectoryCreationException;
 import io.github.imsejin.dl.lezhin.process.ProcessContext;
 import io.github.imsejin.dl.lezhin.process.Processor;
+import io.github.imsejin.dl.lezhin.util.FileNameUtils;
 import io.github.imsejin.dl.lezhin.util.PathUtils;
 import lombok.RequiredArgsConstructor;
 
@@ -47,7 +47,10 @@ public class DirectoryCreationProcessor implements Processor {
         String contentTitle = context.getContent().getDisplay().getTitle();
         String artists = context.getContent().getArtists().stream().map(Artist::getName)
                 .collect(joining(", "));
-        String directoryName = FilenameUtils.replaceUnallowables(String.format("L_%s - %s", contentTitle, artists));
+
+        String directoryName = String.format("L_%s - %s", contentTitle, artists);
+        directoryName = FileNameUtils.sanitize(directoryName);
+        directoryName = FileNameUtils.replaceForbiddenCharacters(directoryName);
 
         Path targetPath = this.basePath.resolve(directoryName);
 

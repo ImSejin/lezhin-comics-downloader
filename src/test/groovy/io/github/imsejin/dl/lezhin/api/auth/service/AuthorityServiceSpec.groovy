@@ -18,7 +18,9 @@ package io.github.imsejin.dl.lezhin.api.auth.service
 
 import io.github.imsejin.dl.lezhin.api.auth.model.ServiceRequest
 import spock.lang.Specification
+import spock.lang.Subject
 
+@Subject(AuthorityService)
 class AuthorityServiceSpec extends Specification {
 
     def "Gets authority for viewing episode"() {

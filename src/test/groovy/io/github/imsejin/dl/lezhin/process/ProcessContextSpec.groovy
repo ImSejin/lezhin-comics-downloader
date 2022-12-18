@@ -23,7 +23,9 @@ import io.github.imsejin.dl.lezhin.argument.impl.ImageFormat
 import io.github.imsejin.dl.lezhin.argument.impl.Language
 import io.github.imsejin.dl.lezhin.attribute.Attribute
 import spock.lang.Specification
+import spock.lang.Subject
 
+@Subject(ProcessContext)
 class ProcessContextSpec extends Specification {
 
     def "Defines all attributes of context"() {

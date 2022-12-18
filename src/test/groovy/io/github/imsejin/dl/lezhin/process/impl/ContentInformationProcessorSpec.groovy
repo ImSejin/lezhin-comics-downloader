@@ -7,11 +7,13 @@ import io.github.imsejin.dl.lezhin.attribute.impl.Content.Display
 import io.github.imsejin.dl.lezhin.attribute.impl.Content.Episode
 import io.github.imsejin.dl.lezhin.attribute.impl.Content.Properties
 import spock.lang.Specification
+import spock.lang.Subject
 
 import java.nio.charset.StandardCharsets
 
 import static java.util.stream.Collectors.joining
 
+@Subject(ContentInformationProcessor)
 class ContentInformationProcessorSpec extends Specification {
 
     def "test"() {

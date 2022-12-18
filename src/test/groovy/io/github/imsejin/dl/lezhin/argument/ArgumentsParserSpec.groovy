@@ -25,7 +25,9 @@ import io.github.imsejin.dl.lezhin.exception.DuplicatedArgumentException
 import io.github.imsejin.dl.lezhin.exception.ParsingArgumentException
 import org.apache.commons.cli.Option
 import spock.lang.Specification
+import spock.lang.Subject
 
+@Subject(ArgumentsParser)
 class ArgumentsParserSpec extends Specification {
 
     def "Failed to create parser due to duplicated argument"() {
