@@ -41,7 +41,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- Dependency versions -->
-        <common-utils.version>0.13.0</common-utils.version>
+        <common-utils.version>0.14.0</common-utils.version>
         <commons-cli.version>1.5.0</commons-cli.version>
         <progressbar.version>0.9.4</progressbar.version>
         <reftrofit.version>2.9.0</reftrofit.version>
