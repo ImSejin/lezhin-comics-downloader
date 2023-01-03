@@ -58,7 +58,6 @@ public final class Application {
             for (Processor processor : processors) {
                 Object attribute = processor.process(context);
                 context.add(attribute);
-//                context = ProcessContext.of(context, attribute);
             }
         } catch (Exception e) {
             Loggers.getLogger().error("Failed to perform a process", e);
