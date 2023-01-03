@@ -61,8 +61,9 @@ public final class Application {
 //                context = ProcessContext.of(context, attribute);
             }
         } catch (Exception e) {
-            WebBrowser.quitIfInitialized();
             Loggers.getLogger().error("Failed to perform a process", e);
+        } finally {
+            WebBrowser.quitIfInitialized();
         }
     }
 
