@@ -1,9 +1,26 @@
 # Table of Contents
 
+- [v3.0.3](#v303): 2023-01-03
 - [v3.0.2](#v302): 2022-12-18
 - [v3.0.1](#v301): 2022-12-16
 - [v3.0.0](#v300): 2022-12-14
 - [v2.9.0](#v290): 2022-02-20
+
+# v3.0.3
+
+## Dependencies
+
+- ⬆️ Upgrade: dependency `common-utils` from `0.13.0` to `0.14.0`
+- ⬆️ Upgrade: dependency `annotations` from `23.0.0` to `23.1.0`
+- ⬆️ Upgrade: dependency `slf4j-api` from `2.0.4` to `2.0.6`
+- ⬆️ Upgrade: dependency `logback-classic` from `1.3.5` to `1.4.5`
+- ⬆️ Upgrade: test dependency `mockito-inline` from `4.10.0` to `4.11.0`
+- ⬆️ Upgrade: build dependency `gmavenplus-plugin` from `1.13.1` to `2.1.0`
+
+## Troubleshooting
+
+- 🐞 Fix: termination of application
+- 🐞 Fix: unreproducible issue that failure to get image count
 
 # v3.0.2
 

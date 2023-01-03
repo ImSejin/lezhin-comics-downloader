@@ -66,18 +66,18 @@ import static java.util.stream.Collectors.toUnmodifiableList;
 @ProcessSpecification(dependsOn = DirectoryCreationProcessor.class)
 public class DownloadProcessor implements Processor {
 
-    private static final Map<Locale, DownloadProcessor> IMPLEMENTATION_MAP = Map.ofEntries(
-            Map.entry(Locale.KOREA, new KoreanImpl()),
-            Map.entry(Locale.US, new EnglishImpl()),
-            Map.entry(Locale.JAPAN, new EnglishImpl())
+    private static final Map<Locale, ImageCountResolver> IMPLEMENTATION_MAP = Map.ofEntries(
+            Map.entry(Locale.KOREA, new UsingService()),
+            Map.entry(Locale.US, new VisitingPage()),
+            Map.entry(Locale.JAPAN, new VisitingPage())
     );
 
     @Override
     public Void process(ProcessContext context) throws DirectoryCreationException {
         Locale locale = context.getLanguage().getValue();
 
-        DownloadProcessor impl = IMPLEMENTATION_MAP.get(locale);
-        impl.prepare(context);
+        ImageCountResolver imageCountResolver = IMPLEMENTATION_MAP.get(locale);
+        imageCountResolver.prepare(context);
 
         AuthorityService service = new AuthorityService(locale, context.getAccessToken().getValue());
 
@@ -95,7 +95,18 @@ public class DownloadProcessor implements Processor {
                 continue;
             }
 
-            int imageCount = impl.getImageCountOfEpisode(context, episode);
+            int imageCount;
+            try {
+                imageCount = imageCountResolver.getImageCountOfEpisode(context, episode);
+            } catch (NullPointerException ignored) {
+                // TODO: Remove the below code if solve the issue (#153).
+                //       See https://github.com/ImSejin/lezhin-comics-downloader/issues/153
+                UsingService impl = (UsingService) imageCountResolver;
+                Loggers.getLogger().debug("Failed to get image count of episode[{}]: (UsingService.imageCountMap={})",
+                        episode, impl.imageCountMap);
+                imageCountResolver = IMPLEMENTATION_MAP.get(Locale.US);
+                imageCount = imageCountResolver.getImageCountOfEpisode(context, episode);
+            }
 
             // If episode has no image, skips this episode.
             if (imageCount < 1) {
@@ -141,20 +152,21 @@ public class DownloadProcessor implements Processor {
 
     // -------------------------------------------------------------------------------------------------
 
-    void prepare(ProcessContext context) {
+    /**
+     * @since 3.0.3
+     */
+    private interface ImageCountResolver {
+        default void prepare(ProcessContext context) {
+        }
+
+        int getImageCountOfEpisode(ProcessContext context, Episode episode);
     }
 
-    int getImageCountOfEpisode(ProcessContext context, Episode episode) {
-        throw new UnsupportedOperationException("Not implemented");
-    }
-
-    // -------------------------------------------------------------------------------------------------
-
-    private static final class KoreanImpl extends DownloadProcessor {
+    private static final class UsingService implements ImageCountResolver {
         private Map<String, Integer> imageCountMap;
 
         @Override
-        void prepare(ProcessContext context) {
+        public void prepare(ProcessContext context) {
             UUID token = context.getAccessToken().getValue();
             String contentAlias = context.getContent().getAlias();
             EpisodeImageCountService service = new EpisodeImageCountService(token);
@@ -163,14 +175,14 @@ public class DownloadProcessor implements Processor {
         }
 
         @Override
-        int getImageCountOfEpisode(ProcessContext context, Episode episode) {
+        public int getImageCountOfEpisode(ProcessContext context, Episode episode) {
             return this.imageCountMap.get(episode.getName());
         }
     }
 
-    private static final class EnglishImpl extends DownloadProcessor {
+    private static final class VisitingPage implements ImageCountResolver {
         @Override
-        int getImageCountOfEpisode(ProcessContext context, Episode episode) {
+        public int getImageCountOfEpisode(ProcessContext context, Episode episode) {
             Language language = context.getLanguage();
 
             String episodeUrl;
