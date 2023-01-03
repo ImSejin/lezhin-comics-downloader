@@ -96,7 +96,7 @@ public class AccessTokenProcessor implements Processor {
         }
 
         AccessToken accessToken = new AccessToken(token);
-        Loggers.getLogger().info("Successfully logged in: access token({})", accessToken.getValue());
+        Loggers.getLogger().info("Successfully logged in: access token({})", token);
 
         return accessToken;
     }
