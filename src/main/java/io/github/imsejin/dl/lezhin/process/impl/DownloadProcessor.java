@@ -68,6 +68,9 @@ import static java.util.stream.Collectors.toUnmodifiableList;
 @ProcessSpecification(dependsOn = DirectoryCreationProcessor.class)
 public class DownloadProcessor implements Processor {
 
+    /**
+     * EpisodeImageCountService is only available on korean platform.
+     */
     private static final Map<Locale, ImageCountResolver> IMPLEMENTATION_MAP = Map.ofEntries(
             Map.entry(Locale.KOREA, new UsingService()),
             Map.entry(Locale.US, new VisitingPage()),
