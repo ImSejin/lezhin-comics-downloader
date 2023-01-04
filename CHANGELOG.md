@@ -20,7 +20,7 @@
 ## Troubleshooting
 
 - 🐞 Fix: termination of application
-- 🐞 Fix: unreproducible issue that failure to get image count
+- 🐞 Fix: failure to get image count on locale KOREA
 
 # v3.0.2
 
