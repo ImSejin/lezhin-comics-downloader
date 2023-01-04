@@ -16,6 +16,7 @@
 
 package io.github.imsejin.dl.lezhin.process.impl;
 
+import io.github.imsejin.common.assertion.Asserts;
 import io.github.imsejin.common.util.FileUtils;
 import io.github.imsejin.dl.lezhin.annotation.ProcessSpecification;
 import io.github.imsejin.dl.lezhin.api.auth.model.Authority;
@@ -29,6 +30,7 @@ import io.github.imsejin.dl.lezhin.browser.WebBrowser;
 import io.github.imsejin.dl.lezhin.common.Loggers;
 import io.github.imsejin.dl.lezhin.common.PropertyBinder;
 import io.github.imsejin.dl.lezhin.exception.DirectoryCreationException;
+import io.github.imsejin.dl.lezhin.exception.ImageCountNotFoundException;
 import io.github.imsejin.dl.lezhin.http.url.URIs;
 import io.github.imsejin.dl.lezhin.process.ProcessContext;
 import io.github.imsejin.dl.lezhin.process.Processor;
@@ -95,18 +97,7 @@ public class DownloadProcessor implements Processor {
                 continue;
             }
 
-            int imageCount;
-            try {
-                imageCount = imageCountResolver.getImageCountOfEpisode(context, episode);
-            } catch (NullPointerException ignored) {
-                // TODO: Remove the below code if solve the issue (#153).
-                //       See https://github.com/ImSejin/lezhin-comics-downloader/issues/153
-                UsingService impl = (UsingService) imageCountResolver;
-                Loggers.getLogger().debug("Failed to get image count of episode[{}]: (UsingService.imageCountMap={})",
-                        episode, impl.imageCountMap);
-                imageCountResolver = IMPLEMENTATION_MAP.get(Locale.US);
-                imageCount = imageCountResolver.getImageCountOfEpisode(context, episode);
-            }
+            int imageCount = getImageCount(context, episode, imageCountResolver);
 
             // If episode has no image, skips this episode.
             if (imageCount < 1) {
@@ -176,7 +167,15 @@ public class DownloadProcessor implements Processor {
 
         @Override
         public int getImageCountOfEpisode(ProcessContext context, Episode episode) {
-            return this.imageCountMap.get(episode.getName());
+            Integer imageCount = this.imageCountMap.get(episode.getName());
+
+            // There is case that imageCountMap doesn't have all names of episode as key for a certain content.
+            if (imageCount == null) {
+                throw new ImageCountNotFoundException("Failed to get image count of episode[{}]: imageCountMap={}",
+                        episode, this.imageCountMap);
+            }
+
+            return imageCount;
         }
     }
 
@@ -232,6 +231,24 @@ public class DownloadProcessor implements Processor {
             default:
                 throw new AssertionError("Never happened");
         }
+    }
+
+    private static int getImageCount(ProcessContext context, Episode episode, ImageCountResolver resolver) {
+        int imageCount;
+
+        try {
+            imageCount = resolver.getImageCountOfEpisode(context, episode);
+        } catch (ImageCountNotFoundException e) {
+            Asserts.that(resolver)
+                    .isNotNull()
+                    .isInstanceOf(UsingService.class);
+
+            // Fix: https://github.com/ImSejin/lezhin-comics-downloader/issues/153
+            Loggers.getLogger().debug(e.getMessage());
+            imageCount = IMPLEMENTATION_MAP.get(Locale.US).getImageCountOfEpisode(context, episode);
+        }
+
+        return imageCount;
     }
 
     private URL getImageUrl(ProcessContext context, Episode episode, Authority authority, int num, boolean purchased) {
