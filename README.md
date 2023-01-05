@@ -7,22 +7,22 @@
 <p align="center">Downloader for lezhin comics</p>
 
 <p align="center">
-    <a href="https://sonarcloud.io/summary/new_code?id=ImSejin_lezhin-comics-downloader">
-        <img alt="Sonarcloud Security Rating" src="https://sonarcloud.io/api/project_badges/measure?project=ImSejin_lezhin-comics-downloader&metric=security_rating"/>
+    <img alt="GitHub All Releases" src="https://img.shields.io/github/downloads/imsejin/lezhin-comics-downloader/total?style=flat">
+    <img alt="GitHub Releases" src="https://img.shields.io/github/downloads/imsejin/lezhin-comics-downloader/latest/total?style=flat">
+    <a href="https://github.com/ImSejin/lezhin-comics-downloader/releases/latest">
+        <img alt="Latest release" src="https://img.shields.io/github/v/release/ImSejin/lezhin-comics-downloader?color=orange&style=flat">
     </a>
-    <a href="https://sonarcloud.io/summary/new_code?id=ImSejin_lezhin-comics-downloader">
+    <br/>
+    <a href="https://sonarcloud.io/summary/overall?id=ImSejin_lezhin-comics-downloader">
+        <img alt="Sonarcloud Quality Gate Status" src="https://sonarcloud.io/api/project_badges/measure?project=ImSejin_lezhin-comics-downloader&metric=alert_status"/>
+    </a>
+    <a href="https://sonarcloud.io/summary/overall?id=ImSejin_lezhin-comics-downloader">
         <img alt="Sonarcloud Maintainability Rating" src="https://sonarcloud.io/api/project_badges/measure?project=ImSejin_lezhin-comics-downloader&metric=sqale_rating"/>
     </a>
     <a href="https://app.codacy.com/gh/ImSejin/lezhin-comics-downloader/dashboard">
         <img alt="Codacy grade" src="https://img.shields.io/codacy/grade/1a2400c31a8346ddbf108fb3ac78f481?style=flat&logo=codacy">
     </a>
     <img alt="jdk11" src="https://img.shields.io/badge/jdk-11-orange?style=flat">
-    <br/>
-    <img alt="GitHub All Releases" src="https://img.shields.io/github/downloads/imsejin/lezhin-comics-downloader/total?style=flat">
-    <img alt="GitHub Releases" src="https://img.shields.io/github/downloads/imsejin/lezhin-comics-downloader/latest/total?style=flat">
-    <a href="https://github.com/ImSejin/lezhin-comics-downloader/releases/latest">
-        <img alt="Latest release" src="https://img.shields.io/github/v/release/ImSejin/lezhin-comics-downloader?color=orange&style=flat">
-    </a>
 </p>
 
 # Preview
