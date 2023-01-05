@@ -173,6 +173,7 @@ public class DownloadProcessor implements Processor {
             Integer imageCount = this.imageCountMap.get(episode.getName());
 
             // There is case that imageCountMap doesn't have all names of episode as key for a certain content.
+            // I guess that lezhin API doesn't provide metadata of new episode. - ImSejin
             if (imageCount == null) {
                 throw new ImageCountNotFoundException("Failed to get image count of episode[{}]: imageCountMap={}",
                         episode, this.imageCountMap);
@@ -246,9 +247,15 @@ public class DownloadProcessor implements Processor {
                     .isNotNull()
                     .isInstanceOf(UsingService.class);
 
-            // Fix: https://github.com/ImSejin/lezhin-comics-downloader/issues/153
             Loggers.getLogger().debug(e.getMessage());
-            imageCount = IMPLEMENTATION_MAP.get(Locale.US).getImageCountOfEpisode(context, episode);
+            resolver = IMPLEMENTATION_MAP.get(Locale.US);
+
+            Asserts.that(resolver)
+                    .isNotNull()
+                    .isInstanceOf(VisitingPage.class);
+
+            // Fix: https://github.com/ImSejin/lezhin-comics-downloader/issues/153
+            imageCount = resolver.getImageCountOfEpisode(context, episode);
         }
 
         return imageCount;
