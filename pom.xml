@@ -57,7 +57,7 @@
         <junit5.version>5.9.2</junit5.version>
         <assertj.version>3.24.2</assertj.version>
         <spock.version>2.3-groovy-4.0</spock.version>
-        <mockito.version>4.11.0</mockito.version>
+        <mockito.version>5.1.1</mockito.version>
     </properties>
 
     <!-- Enables to build on development environment -->
