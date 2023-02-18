@@ -285,6 +285,7 @@ public class DownloadProcessor implements Processor {
             FileUtils.download(url, dest);
             return true;
         } catch (Exception e) {
+            Loggers.getLogger().debug("Failed to download an image to {} by {}", dest, url);
             return false;
         }
     }
