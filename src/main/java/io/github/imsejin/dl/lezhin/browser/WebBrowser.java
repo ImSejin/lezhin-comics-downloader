@@ -122,7 +122,7 @@ public final class WebBrowser {
             WebBrowser.initialized = true;
         }
 
-        private static final RemoteWebDriver DRIVER = new ChromeDriver(options);
+        private static final RemoteWebDriver DRIVER = new ChromeDriver(WebBrowser.options);
     }
 
     public static RemoteWebDriver getDriver() {

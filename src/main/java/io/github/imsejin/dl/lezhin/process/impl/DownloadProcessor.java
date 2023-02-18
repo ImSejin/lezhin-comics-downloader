@@ -126,7 +126,7 @@ public class DownloadProcessor implements Processor {
                     String fileName = String.format("%03d.%s", n, context.getImageFormat().getValue());
                     Path dest = episodeDirectoryPath.resolve(fileName);
 
-                    // Tries to download a image of the specific resolution.
+                    // Tries to download an image of the specific resolution.
                     // The resolution depends on whether you paid for this episode or not.
                     URL url = getImageUrl(context, episode, authority, n, purchased);
                     boolean success = downloadImage(url, dest);
@@ -278,7 +278,7 @@ public class DownloadProcessor implements Processor {
     }
 
     /**
-     * Creates a image file with the image URL. Returns {@code true} if success or {@code false}.
+     * Creates an image file with the image URL. Returns {@code true} if success or {@code false}.
      */
     private static boolean downloadImage(URL url, Path dest) {
         try {
