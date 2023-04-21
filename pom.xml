@@ -45,7 +45,7 @@
         <commons-cli.version>1.5.0</commons-cli.version>
         <progressbar.version>0.9.4</progressbar.version>
         <reftrofit.version>2.9.0</reftrofit.version>
-        <selenium.version>4.8.3</selenium.version>
+        <selenium.version>4.9.0</selenium.version>
         <reflections.version>0.10.2</reflections.version>
         <lombok.version>1.18.26</lombok.version>
         <mapstruct.version>1.5.4.Final</mapstruct.version>
