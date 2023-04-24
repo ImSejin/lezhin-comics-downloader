@@ -1,10 +1,34 @@
 # Table of Contents
 
+- [v3.0.4](#v304): 2023-04-24
 - [v3.0.3](#v303): 2023-01-03
 - [v3.0.2](#v302): 2022-12-18
 - [v3.0.1](#v301): 2022-12-16
 - [v3.0.0](#v300): 2022-12-14
 - [v2.9.0](#v290): 2022-02-20
+
+# v3.0.4
+
+## Dependencies
+
+- ⬆️ Upgrade: dependency `selenium-java` from `4.6.0` to `4.9.0`
+- ⬆️ Upgrade: dependency `lombok` from `1.18.24` to `1.18.26`
+- ⬆️ Upgrade: dependency `logback-classic` from `1.4.5` to `1.4.7`
+- ⬆️ Upgrade: dependency `slf4j-api` from `2.0.6` to `2.0.7`
+- ⬆️ Upgrade: dependency `annotations` from `23.1.0` to `24.0.1`
+- ⬆️ Upgrade: dependency `progressbar` from `0.9.4` to `0.9.5`
+- ⬆️ Upgrade: dependency `mapstruct-plugin` from `1.5.3.Final` to `1.5.5.Final`
+- ⬆️ Upgrade: test dependency `junit5` from `5.9.1` to `5.9.2`
+- ⬆️ Upgrade: test dependency `assertj-core` from `3.23.1` to `3.24.2`
+- ⬆️ Upgrade: test dependency `mockito-inline` from `4.11.0` to `5.2.0`
+- ⬆️ Upgrade: build dependency `maven-compiler-plugin` from `3.10.1` to `3.11.0`
+- ⬆️ Upgrade: build dependency `maven-assembly-plugin` from `3.3.0` to `3.5.0`
+- ⬆️ Upgrade: build dependency `jacoco-maven-plugin` from `0.8.8` to `0.8.9`
+
+## Troubleshooting
+
+- 🐞 Fix: IOException ... Invalid Status code=403 text=Forbidden
+- 🐞 Fix: SessionNotCreatedException ... Could not start a new session. Response code 500
 
 # v3.0.3
 
@@ -20,7 +44,7 @@
 ## Troubleshooting
 
 - 🐞 Fix: termination of application
-- 🐞 Fix: unreproducible issue that failure to get image count
+- 🐞 Fix: failure to get image count on locale KOREA
 
 # v3.0.2
 

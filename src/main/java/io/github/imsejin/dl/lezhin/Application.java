@@ -59,8 +59,8 @@ public final class Application {
                 Object attribute = processor.process(context);
                 context.add(attribute);
             }
-        } catch (Exception e) {
-            Loggers.getLogger().error("Failed to perform a process", e);
+        } catch (Throwable t) {
+            Loggers.getLogger().error("Failed to perform a process", t);
         } finally {
             WebBrowser.quitIfInitialized();
         }

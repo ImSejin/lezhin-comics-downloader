@@ -50,7 +50,7 @@ public final class ProcessorCreator {
     // -------------------------------------------------------------------------------------------------
 
     private Constructor<?> resolveConstructor(Class<? extends Processor> processorType) throws ProcessorCreationException {
-        // Resolves a constructor that has less number of parameters first.
+        // Resolves a constructor that has fewer number of parameters first.
         List<Constructor<?>> constructors = Arrays.stream(processorType.getDeclaredConstructors())
                 .sorted(comparing(Constructor::getParameterCount)).collect(toList());
 

@@ -57,6 +57,7 @@ import static java.util.stream.Collectors.toUnmodifiableList;
 @ToString
 @ThreadSafe
 @EqualsAndHashCode
+@SuppressWarnings("unused")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ProcessContext {
 

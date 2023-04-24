@@ -23,8 +23,6 @@ import io.github.imsejin.common.util.ClassUtils;
 import io.github.imsejin.dl.lezhin.exception.ChromeDriverNotFoundException;
 import io.github.imsejin.dl.lezhin.exception.WebBrowserNotRunningException;
 import io.github.imsejin.dl.lezhin.util.PathUtils;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
@@ -44,13 +42,10 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
-
-import static java.util.stream.Collectors.toList;
 
 /**
  * @since 2.0.0
@@ -110,6 +105,8 @@ public final class WebBrowser {
 
         // Sets up pathname of web driver.
         System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, chromeDriverPath.toString());
+        // See: https://github.com/SeleniumHQ/selenium/issues/11750
+        System.setProperty("webdriver.http.factory", "jdk-http-client");
     }
 
     @ExcludeFromGeneratedJacocoReport
@@ -122,7 +119,7 @@ public final class WebBrowser {
             WebBrowser.initialized = true;
         }
 
-        private static final RemoteWebDriver DRIVER = new ChromeDriver(options);
+        private static final RemoteWebDriver DRIVER = new ChromeDriver(WebBrowser.options);
     }
 
     public static RemoteWebDriver getDriver() {
@@ -248,102 +245,6 @@ public final class WebBrowser {
 
         // When not matching between evaluated type and expected type.
         return null;
-    }
-
-    // Driver Options ----------------------------------------------------------------------------------
-
-    /**
-     * @since 2.6.2
-     */
-    @Getter
-    @RequiredArgsConstructor
-    private enum ChromeOption {
-        /**
-         * Opens browser in maximized mode.
-         */
-        START_MAXIMIZED("--start-maximized"),
-
-        /**
-         * Opens browser on private mode.
-         */
-        INCOGNITO("--incognito"),
-
-        /**
-         * Runs browser using CLI.
-         */
-        HEADLESS("--headless"),
-
-        /**
-         * Bypasses OS security model.
-         *
-         * @since 2.8.2
-         */
-        NO_SANDBOX("--no-sandbox"),
-
-        /**
-         * Disables GPU computation (applicable to Windows OS only).
-         *
-         * @since 2.8.2
-         */
-        DISABLE_GPU("--disable-gpu"),
-
-        /**
-         * Ignores certificate errors.
-         */
-        IGNORE_CERTIFICATE_ERRORS("--ignore-certificate-errors"),
-
-        /**
-         * Disables to check if Google Chrome is default browser on your device.
-         *
-         * @since 2.8.2
-         */
-        NO_DEFAULT_BROWSER_CHECK("--no-default-browser-check"),
-
-        /**
-         * Disables popup blocking.
-         */
-        DISABLE_POPUP_BLOCKING("--disable-popup-blocking"),
-
-        /**
-         * Disables installed extensions(plugins) of Google Chrome.
-         *
-         * @since 2.8.2
-         */
-        DISABLE_EXTENSIONS("--disable-extensions"),
-
-        /**
-         * Disables default web apps on Google Chrome’s new tab page
-         * <p>
-         * Chrome Web Store, Google Drive, Gmail, YouTube, Google Search, etc.
-         */
-        DISABLE_DEFAULT_APPS("--disable-default-apps"),
-
-        /**
-         * Disables Google translate feature.
-         *
-         * @since 2.8.2
-         */
-        DISABLE_TRANSLATE("--disable-translate"),
-
-        /**
-         * Disables detection for client side phishing.
-         *
-         * @since 2.8.2
-         */
-        DISABLE_CLIENT_SIDE_PHISHING_DETECTION("--disable-client-side-phishing-detection"),
-
-        /**
-         * Overcomes limited resource problems.
-         *
-         * @since 2.8.2
-         */
-        DISABLE_DEV_SHM_USAGE("--disable-dev-shm-usage");
-
-        private final String argument;
-
-        public static List<String> getArguments() {
-            return Arrays.stream(values()).map(it -> it.argument).collect(toList());
-        }
     }
 
 }
