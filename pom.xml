@@ -6,7 +6,7 @@
 
     <groupId>io.github.imsejin</groupId>
     <artifactId>lezhin-comics-downloader</artifactId>
-    <version>3.0.3</version>
+    <version>3.0.4</version>
     <packaging>jar</packaging>
 
     <name>Lezhin Comics Downloader</name>
@@ -311,7 +311,7 @@
                     <testFailureIgnore>false</testFailureIgnore>
                     <!--
                         Only required if names of test classes don't match default Surefire patterns('*Test').
-                        By default only files ending in 'Test' will be included,
+                        By default, only files ending with 'Test' will be included,
                         so also include support for Spock style naming convention.
 
                         Oddly enough for Groovy files, '*Spec.groovy' does not work, but '*Spec.java'.
