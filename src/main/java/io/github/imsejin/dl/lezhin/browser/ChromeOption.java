@@ -94,7 +94,7 @@ public enum ChromeOption {
     /**
      * Allows all remote origins.
      *
-     * @since 3.1.0
+     * @since 3.0.4
      */
     REMOTE_ALLOW_ALL_ORIGINS("--remote-allow-origins=*"),
 
