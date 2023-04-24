@@ -48,7 +48,7 @@
         <selenium.version>4.8.3</selenium.version>
         <reflections.version>0.10.2</reflections.version>
         <lombok.version>1.18.26</lombok.version>
-        <mapstruct.version>1.5.4.Final</mapstruct.version>
+        <mapstruct.version>1.5.5.Final</mapstruct.version>
         <jetbrains-annotations.version>24.0.1</jetbrains-annotations.version>
         <logback-classic.version>1.4.6</logback-classic.version>
         <slf4j-api.version>2.0.7</slf4j-api.version>
