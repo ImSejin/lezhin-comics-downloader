@@ -1,11 +1,22 @@
 # Table of Contents
 
+- [v3.0.5](#v305): 2023-04-25
 - [v3.0.4](#v304): 2023-04-24
 - [v3.0.3](#v303): 2023-01-03
 - [v3.0.2](#v302): 2022-12-18
 - [v3.0.1](#v301): 2022-12-16
 - [v3.0.0](#v300): 2022-12-14
 - [v2.9.0](#v290): 2022-02-20
+
+# v3.0.5
+
+## Dependencies
+
+## Troubleshooting
+
+- ♻️ Replace: build dependency `maven-assembly-plugin` with `maven-shade-plugin`
+
+- 🐞 Fix: IllegalArgumentException ... Unknown HttpClient factory jdk-http-client
 
 # v3.0.4
 
