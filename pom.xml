@@ -262,7 +262,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.3.0</version>
                 <configuration>
-                    <finalName>${project.build.finalName}-jar-without-dependencies</finalName>
+                    <finalName>${project.build.finalName}</finalName>
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
@@ -350,39 +350,72 @@
                 Assembler for third-party libraries
 
                 THIS PLUGIN ASSEMBLES OWN CODE AND DEPENDENCIES IN A JAR FILE BY THE FOLLOWING COMMAND.
-                    mvn assembly:single
-                THE GOAL "assembly:assembly" IS REMOVED SINCE "3.X.X".
-                REPLACEMENT OF THE GOAL IS "assembly:single".
+                    mvn shade:shade
             -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.5.0</version>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.4.1</version>
                 <executions>
                     <execution>
                         <id>create-jar</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>single</goal>
+                            <goal>shade</goal>
                         </goals>
-
                         <configuration>
-                            <descriptorRefs>
-                                <descriptorRef>jar-with-dependencies</descriptorRef>
-                            </descriptorRefs>
-                            <finalName>${project.build.finalName}</finalName>
-                            <appendAssemblyId>false</appendAssemblyId>
-                            <archive>
-                                <manifest>
-                                    <addClasspath>true</addClasspath>
-                                    <classpathPrefix>lib/</classpathPrefix>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>io.github.imsejin.dl.lezhin.Application</mainClass>
-                                </manifest>
-                            </archive>
+                                </transformer>
+                                <!--
+                                    Fix: exception "Unknown HttpClient factory jdk-http-client" with "jdk http client" in fat jar.
+                                    See https://github.com/SeleniumHQ/selenium/issues/11574
+                                -->
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                            </transformers>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+
+            <!--
+                Assembler for third-party libraries
+
+                THIS PLUGIN ASSEMBLES OWN CODE AND DEPENDENCIES IN A JAR FILE BY THE FOLLOWING COMMAND.
+                    mvn assembly:single
+                THE GOAL "assembly:assembly" IS REMOVED SINCE "3.X.X".
+                REPLACEMENT OF THE GOAL IS "assembly:single".
+            -->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-assembly-plugin</artifactId>-->
+<!--                <version>3.5.0</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>create-jar</id>-->
+<!--                        <phase>package</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>single</goal>-->
+<!--                        </goals>-->
+
+<!--                        <configuration>-->
+<!--                            <descriptorRefs>-->
+<!--                                <descriptorRef>jar-with-dependencies</descriptorRef>-->
+<!--                            </descriptorRefs>-->
+<!--                            <finalName>${project.build.finalName}</finalName>-->
+<!--                            <appendAssemblyId>false</appendAssemblyId>-->
+<!--                            <archive>-->
+<!--                                <manifest>-->
+<!--                                    <addClasspath>true</addClasspath>-->
+<!--                                    <classpathPrefix>lib/</classpathPrefix>-->
+<!--                                    <mainClass>io.github.imsejin.dl.lezhin.Application</mainClass>-->
+<!--                                </manifest>-->
+<!--                            </archive>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
 
             <!--
                 Jacoco
