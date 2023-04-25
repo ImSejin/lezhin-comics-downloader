@@ -89,11 +89,9 @@ public final class WebBrowser {
 
     static {
         // Assigns chrome driver pathname.
-        String fileName;
+        String fileName = ChromeDriverService.CHROME_DRIVER_NAME;
         if (OS.WINDOWS.isCurrentOS()) {
-            fileName = "chromedriver.exe"; // for Microsoft Windows
-        } else {
-            fileName = "chromedriver"; // for Linux and macOS
+            fileName += ".exe"; // for Microsoft Windows
         }
 
         Path currentPath = PathUtils.getCurrentPath();
