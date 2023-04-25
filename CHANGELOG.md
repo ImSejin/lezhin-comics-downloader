@@ -12,9 +12,9 @@
 
 ## Dependencies
 
-## Troubleshooting
-
 - ♻️ Replace: build dependency `maven-assembly-plugin` with `maven-shade-plugin`
+
+## Troubleshooting
 
 - 🐞 Fix: IllegalArgumentException ... Unknown HttpClient factory jdk-http-client
 
