@@ -4,8 +4,7 @@ on:
   push:
     # When a version tag is pushed.
     tags:
-#      - '[0-9]+.[0-9]+.[0-9]+'
-      - '[0-9]+.[0-9]+.[0-9]+-[a-zA-Z]+'
+      - '[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
   create-release:
@@ -64,7 +63,7 @@ jobs:
         draft: false
         prerelease: true
         makeLatest: false
-        skipIfReleaseExists: true
+        skipIfReleaseExists: true # If `draft` is true, ineffective.
         artifactErrorsFailBuild: true
         body: ${{ steps.set_release_body.outputs.RELEASE_BODY }}
         artifacts: 'target/lezhin-comics-downloader-*.jar'
