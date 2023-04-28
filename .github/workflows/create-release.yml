@@ -61,9 +61,9 @@ jobs:
       uses: ncipollo/release-action@v1
       with:
         name: v${{ github.ref_name }}
-        draft: true
+        draft: false
         prerelease: true
-        makeLatest: true
+        makeLatest: false
         skipIfReleaseExists: true
         artifactErrorsFailBuild: true
         body: ${{ steps.set_release_body.outputs.RELEASE_BODY }}
