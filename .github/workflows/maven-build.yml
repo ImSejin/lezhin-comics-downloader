@@ -38,6 +38,28 @@ jobs:
         java-version: ${{ matrix.java }}
         distribution: 'zulu'
 
+    - name: Download chrome driver
+      run: |
+        # Get latest version number.
+        VERSION=$(curl -s https://chromedriver.storage.googleapis.com/LATEST_RELEASE)
+
+        # Download chromedriver for your OS.
+        if [[ '${{ matrix.os }}' == "ubuntu"* ]]; then
+          URL="https://chromedriver.storage.googleapis.com/$VERSION/chromedriver_linux64.zip"
+        elif [[ '${{ matrix.os }}' == "macos"* ]]; then
+          URL="https://chromedriver.storage.googleapis.com/$VERSION/chromedriver_mac64.zip"
+        elif [[ '${{ matrix.os }}' == "windows"* ]]; then
+          URL="https://chromedriver.storage.googleapis.com/$VERSION/chromedriver_win32.zip"
+        else
+          echo "Error: Unsupported operating system $OSTYPE"
+          exit 1
+        fi
+
+        # Download and extract chromedriver.
+        curl -O $URL
+        unzip chromedriver*.zip
+        rm chromedriver*.zip
+
     - name: Build with Maven
       run: mvn clean package -B --file pom.xml
 
