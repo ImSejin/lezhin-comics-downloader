@@ -7,7 +7,7 @@ on:
     # When a version tag is pushed.
     tags:
 #      - '[0-9]+(\.[0-9]+){2}'
-      - '3.*'
+      - '3\..*'
 #      - '[0-9]+(\.[0-9]+){2}(-[a-zA-Z]+)?'
 
 jobs:
@@ -58,12 +58,43 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v3
-      - name: Attach artifacts
-        uses: ncipollo/release-action@v1.12.0
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+#      - name: Attach artifacts
+#        uses: ncipollo/release-action@v1.12.0
+#        with:
+#          name: ${{ github.ref }}
+#          draft: true
+#          makeLatest: true
+#          skipIfReleaseExists: true
+#          artifacts: 'target/lezhin-comics-downloader.*.*.*.jar'
+#          artifactContentType: 'application/java-archive'
+
+      - name: Create draft release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          tag_name: ${{ github.ref }}
+          release_name: v${{ github.ref }}
           draft: true
-          makeLatest: true
-          skipIfReleaseExists: true
-          artifacts: 'target/lezhin-comics-downloader.*.*.*.jar'
-          artifactContentType: 'application/java-archive'
+          body: [See changelog](https://github.com/ImSejin/lezhin-comics-downloader/blob/dev/CHANGELOG.md#v305)
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2.2.4
+        with:
+          name: my-file
+          path: /path/to/my-file
+
+      - name: Attach artifact to release
+        id: attach_asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: '${{ github.workspace }}/target/lezhin-comics-downloader.*.*.*.jar'
+          asset_name: 'lezhin-comics-downloader.jar'
+          asset_content_type: 'application/java-archive'
