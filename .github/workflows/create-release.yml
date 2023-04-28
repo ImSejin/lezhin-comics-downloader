@@ -61,11 +61,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # https://stackoverflow.com/questions/57819539/github-actions-how-to-share-a-calculated-value-between-job-steps
       - name: Get the current tag name
         id: get_tag_name
         run: |
           REF='${{ github.ref }}'
           TAG=${REF#refs/tags/}
+          ls -lh
+          ls -lh target/
           echo "TAG=$TAG" >> $GITHUB_OUTPUT
 
       - name: Attach artifacts
@@ -78,6 +81,7 @@ jobs:
           body: "[See changelog](https://github.com/ImSejin/lezhin-comics-downloader/blob/dev/CHANGELOG.md#v305)"
           artifacts: './target/lezhin-comics-downloader.*.jar'
           artifactContentType: 'application/java-archive'
+          artifactErrorsFailBuild: true
 
 #      - name: Create draft release
 #        id: create_release
