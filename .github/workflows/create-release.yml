@@ -66,6 +66,6 @@ jobs:
         makeLatest: true
         skipIfReleaseExists: true
         artifactErrorsFailBuild: true
-        body: "[See changelog](https://github.com/ImSejin/lezhin-comics-downloader/blob/dev/CHANGELOG.md#v$(echo '${{ steps.get_tag_name.outputs.TAG }}' | sed 's/\.//g'))"
+        body: "[See changelog](https://github.com/ImSejin/lezhin-comics-downloader/blob/dev/CHANGELOG.md#v$(echo '${{ steps.get_tag_name.outputs.TAG }}' | sed 's/\\.//g'))"
         artifacts: 'target/lezhin-comics-downloader-*.jar'
         artifactContentType: 'application/java-archive'
