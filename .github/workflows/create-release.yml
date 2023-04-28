@@ -67,7 +67,6 @@ jobs:
       - name: Attach artifacts
         uses: ncipollo/release-action@v1
         with:
-#          name: 'v${{ github.ref }}'
           name: ${{ github.ref }}
           draft: true
           makeLatest: true
