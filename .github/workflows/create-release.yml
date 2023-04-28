@@ -55,13 +55,14 @@ jobs:
       run: |
         TAG='${{ github.ref_name }}'
         TAG_ID=$(echo $TAG | sed 's/\.//g')
-        echo "RELEASE_BODY=[See changelog](https://github.com/ImSejin/lezhin-comics-downloader/blob/dev/CHANGELOG.md#v$TAG_ID)"
+        echo "RELEASE_BODY=[See changelog](https://github.com/ImSejin/lezhin-comics-downloader/blob/dev/CHANGELOG.md#v$TAG_ID)" >> $GITHUB_OUTPUT
 
     - name: Attach artifacts
       uses: ncipollo/release-action@v1
       with:
         name: v${{ github.ref_name }}
         draft: true
+        prerelease: true
         makeLatest: true
         skipIfReleaseExists: true
         artifactErrorsFailBuild: true
