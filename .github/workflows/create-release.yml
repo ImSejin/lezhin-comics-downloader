@@ -51,7 +51,7 @@ jobs:
       run: mvn clean package -B --file pom.xml
 
   create-release:
-    name: Create new release
+    name: Create release
     runs-on: ubuntu-latest
     needs: build
     permissions:
@@ -67,7 +67,8 @@ jobs:
       - name: Attach artifacts
         uses: ncipollo/release-action@v1
         with:
-          name: 'v${{ github.ref }}'
+#          name: 'v${{ github.ref }}'
+          name: ${{ github.ref }}
           draft: true
           makeLatest: true
           skipIfReleaseExists: true
