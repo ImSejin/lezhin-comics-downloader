@@ -4,6 +4,7 @@ on:
   push:
     # When a version tag is pushed.
     tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
       - '[0-9]+.[0-9]+.[0-9]+(-[a-zA-Z]+)?'
 #      - '3.*'
 
@@ -53,17 +54,15 @@ jobs:
     - name: Get the current tag name
       id: get_tag_name
       run: |
-        echo '${{ github.ref_name }}'
         REF='${{ github.ref }}'
         TAG=${REF#refs/tags/}
-        ls -lh
-        ls -lh target/
         echo "TAG=$TAG" >> $GITHUB_OUTPUT
 
     - name: Attach artifacts
       uses: ncipollo/release-action@v1
       with:
-        name: v${{ steps.get_tag_name.outputs.TAG }}
+#        name: v${{ steps.get_tag_name.outputs.TAG }}
+        name: v${{ github.ref_name }}
         draft: true
         makeLatest: true
         skipIfReleaseExists: true
