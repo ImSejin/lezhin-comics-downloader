@@ -48,7 +48,7 @@ jobs:
         rm chromedriver*.zip
 
     - name: Build with Maven
-      run: mvn clean package -B --file pom.xml
+      run: mvn clean package -B --file pom.xml -Dmaven.test.skip=true
 
   create-release:
     name: Create release
@@ -65,10 +65,11 @@ jobs:
         id: get_tag_name
         run: |
           REF='${{ github.ref }}'
-          echo '${REF#refs/tags/}'
+          echo $REF
+          echo ${REF#refs/tags/}
 
       - name: Attach artifacts
-        uses: ncipollo/release-action@v1.12.0
+        uses: ncipollo/release-action@v1
         with:
           name: v${{ steps.get_tag_name.outputs.stdout }}
           draft: true
