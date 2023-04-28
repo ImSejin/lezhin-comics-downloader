@@ -56,6 +56,7 @@ jobs:
     - name: Get the current tag name
       id: get_tag_name
       run: |
+        echo '${{ github.ref_name }}'
         REF='${{ github.ref }}'
         TAG=${REF#refs/tags/}
         ls -lh
@@ -71,33 +72,5 @@ jobs:
         skipIfReleaseExists: true
         artifactErrorsFailBuild: true
         body: "[See changelog](https://github.com/ImSejin/lezhin-comics-downloader/blob/dev/CHANGELOG.md#v305)"
-        artifacts: './target/lezhin-comics-downloader.*.jar'
+        artifacts: 'target/*.jar'
         artifactContentType: 'application/java-archive'
-
-#      - name: Create draft release
-#        id: create_release
-#        uses: actions/create-release@v1
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          tag_name: ${{ github.ref }}
-#          release_name: v${{ github.ref }}
-#          draft: true
-#          body: [See changelog](https://github.com/ImSejin/lezhin-comics-downloader/blob/dev/CHANGELOG.md#v305)
-
-#      - name: Upload asset
-#        uses: actions/upload-artifact@v2.2.4
-#        with:
-#          name: my-file
-#          path: /path/to/my-file
-
-#      - name: Attach asset to release
-#        id: attach_asset
-#        uses: actions/upload-release-asset@v1
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          upload_url: ${{ steps.create_release.outputs.upload_url }}
-#          asset_path: '${{ github.workspace }}/target/lezhin-comics-downloader.*.*.*.jar'
-#          asset_name: 'lezhin-comics-downloader.jar'
-#          asset_content_type: 'application/java-archive'
