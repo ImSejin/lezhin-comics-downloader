@@ -87,26 +87,6 @@ public final class WebBrowser {
 
     // Initialization ----------------------------------------------------------------------------------
 
-    static {
-        // Assigns chrome driver pathname.
-        String fileName = ChromeDriverService.CHROME_DRIVER_NAME;
-        if (OS.WINDOWS.isCurrentOS()) {
-            fileName += ".exe"; // for Microsoft Windows
-        }
-
-        Path currentPath = PathUtils.getCurrentPath();
-        Path chromeDriverPath = currentPath.resolve(fileName);
-
-        if (!Files.isRegularFile(chromeDriverPath)) {
-            throw new ChromeDriverNotFoundException("There is no chromedriver: %s", chromeDriverPath);
-        }
-
-        // Sets up pathname of web driver.
-        System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, chromeDriverPath.toString());
-        // See: https://github.com/SeleniumHQ/selenium/issues/11750
-        System.setProperty("webdriver.http.factory", "jdk-http-client");
-    }
-
     @ExcludeFromGeneratedJacocoReport
     private WebBrowser() {
         throw new UnsupportedOperationException(getClass().getName() + " is not allowed to instantiate");
@@ -131,6 +111,28 @@ public final class WebBrowser {
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void run() {
+        if (isRunning()) {
+            return;
+        }
+
+        // Assigns chrome driver pathname.
+        String fileName = ChromeDriverService.CHROME_DRIVER_NAME;
+        if (OS.WINDOWS.isCurrentOS()) {
+            fileName += ".exe"; // for Microsoft Windows
+        }
+
+        Path currentPath = PathUtils.getCurrentPath();
+        Path chromeDriverPath = currentPath.resolve(fileName);
+
+        if (!Files.isRegularFile(chromeDriverPath)) {
+            throw new ChromeDriverNotFoundException("There is no chromedriver: %s", chromeDriverPath);
+        }
+
+        // Sets up pathname of web driver.
+        System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, chromeDriverPath.toString());
+        // See: https://github.com/SeleniumHQ/selenium/issues/11750
+        System.setProperty("webdriver.http.factory", "jdk-http-client");
+
         // Invokes any instance method of driver to initialize this field by classloader.
         SingletonLazyHolder.DRIVER.hashCode();
     }
