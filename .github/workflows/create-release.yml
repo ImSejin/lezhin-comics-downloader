@@ -23,28 +23,6 @@ jobs:
         java-version: 11
         distribution: 'zulu'
 
-    - name: Download chrome driver
-      run: |
-        # Get latest version number.
-        VERSION=$(curl -s https://chromedriver.storage.googleapis.com/LATEST_RELEASE)
-        
-        # Download chromedriver for your OS.
-        if [[ $OSTYPE == "linux-gnu" ]]; then
-          URL="https://chromedriver.storage.googleapis.com/$VERSION/chromedriver_linux64.zip"
-        elif [[ $OSTYPE == "darwin"* ]]; then
-          URL="https://chromedriver.storage.googleapis.com/$VERSION/chromedriver_mac64.zip"
-        elif [[ $OSTYPE == "win32" ]]; then
-          URL="https://chromedriver.storage.googleapis.com/$VERSION/chromedriver_win32.zip"
-        else
-          echo "Error: Unsupported operating system $OSTYPE"
-          exit 1
-        fi
-        
-        # Download and extract chromedriver.
-        curl -O $URL
-        unzip chromedriver*.zip
-        rm chromedriver*.zip
-
     - name: Build with Maven
       run: mvn clean package -B --file pom.xml -Dmaven.test.skip=true
 
