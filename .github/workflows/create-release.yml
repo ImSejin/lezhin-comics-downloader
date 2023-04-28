@@ -65,13 +65,13 @@ jobs:
         id: get_tag_name
         run: |
           REF='${{ github.ref }}'
-          echo $REF
-          echo ${REF#refs/tags/}
+          TAG=${REF#refs/tags/}
+          echo "TAG=$TAG"
 
       - name: Attach artifacts
         uses: ncipollo/release-action@v1
         with:
-          name: v${{ steps.get_tag_name.outputs.stdout }}
+          name: v${{ steps.get_tag_name.outputs.TAG }}
           draft: true
           makeLatest: true
           skipIfReleaseExists: true
