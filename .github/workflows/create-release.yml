@@ -54,8 +54,8 @@ jobs:
       id: set_release_body
       run: |
         TAG='${{ github.ref_name }}'
-        TAG_ID=$(echo $TAG | sed 's/\\.//g')
-        echo "::set-output name=release_body::[See changelog](https://github.com/ImSejin/lezhin-comics-downloader/blob/dev/CHANGELOG.md#v$TAG_ID)"
+        TAG_ID=$(echo $TAG | sed 's/\.//g')
+        echo "RELEASE_BODY=[See changelog](https://github.com/ImSejin/lezhin-comics-downloader/blob/dev/CHANGELOG.md#v$TAG_ID)"
 
     - name: Attach artifacts
       uses: ncipollo/release-action@v1
@@ -65,6 +65,6 @@ jobs:
         makeLatest: true
         skipIfReleaseExists: true
         artifactErrorsFailBuild: true
-        body: ${{ steps.set_release_body.outputs.release_body }}
+        body: ${{ steps.set_release_body.outputs.RELEASE_BODY }}
         artifacts: 'target/lezhin-comics-downloader-*.jar'
         artifactContentType: 'application/java-archive'
