@@ -61,18 +61,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Test
-        run: echo 'github.ref = ${{ github.ref }}'
+      - name: Get the current tag name
+        id: get_tag_name
+        run: |
+          REF='${{ github.ref }}'
+          echo '${REF#refs/tags/}'
 
       - name: Attach artifacts
         uses: ncipollo/release-action@v1.12.0
         with:
-          name: 'v${GITHUB_REF#refs/tags/}'
+          name: v${{ steps.get_tag_name.outputs.stdout }}
           draft: true
           makeLatest: true
           skipIfReleaseExists: true
           body: "[See changelog](https://github.com/ImSejin/lezhin-comics-downloader/blob/dev/CHANGELOG.md#v305)"
-          artifacts: 'target/lezhin-comics-downloader.*.*.*.jar'
+          artifacts: './target/lezhin-comics-downloader.*.jar'
           artifactContentType: 'application/java-archive'
 
 #      - name: Create draft release
