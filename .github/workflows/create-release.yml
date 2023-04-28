@@ -71,7 +71,7 @@ jobs:
           draft: true
           makeLatest: true
           skipIfReleaseExists: true
-          body: [See changelog](https://github.com/ImSejin/lezhin-comics-downloader/blob/dev/CHANGELOG.md#v305)
+          body: "[See changelog](https://github.com/ImSejin/lezhin-comics-downloader/blob/dev/CHANGELOG.md#v305)"
           artifacts: 'target/lezhin-comics-downloader.*.*.*.jar'
           artifactContentType: 'application/java-archive'
 
