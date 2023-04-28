@@ -4,8 +4,8 @@ on:
   push:
     # When a version tag is pushed.
     tags:
-#      - '[0-9]+.[0-9]+.[0-9]+'
-      - '[0-9]+.[0-9]+.[0-9]+-[a-zA-Z]+'
+#      - '[0-9]+\\.[0-9]+\\.[0-9]+'
+      - '[0-9]+\\.[0-9]+\\.[0-9]+-[a-zA-Z]+'
 
 jobs:
   create-release:
@@ -50,22 +50,21 @@ jobs:
       run: mvn clean package -B --file pom.xml -Dmaven.test.skip=true
 
     # https://stackoverflow.com/questions/57819539/github-actions-how-to-share-a-calculated-value-between-job-steps
-    - name: Get the current tag name
-      id: get_tag_name
+    - name: Set release body
+      id: set_release_body
       run: |
-        REF='${{ github.ref }}'
-        TAG=${REF#refs/tags/}
-        echo "TAG=$TAG" >> $GITHUB_OUTPUT
+        TAG='${{ github.ref_name }}'
+        TAG_ID=$(echo $TAG | sed 's/\\.//g')
+        echo "::set-output name=release_body::[See changelog](https://github.com/ImSejin/lezhin-comics-downloader/blob/dev/CHANGELOG.md#v$TAG_ID)"
 
     - name: Attach artifacts
       uses: ncipollo/release-action@v1
       with:
-#        name: v${{ steps.get_tag_name.outputs.TAG }}
         name: v${{ github.ref_name }}
         draft: true
         makeLatest: true
         skipIfReleaseExists: true
         artifactErrorsFailBuild: true
-        body: "[See changelog](https://github.com/ImSejin/lezhin-comics-downloader/blob/dev/CHANGELOG.md#v$(echo '${{ steps.get_tag_name.outputs.TAG }}' | sed 's/\\.//g'))"
+        body: ${{ steps.set_release_body.outputs.release_body }}
         artifacts: 'target/lezhin-comics-downloader-*.jar'
         artifactContentType: 'application/java-archive'
