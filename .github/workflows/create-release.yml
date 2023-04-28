@@ -66,7 +66,7 @@ jobs:
         run: |
           REF='${{ github.ref }}'
           TAG=${REF#refs/tags/}
-          echo "TAG=$TAG"
+          echo "TAG=$TAG" >> $GITHUB_OUTPUT
 
       - name: Attach artifacts
         uses: ncipollo/release-action@v1
