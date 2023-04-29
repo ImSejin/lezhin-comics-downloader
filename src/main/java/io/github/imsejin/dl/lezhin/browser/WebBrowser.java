@@ -94,10 +94,11 @@ public final class WebBrowser {
 
     private static final class SingletonLazyHolder {
         static {
+            DRIVER = new ChromeDriver(WebBrowser.options);
             WebBrowser.initialized = true;
         }
 
-        private static final RemoteWebDriver DRIVER = new ChromeDriver(WebBrowser.options);
+        private static final RemoteWebDriver DRIVER;
     }
 
     public static RemoteWebDriver getDriver() {
@@ -134,6 +135,7 @@ public final class WebBrowser {
         System.setProperty("webdriver.http.factory", "jdk-http-client");
 
         // Invokes any instance method of driver to initialize this field by classloader.
+        // `WebBrowser.initialized` will be updated after the invocation.
         SingletonLazyHolder.DRIVER.hashCode();
     }
 
