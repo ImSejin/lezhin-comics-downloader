@@ -175,7 +175,7 @@ public class DownloadProcessor implements Processor {
             // There is case that imageCountMap doesn't have all names of episode as key for a certain content.
             // I guess that lezhin API doesn't provide metadata of new episode. - ImSejin
             if (imageCount == null) {
-                throw new ImageCountNotFoundException("Failed to get image count of episode[{}]: imageCountMap={}",
+                throw new ImageCountNotFoundException("Failed to get image count of episode[%s]: imageCountMap=%s",
                         episode, this.imageCountMap);
             }
 
