@@ -155,7 +155,6 @@
         <!--
             Logback
 
-            DO NOT UPGRADE VERSION OF MAJOR OR MINOR.
             THIS REQUIRES JAVA 11+ AT RUNTIME SINCE 1.4.x.
         -->
         <dependency>

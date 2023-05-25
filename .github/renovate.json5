@@ -1,0 +1,16 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    // The :xyz naming convention (with : prefix) is shorthand for the default: presets.
+    // For example: :xyz is the same as default:xyz.
+    // (See https://docs.renovatebot.com/config-presets/#example-configs)
+    "config:base",
+    ":autodetectPinVersions",
+    ":automergeDisabled",
+    ":timezone(Asia/Seoul)",
+  ],
+  "enabled": true,
+  "schedule": [
+    "before 7am on Sunday"
+  ],
+}
