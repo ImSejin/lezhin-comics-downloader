@@ -28,6 +28,10 @@ public class DebugMode extends BooleanArgument implements Attribute {
     protected Option getOption() {
         return Option.builder("d")
                 .longOpt("debug")
+                .optionalArg(true)
+                .numberOfArgs(1)
+                .valueSeparator()
+                .argName("true/false")
                 .desc("Debugging mode to show browser and print more logs")
                 .build();
     }

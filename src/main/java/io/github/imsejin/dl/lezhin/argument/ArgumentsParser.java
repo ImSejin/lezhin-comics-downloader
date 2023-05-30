@@ -101,12 +101,21 @@ public class ArgumentsParser {
     // -------------------------------------------------------------------------------------------------
 
     private static String getOptionValue(CommandLine cmd, Option option) {
-        if (option.hasArg()) {
-            return Objects.requireNonNullElse(cmd.getOptionValue(option.getOpt()), "");
-        } else {
-            boolean hasOption = cmd.hasOption(option.getOpt());
-            return String.valueOf(hasOption);
+        String optionValue = cmd.getOptionValue(option.getOpt());
+
+        // When option with required argument.
+        if (option.hasArg() && !option.hasOptionalArg()) {
+            return Objects.requireNonNullElse(optionValue, "");
         }
+
+        // When option has optional argument.
+        if (optionValue != null) {
+            return optionValue;
+        }
+
+        // When option without argument.
+        boolean hasOption = cmd.hasOption(option.getOpt());
+        return String.valueOf(hasOption);
     }
 
 }
