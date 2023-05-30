@@ -24,6 +24,7 @@ import io.github.imsejin.dl.lezhin.argument.impl.DebugMode;
 import io.github.imsejin.dl.lezhin.argument.impl.EpisodeRange;
 import io.github.imsejin.dl.lezhin.argument.impl.ImageFormat;
 import io.github.imsejin.dl.lezhin.argument.impl.Language;
+import io.github.imsejin.dl.lezhin.argument.impl.SingleThreading;
 import io.github.imsejin.dl.lezhin.browser.WebBrowser;
 import io.github.imsejin.dl.lezhin.common.Loggers;
 import io.github.imsejin.dl.lezhin.exception.LezhinComicsDownloaderException;
@@ -44,7 +45,8 @@ public final class Application {
     public static void main(String[] args) {
         try {
             ArgumentsParser argumentsParser = new ArgumentsParser(
-                    new Language(), new ContentName(), new EpisodeRange(), new ImageFormat(), new DebugMode());
+                    new Language(), new ContentName(), new EpisodeRange(),
+                    new ImageFormat(), new SingleThreading(), new DebugMode());
             List<Argument> arguments = argumentsParser.parse(args);
 
             ProcessContext context = ProcessContext.create(arguments.toArray());

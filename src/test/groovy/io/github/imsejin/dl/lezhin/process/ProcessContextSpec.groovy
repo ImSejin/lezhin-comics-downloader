@@ -16,11 +16,7 @@
 
 package io.github.imsejin.dl.lezhin.process
 
-import io.github.imsejin.dl.lezhin.argument.impl.ContentName
-import io.github.imsejin.dl.lezhin.argument.impl.DebugMode
-import io.github.imsejin.dl.lezhin.argument.impl.EpisodeRange
-import io.github.imsejin.dl.lezhin.argument.impl.ImageFormat
-import io.github.imsejin.dl.lezhin.argument.impl.Language
+import io.github.imsejin.dl.lezhin.argument.impl.*
 import io.github.imsejin.dl.lezhin.attribute.Attribute
 import spock.lang.Specification
 import spock.lang.Subject
@@ -41,7 +37,7 @@ class ProcessContextSpec extends Specification {
 
     def "Creates new context with attributes"() {
         given:
-        def attributes = [language, contentName, episodeRange, imageFormat, debugMode]
+        def attributes = [language, contentName, episodeRange, imageFormat, debugMode, singleThreading]
 
         when:
         def context = ProcessContext.create(attributes as Object[])
@@ -53,12 +49,13 @@ class ProcessContextSpec extends Specification {
         context.episodeRange === episodeRange
         context.imageFormat === imageFormat
         context.debugMode === debugMode
+        context.singleThreading === singleThreading
 
         where:
-        language                  | contentName                       | episodeRange                    | imageFormat                     | debugMode
-        new Language(value: "ko") | new ContentName(value: "alpha")   | new EpisodeRange(value: "")     | new ImageFormat(value: "false") | new DebugMode(value: "false")
-        new Language(value: "en") | new ContentName(value: "epsilon") | new EpisodeRange(value: "~25")  | new ImageFormat(value: "true")  | new DebugMode(value: "false")
-        new Language(value: "ja") | new ContentName(value: "zeta")    | new EpisodeRange(value: "1~10") | new ImageFormat(value: "true")  | new DebugMode(value: "true")
+        language                  | contentName                       | episodeRange                    | imageFormat                     | debugMode                     | singleThreading
+        new Language(value: "ko") | new ContentName(value: "alpha")   | new EpisodeRange(value: "")     | new ImageFormat(value: "false") | new DebugMode(value: "false") | new SingleThreading(value: "true")
+        new Language(value: "en") | new ContentName(value: "epsilon") | new EpisodeRange(value: "~25")  | new ImageFormat(value: "true")  | new DebugMode(value: "false") | new SingleThreading(value: "true")
+        new Language(value: "ja") | new ContentName(value: "zeta")    | new EpisodeRange(value: "1~10") | new ImageFormat(value: "true")  | new DebugMode(value: "true")  | new SingleThreading(value: "false")
     }
 
     def "Returns given context with redundant attributes"() {
@@ -82,7 +79,7 @@ class ProcessContextSpec extends Specification {
 
     def "Creates new context with other context"() {
         given:
-        def attributes = [language, contentName, episodeRange, imageFormat, debugMode]
+        def attributes = [language, contentName, episodeRange, imageFormat, debugMode, singleThreading]
         def context = ProcessContext.create(attributes as Object[])
 
         when:
@@ -96,12 +93,13 @@ class ProcessContextSpec extends Specification {
         newContext.episodeRange === episodeRange
         newContext.imageFormat === imageFormat
         newContext.debugMode === debugMode
+        context.singleThreading === singleThreading
 
         where:
-        language                  | contentName                       | episodeRange                    | imageFormat                     | debugMode
-        new Language(value: "ko") | new ContentName(value: "alpha")   | new EpisodeRange(value: "")     | new ImageFormat(value: "false") | new DebugMode(value: "false")
-        new Language(value: "en") | new ContentName(value: "epsilon") | new EpisodeRange(value: "~25")  | new ImageFormat(value: "true")  | new DebugMode(value: "false")
-        new Language(value: "ja") | new ContentName(value: "zeta")    | new EpisodeRange(value: "1~10") | new ImageFormat(value: "true")  | new DebugMode(value: "true")
+        language                  | contentName                       | episodeRange                    | imageFormat                     | debugMode                     | singleThreading
+        new Language(value: "ko") | new ContentName(value: "alpha")   | new EpisodeRange(value: "")     | new ImageFormat(value: "false") | new DebugMode(value: "false") | new SingleThreading(value: "true")
+        new Language(value: "en") | new ContentName(value: "epsilon") | new EpisodeRange(value: "~25")  | new ImageFormat(value: "true")  | new DebugMode(value: "false") | new SingleThreading(value: "true")
+        new Language(value: "ja") | new ContentName(value: "zeta")    | new EpisodeRange(value: "1~10") | new ImageFormat(value: "true")  | new DebugMode(value: "true")  | new SingleThreading(value: "false")
     }
 
     def "Adds attributes"() {

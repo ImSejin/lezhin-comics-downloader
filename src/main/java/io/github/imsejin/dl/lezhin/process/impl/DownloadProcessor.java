@@ -121,6 +121,28 @@ public class DownloadProcessor implements Processor {
                 ServiceRequest serviceRequest = PropertyBinder.INSTANCE.toServiceRequest(context.getContent(), episode, purchased);
                 Authority authority = service.getAuthForViewEpisode(serviceRequest);
 
+                // Downloads all images of the episode in sequential.
+                if (context.getSingleThreading().getValue()) {
+                    for (int n = 1; n <= imageCount; n++) {
+                        String fileName = String.format("%03d.%s", n, context.getImageFormat().getValue());
+                        Path dest = episodeDirectoryPath.resolve(fileName);
+
+                        // Tries to download an image of the specific resolution.
+                        // The resolution depends on whether you paid for this episode or not.
+                        URL url = getImageUrl(context, episode, authority, n, purchased);
+                        boolean success = downloadImage(url, dest);
+
+                        // If failed to download, skips this image.
+                        if (!success) {
+                            continue;
+                        }
+
+                        progressBar.step();
+                    }
+
+                    continue;
+                }
+
                 // Downloads all images of the episode in parallel.
                 IntStream.rangeClosed(1, imageCount).parallel().forEach(n -> {
                     String fileName = String.format("%03d.%s", n, context.getImageFormat().getValue());
