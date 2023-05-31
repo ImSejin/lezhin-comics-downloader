@@ -1,5 +1,6 @@
 # Table of Contents
 
+- [v3.1.0](#v310): 2023-05-31
 - [v3.0.5](#v305): 2023-04-25
 - [v3.0.4](#v304): 2023-04-24
 - [v3.0.3](#v303): 2023-01-03
@@ -7,6 +8,34 @@
 - [v3.0.1](#v301): 2022-12-16
 - [v3.0.0](#v300): 2022-12-14
 - [v2.9.0](#v290): 2022-02-20
+
+# v3.1.0
+
+## Modification
+
+- ♻️ Make: `WebBrowser` testable without chrome driver
+- ♻️ Modify: parsing optional value
+
+## New features
+
+- ✨ Add: new option `--single-threading`
+
+## Dependencies
+
+- ⬆️ Upgrade: `maven` from `3.6.3` to `3.9.2`
+- ⬆️ Upgrade: `maven wrapper` from `0.5.6` to `3.2.0`
+- ⬆️ Upgrade: dependency `selenium-java` from `4.9.0` to `4.9.1`
+- ⬆️ Upgrade: dependency `lombok` from `1.18.26` to `1.18.28`
+- ⬆️ Upgrade: test dependency `junit5` from `5.9.2` to `5.9.3`
+- ⬆️ Upgrade: build dependency `gmavenplus-plugin` from `2.1.0` to `3.0.0`
+- ⬆️ Upgrade: build dependency `maven-surefire-plugin` from `2.22.2` to `3.1.0`
+- ⬆️ Upgrade: build dependency `maven-assembly-plugin` from `3.3.0` to `3.5.0`
+- ⬆️ Upgrade: build dependency `jacoco-maven-plugin` from `0.8.9` to `0.8.10`
+
+## Troubleshooting
+
+- 🐞 Fix: unused format arguments on exception
+- 🐞 Fix: missing images on downloading caused by unknown reason
 
 # v3.0.5
 
