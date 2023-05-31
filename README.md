@@ -63,7 +63,7 @@
 ## Usage
 
 ```bash
-java -jar {JAR filename} -l=<locale_language> -n=<content_name> [-r=<episode_range> -j -d]
+java -jar {JAR filename} -l=<locale_language> -n=<content_name> [-r=<episode_range> -j -s -d]
 ```
 
 - *<ins>locale language</ins> (required)*: language of lezhin platform you want to download the webtoon on.
@@ -84,6 +84,7 @@ java -jar {JAR filename} -l=<locale_language> -n=<content_name> [-r=<episode_ran
     - __~n__ : from the first episode to ep.N
     - __m~n__ : from ep.M to ep.N
 - <ins>jpg</ins> (optional): save images as JPEG format (default: WEBP format).
+- <ins>single threading</ins> (optional): download images on single-thread; useful if some images are missing (default: multi-threading).
 - <ins>debug</ins> (optional): enables debugging mode.
 
 <br><br>

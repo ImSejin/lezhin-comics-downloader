@@ -87,7 +87,35 @@ public final class WebBrowser {
 
     // Initialization ----------------------------------------------------------------------------------
 
-    static {
+    @ExcludeFromGeneratedJacocoReport
+    private WebBrowser() {
+        throw new UnsupportedOperationException(getClass().getName() + " is not allowed to instantiate");
+    }
+
+    private static final class SingletonLazyHolder {
+        static {
+            DRIVER = new ChromeDriver(WebBrowser.options);
+            WebBrowser.initialized = true;
+        }
+
+        private static final RemoteWebDriver DRIVER;
+    }
+
+    public static RemoteWebDriver getDriver() {
+        return SingletonLazyHolder.DRIVER;
+    }
+
+    /**
+     * Runs web browser by chromedriver file.
+     *
+     * @since 3.0.0
+     */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public static void run() {
+        if (isRunning()) {
+            return;
+        }
+
         // Assigns chrome driver pathname.
         String fileName = ChromeDriverService.CHROME_DRIVER_NAME;
         if (OS.WINDOWS.isCurrentOS()) {
@@ -105,33 +133,9 @@ public final class WebBrowser {
         System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, chromeDriverPath.toString());
         // See: https://github.com/SeleniumHQ/selenium/issues/11750
         System.setProperty("webdriver.http.factory", "jdk-http-client");
-    }
 
-    @ExcludeFromGeneratedJacocoReport
-    private WebBrowser() {
-        throw new UnsupportedOperationException(getClass().getName() + " is not allowed to instantiate");
-    }
-
-    private static final class SingletonLazyHolder {
-        static {
-            WebBrowser.initialized = true;
-        }
-
-        private static final RemoteWebDriver DRIVER = new ChromeDriver(WebBrowser.options);
-    }
-
-    public static RemoteWebDriver getDriver() {
-        return SingletonLazyHolder.DRIVER;
-    }
-
-    /**
-     * Runs web browser by chromedriver file.
-     *
-     * @since 3.0.0
-     */
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static void run() {
         // Invokes any instance method of driver to initialize this field by classloader.
+        // `WebBrowser.initialized` will be updated after the invocation.
         SingletonLazyHolder.DRIVER.hashCode();
     }
 

@@ -15,6 +15,8 @@ import java.nio.file.Path;
 import java.util.Map;
 
 /**
+ * Processor for reading the configuration file
+ *
  * @since 3.0.0
  */
 @ProcessSpecification

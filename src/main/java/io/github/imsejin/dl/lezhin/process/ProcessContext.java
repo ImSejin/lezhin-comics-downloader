@@ -23,6 +23,7 @@ import io.github.imsejin.dl.lezhin.argument.impl.DebugMode;
 import io.github.imsejin.dl.lezhin.argument.impl.EpisodeRange;
 import io.github.imsejin.dl.lezhin.argument.impl.ImageFormat;
 import io.github.imsejin.dl.lezhin.argument.impl.Language;
+import io.github.imsejin.dl.lezhin.argument.impl.SingleThreading;
 import io.github.imsejin.dl.lezhin.attribute.Attribute;
 import io.github.imsejin.dl.lezhin.attribute.impl.AccessToken;
 import io.github.imsejin.dl.lezhin.attribute.impl.Authentication;
@@ -78,6 +79,8 @@ public final class ProcessContext {
     private ImageFormat imageFormat;
 
     private DebugMode debugMode;
+
+    private SingleThreading singleThreading;
 
     // From processors ---------------------------------------------------------------------------------
 

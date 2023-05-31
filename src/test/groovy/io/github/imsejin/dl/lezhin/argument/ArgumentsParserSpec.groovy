@@ -16,11 +16,7 @@
 
 package io.github.imsejin.dl.lezhin.argument
 
-import io.github.imsejin.dl.lezhin.argument.impl.ContentName
-import io.github.imsejin.dl.lezhin.argument.impl.DebugMode
-import io.github.imsejin.dl.lezhin.argument.impl.EpisodeRange
-import io.github.imsejin.dl.lezhin.argument.impl.ImageFormat
-import io.github.imsejin.dl.lezhin.argument.impl.Language
+import io.github.imsejin.dl.lezhin.argument.impl.*
 import io.github.imsejin.dl.lezhin.exception.DuplicatedArgumentException
 import io.github.imsejin.dl.lezhin.exception.ParsingArgumentException
 import org.apache.commons.cli.Option
@@ -88,7 +84,7 @@ class ArgumentsParserSpec extends Specification {
 
     def "Parses actual program arguments"() {
         given:
-        def arguments = [new Language(), new ContentName(), new EpisodeRange(), new ImageFormat(), new DebugMode()]
+        def arguments = [new Language(), new ContentName(), new EpisodeRange(), new ImageFormat(), new SingleThreading(), new DebugMode()]
 
         when:
         def parser = new ArgumentsParser(arguments as Argument[])
@@ -101,13 +97,15 @@ class ArgumentsParserSpec extends Specification {
         actual == expected
 
         where:
-        programArgs                   | expected
-        "-l=ko -n=alpha"              | [new Language(value: "ko"), new ContentName(value: "alpha"), new EpisodeRange(value: ""), new ImageFormat(value: "false"), new DebugMode(value: "false")]
-        "-l=en -n=beta -r=8~"         | [new Language(value: "en"), new ContentName(value: "beta"), new EpisodeRange(value: "8~"), new ImageFormat(value: "false"), new DebugMode(value: "false")]
-        "-l=ja -n=gamma -j"           | [new Language(value: "ja"), new ContentName(value: "gamma"), new EpisodeRange(value: ""), new ImageFormat(value: "true"), new DebugMode(value: "false")]
-        "-l=ko -n=delta -d"           | [new Language(value: "ko"), new ContentName(value: "delta"), new EpisodeRange(value: ""), new ImageFormat(value: "false"), new DebugMode(value: "true")]
-        "-l=en -n=epsilon -r=~25 -j"  | [new Language(value: "en"), new ContentName(value: "epsilon"), new EpisodeRange(value: "~25"), new ImageFormat(value: "true"), new DebugMode(value: "false")]
-        "-l=ja -n=zeta -r=1~10 -j -d" | [new Language(value: "ja"), new ContentName(value: "zeta"), new EpisodeRange(value: "1~10"), new ImageFormat(value: "true"), new DebugMode(value: "true")]
+        programArgs                           | expected
+        "-l=ko -n=alpha"                      | [new Language(value: "ko"), new ContentName(value: "alpha"), new EpisodeRange(value: ""), new ImageFormat(value: "false"), new SingleThreading(value: "false"), new DebugMode(value: "false")]
+        "-l=en -n=beta -r=8~"                 | [new Language(value: "en"), new ContentName(value: "beta"), new EpisodeRange(value: "8~"), new ImageFormat(value: "false"), new SingleThreading(value: "false"), new DebugMode(value: "false")]
+        "-l=ja -n=gamma -j"                   | [new Language(value: "ja"), new ContentName(value: "gamma"), new EpisodeRange(value: ""), new ImageFormat(value: "true"), new SingleThreading(value: "false"), new DebugMode(value: "false")]
+        "-l=ja -n=gamma -j -s"                | [new Language(value: "ja"), new ContentName(value: "gamma"), new EpisodeRange(value: ""), new ImageFormat(value: "true"), new SingleThreading(value: "true"), new DebugMode(value: "false")]
+        "-l=ko -n=delta -d -s=true"           | [new Language(value: "ko"), new ContentName(value: "delta"), new EpisodeRange(value: ""), new ImageFormat(value: "false"), new SingleThreading(value: "true"), new DebugMode(value: "true")]
+        "-l=ko -n=delta -d=true"              | [new Language(value: "ko"), new ContentName(value: "delta"), new EpisodeRange(value: ""), new ImageFormat(value: "false"), new SingleThreading(value: "false"), new DebugMode(value: "true")]
+        "-l=en -n=epsilon -r=~25 -s=false -j" | [new Language(value: "en"), new ContentName(value: "epsilon"), new EpisodeRange(value: "~25"), new ImageFormat(value: "true"), new SingleThreading(value: "false"), new DebugMode(value: "false")]
+        "-l=ja -n=zeta -r=1~10 -j -d=false"   | [new Language(value: "ja"), new ContentName(value: "zeta"), new EpisodeRange(value: "1~10"), new ImageFormat(value: "true"), new SingleThreading(value: "false"), new DebugMode(value: "false")]
     }
 
 }
