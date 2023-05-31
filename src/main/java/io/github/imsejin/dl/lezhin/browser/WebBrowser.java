@@ -59,7 +59,7 @@ public final class WebBrowser {
 
     public static final String INITIAL_URL = "data:,";
 
-    private static ChromeOptions options = new ChromeOptions().addArguments(ChromeOption.getArguments());
+    private static final List<String> arguments = ChromeOption.getArguments();
 
     private static final Runnable CHECK_INITIALIZATION = () -> {
         if (!isRunning()) {
@@ -78,11 +78,8 @@ public final class WebBrowser {
      * @since 2.6.2
      */
     public static void debugging() {
-        List<String> arguments = ChromeOption.getArguments();
         Stream.of(ChromeOption.HEADLESS, ChromeOption.NO_SANDBOX, ChromeOption.DISABLE_GPU)
                 .map(ChromeOption::getArgument).forEach(arguments::remove);
-
-        options = new ChromeOptions().addArguments(arguments);
     }
 
     // Initialization ----------------------------------------------------------------------------------
@@ -94,7 +91,8 @@ public final class WebBrowser {
 
     private static final class SingletonLazyHolder {
         static {
-            DRIVER = new ChromeDriver(WebBrowser.options);
+            ChromeOptions options = new ChromeOptions().addArguments(WebBrowser.arguments);
+            DRIVER = new ChromeDriver(options);
             WebBrowser.initialized = true;
         }
 
