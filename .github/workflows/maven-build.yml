@@ -6,11 +6,11 @@ name: Java CI with Maven
 on:
   push:
     branches:
-    - release
-    # - dev
+      - release
+      - dev
 
   schedule:
-  - cron: "0 20 * * 6" # Runs at 05:00 Asia/Seoul on Sun.
+    - cron: "0 20 * * 6" # Runs at 05:00 Asia/Seoul on Sun.
 
 jobs:
   build:
@@ -20,8 +20,8 @@ jobs:
       fail-fast: true
       max-parallel: 3 # Sum of matrices.
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        java: [11, 11.0.4, 17]
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        java: [ 11, 11.0.4, 17 ]
 
     runs-on: ${{ matrix.os }}
     
@@ -30,41 +30,41 @@ jobs:
       GITHUB_WORKSPACE: ${{ github.workspace }}
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Set up JDK ${{ matrix.java }}
-      uses: actions/setup-java@v3
-      with:
-        java-version: ${{ matrix.java }}
-        distribution: 'zulu'
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'zulu'
 
-#    - name: Download chrome driver
-#      run: |
-#        # Get latest version number.
-#        VERSION=$(curl -s https://chromedriver.storage.googleapis.com/LATEST_RELEASE)
-#
-#        # Download chromedriver for your OS.
-#        if [[ '${{ matrix.os }}' == "ubuntu"* ]]; then
-#          URL="https://chromedriver.storage.googleapis.com/$VERSION/chromedriver_linux64.zip"
-#        elif [[ '${{ matrix.os }}' == "macos"* ]]; then
-#          URL="https://chromedriver.storage.googleapis.com/$VERSION/chromedriver_mac64.zip"
-#        elif [[ '${{ matrix.os }}' == "windows"* ]]; then
-#          URL="https://chromedriver.storage.googleapis.com/$VERSION/chromedriver_win32.zip"
-#        else
-#          echo "Error: Unsupported operating system $OSTYPE"
-#          exit 1
-#        fi
-#
-#        # Download and extract chromedriver.
-#        curl -O $URL
-#        unzip chromedriver*.zip
-#        rm chromedriver*.zip
+      #    - name: Download chrome driver
+      #      run: |
+      #        # Get latest version number.
+      #        VERSION=$(curl -s https://chromedriver.storage.googleapis.com/LATEST_RELEASE)
+      #
+      #        # Download chromedriver for your OS.
+      #        if [[ '${{ matrix.os }}' == "ubuntu"* ]]; then
+      #          URL="https://chromedriver.storage.googleapis.com/$VERSION/chromedriver_linux64.zip"
+      #        elif [[ '${{ matrix.os }}' == "macos"* ]]; then
+      #          URL="https://chromedriver.storage.googleapis.com/$VERSION/chromedriver_mac64.zip"
+      #        elif [[ '${{ matrix.os }}' == "windows"* ]]; then
+      #          URL="https://chromedriver.storage.googleapis.com/$VERSION/chromedriver_win32.zip"
+      #        else
+      #          echo "Error: Unsupported operating system $OSTYPE"
+      #          exit 1
+      #        fi
+      #
+      #        # Download and extract chromedriver.
+      #        curl -O $URL
+      #        unzip chromedriver*.zip
+      #        rm chromedriver*.zip
 
-    - name: Build with Maven
-      run: mvn clean package -B --file pom.xml
+      - name: Build with Maven
+        run: mvn clean package -B --file pom.xml
 
-    - name: Send code coverage to Codecov
-      uses: codecov/codecov-action@v3
-      with:
-        fail_ci_if_error: true
-        verbose: true
+      - name: Send code coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          fail_ci_if_error: true
+          verbose: true
