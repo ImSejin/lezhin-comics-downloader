@@ -6,11 +6,8 @@ L_*/
 # --------------------------------------------------------------------------------------------------
 # Chrome Driver
 # --------------------------------------------------------------------------------------------------
-chromedriver
-chromedriver.exe
-!src/test/**/chrome-driver/**/chromedriver*
-src/test/**/chrome-driver/**/chromedriver-m1-*
-src/test/**/google-chrome/**/googlechrome-m1-*
+/chromedriver
+/chromedriver.exe
 
 # --------------------------------------------------------------------------------------------------
 # Maven
