@@ -29,7 +29,7 @@ import io.github.imsejin.dl.lezhin.process.Processor;
  * Processor for selecting locale
  *
  * <p> When you see the content of lezhin platform not as usual, they show you a page of locale selection.
- * It is a obstacle to progress a process, so this processor requests that in advance.
+ * It is an obstacle to progress a process, so this processor requests that in advance.
  *
  * <pre>{@code
  * $("#locale-form").on("submit", function (t) {
