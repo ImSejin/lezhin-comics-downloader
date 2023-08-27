@@ -47,6 +47,7 @@ import io.github.imsejin.dl.lezhin.argument.impl.SingleThreading;
 import io.github.imsejin.dl.lezhin.attribute.Attribute;
 import io.github.imsejin.dl.lezhin.attribute.impl.AccessToken;
 import io.github.imsejin.dl.lezhin.attribute.impl.Authentication;
+import io.github.imsejin.dl.lezhin.attribute.impl.ChromeInfo;
 import io.github.imsejin.dl.lezhin.attribute.impl.Content;
 import io.github.imsejin.dl.lezhin.attribute.impl.DirectoryPath;
 import io.github.imsejin.dl.lezhin.attribute.impl.HttpHosts;
@@ -100,6 +101,8 @@ public final class ProcessContext {
     private Content content;
 
     private DirectoryPath directoryPath;
+
+    private ChromeInfo chromeInfo;
 
     private PurchasedEpisodes purchasedEpisodes;
 
