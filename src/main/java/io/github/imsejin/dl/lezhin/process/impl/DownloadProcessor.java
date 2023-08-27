@@ -28,7 +28,7 @@ import io.github.imsejin.dl.lezhin.argument.impl.Language;
 import io.github.imsejin.dl.lezhin.attribute.impl.Content.Episode;
 import io.github.imsejin.dl.lezhin.browser.WebBrowser;
 import io.github.imsejin.dl.lezhin.common.Loggers;
-import io.github.imsejin.dl.lezhin.common.PropertyBinder;
+import io.github.imsejin.dl.lezhin.common.ModelPropertyMapper;
 import io.github.imsejin.dl.lezhin.exception.DirectoryCreationException;
 import io.github.imsejin.dl.lezhin.exception.ImageCountNotFoundException;
 import io.github.imsejin.dl.lezhin.http.url.URIs;
@@ -118,7 +118,9 @@ public class DownloadProcessor implements Processor {
 
             String taskName = String.format("%s ep.%d", context.getContent().getAlias(), sequence);
             try (ProgressBar progressBar = createProgressBar(taskName, imageCount)) {
-                ServiceRequest serviceRequest = PropertyBinder.INSTANCE.toServiceRequest(context.getContent(), episode, purchased);
+                ServiceRequest serviceRequest = ModelPropertyMapper.INSTANCE.toServiceRequest(context.getContent(),
+                        episode,
+                        purchased);
                 Authority authority = service.getAuthForViewEpisode(serviceRequest);
 
                 // Downloads all images of the episode in sequential.
