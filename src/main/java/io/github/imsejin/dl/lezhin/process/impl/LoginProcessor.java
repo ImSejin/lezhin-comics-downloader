@@ -36,7 +36,7 @@ import java.util.Map;
  *
  * @since 3.0.0
  */
-@ProcessSpecification(dependsOn = ConfigurationFileProcessor.class)
+@ProcessSpecification(dependsOn = ChromeDriverDownloadProcessor.class)
 public class LoginProcessor implements Processor {
 
     private static final Map<Locale, String> BASE_URL_MAP = Map.ofEntries(
@@ -56,7 +56,7 @@ public class LoginProcessor implements Processor {
         }
 
         // Starts to run web browser.
-        WebBrowser.run();
+        WebBrowser.run(context.getChromeInfo().getDriverPath());
 
         // Goes to login page.
         gotoLoginPage(baseUrl, locale);

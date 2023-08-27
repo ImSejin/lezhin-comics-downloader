@@ -1,32 +1,33 @@
+/*
+ * Copyright 2023 Sejin Im
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.github.imsejin.dl.lezhin.browser
 
-import io.github.imsejin.dl.lezhin.exception.ChromeDriverNotFoundException
-import io.github.imsejin.dl.lezhin.util.PathUtils
-import org.mockito.MockedStatic
 import spock.lang.Specification
 import spock.lang.Subject
 import spock.lang.TempDir
 
+import java.nio.file.Files
 import java.nio.file.Path
-
-import static org.mockito.Mockito.mockStatic
-import static org.mockito.Mockito.when
 
 @Subject(WebBrowser)
 class WebBrowserSpec extends Specification {
 
     @TempDir
     private Path basePath
-
-    private MockedStatic<PathUtils> pathUtils
-
-    void setup() {
-        pathUtils = mockStatic(PathUtils)
-    }
-
-    void cleanup() {
-        pathUtils.close()
-    }
 
     // -------------------------------------------------------------------------------------------------
 
@@ -50,16 +51,13 @@ class WebBrowserSpec extends Specification {
 
     def "Runs"() {
         given:
-        with(PathUtils) {
-            when(getCurrentPath()).thenReturn(basePath)
-        }
+        def chromeDriverPath = Files.createFile(basePath.resolve("chromedriver"))
 
         when:
-        WebBrowser.run()
+        WebBrowser.run(chromeDriverPath)
 
-        then:
-        def e = thrown(ChromeDriverNotFoundException)
-        e.message.startsWith("There is no chromedriver: ")
+        then: "Failed to instantiate WebBrowser.SingletonLazyHolder"
+        thrown(ExceptionInInitializerError)
     }
 
     def "Checks if web browser is running"() {
