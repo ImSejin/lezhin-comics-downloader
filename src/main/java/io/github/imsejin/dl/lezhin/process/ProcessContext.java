@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Sejin Im
+ * Copyright 2023 Sejin Im
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,26 @@
 
 package io.github.imsejin.dl.lezhin.process;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+
+import javax.annotation.concurrent.ThreadSafe;
+
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.VisibleForTesting;
+
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import io.github.imsejin.common.util.ArrayUtils;
 import io.github.imsejin.common.util.ReflectionUtils;
 import io.github.imsejin.dl.lezhin.argument.impl.ContentName;
@@ -31,25 +51,8 @@ import io.github.imsejin.dl.lezhin.attribute.impl.Content;
 import io.github.imsejin.dl.lezhin.attribute.impl.DirectoryPath;
 import io.github.imsejin.dl.lezhin.attribute.impl.HttpHosts;
 import io.github.imsejin.dl.lezhin.attribute.impl.PurchasedEpisodes;
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.VisibleForTesting;
 
-import javax.annotation.concurrent.ThreadSafe;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-
-import static java.util.stream.Collectors.toUnmodifiableList;
+import static java.util.stream.Collectors.*;
 
 /**
  * @since 3.0.0
@@ -68,7 +71,9 @@ public final class ProcessContext {
             .filter(it -> !Modifier.isStatic(it.getModifiers()))
             .collect(toUnmodifiableList());
 
-    // From command line -------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------
+    // From command line
+    // -------------------------------------------------------------------------------------------------
 
     private Language language;
 
@@ -82,7 +87,9 @@ public final class ProcessContext {
 
     private SingleThreading singleThreading;
 
-    // From processors ---------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------
+    // From processors
+    // -------------------------------------------------------------------------------------------------
 
     private Authentication authentication;
 

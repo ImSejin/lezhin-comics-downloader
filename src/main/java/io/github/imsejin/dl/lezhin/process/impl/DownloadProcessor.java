@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Sejin Im
+ * Copyright 2023 Sejin Im
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,28 @@
  */
 
 package io.github.imsejin.dl.lezhin.process.impl;
+
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+import java.nio.file.Path;
+import java.text.DecimalFormat;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.IntStream;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
+
+import me.tongfei.progressbar.ConsoleProgressBarConsumer;
+import me.tongfei.progressbar.ProgressBar;
+import me.tongfei.progressbar.ProgressBarBuilder;
+import me.tongfei.progressbar.ProgressBarStyle;
 
 import io.github.imsejin.common.assertion.Asserts;
 import io.github.imsejin.common.util.FileUtils;
@@ -36,29 +58,9 @@ import io.github.imsejin.dl.lezhin.process.ProcessContext;
 import io.github.imsejin.dl.lezhin.process.Processor;
 import io.github.imsejin.dl.lezhin.util.FileNameUtils;
 import io.github.imsejin.dl.lezhin.util.PathUtils;
-import me.tongfei.progressbar.ConsoleProgressBarConsumer;
-import me.tongfei.progressbar.ProgressBar;
-import me.tongfei.progressbar.ProgressBarBuilder;
-import me.tongfei.progressbar.ProgressBarStyle;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
 
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
-import java.nio.file.Path;
-import java.text.DecimalFormat;
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.IntStream;
-
-import static java.util.Comparator.comparingInt;
-import static java.util.stream.Collectors.toUnmodifiableList;
+import static java.util.Comparator.*;
+import static java.util.stream.Collectors.*;
 
 /**
  * Processor for downloading images
@@ -71,10 +73,10 @@ public class DownloadProcessor implements Processor {
     /**
      * EpisodeImageCountService is only available on korean platform.
      */
-    private static final Map<Locale, ImageCountResolver> IMPLEMENTATION_MAP = Map.ofEntries(
-            Map.entry(Locale.KOREA, new UsingService()),
-            Map.entry(Locale.US, new VisitingPage()),
-            Map.entry(Locale.JAPAN, new VisitingPage())
+    private static final Map<Locale, ImageCountResolver> IMPLEMENTATION_MAP = Map.of(
+            Locale.KOREA, new UsingService(),
+            Locale.US, new VisitingPage(),
+            Locale.JAPAN, new VisitingPage()
     );
 
     @Override
@@ -227,11 +229,13 @@ public class DownloadProcessor implements Processor {
 
             try {
                 // Waits for DOM to complete the rendering.
-                Loggers.getLogger().debug("Wait up to {} sec for images to be rendered", WebBrowser.DEFAULT_TIMEOUT_SECONDS);
+                Loggers.getLogger()
+                        .debug("Wait up to {} sec for images to be rendered", WebBrowser.DEFAULT_TIMEOUT_SECONDS);
                 WebElement episodeList = WebBrowser.waitForVisibilityOfElement(By.id("scroll-list"));
 
                 List<WebElement> images = episodeList.findElements(
-                        By.xpath(".//div[@class='cut' and not(contains(@class, 'cutLicense')) and @data-cut-index and @data-cut-type='cut']"));
+                        By.xpath(
+                                ".//div[@class='cut' and not(contains(@class, 'cutLicense')) and @data-cut-index and @data-cut-type='cut']"));
 
                 // Successful
                 return images.size();
@@ -249,7 +253,7 @@ public class DownloadProcessor implements Processor {
             case ALL:
                 return IntStream.range(0, episodeCount).toArray();
             case ONE:
-                return new int[]{episodeRange.getStartNumber() - 1};
+                return new int[] {episodeRange.getStartNumber() - 1};
             case TO_END:
                 return IntStream.range(episodeRange.getStartNumber() - 1, episodeCount).toArray();
             case FROM_BEGINNING:
