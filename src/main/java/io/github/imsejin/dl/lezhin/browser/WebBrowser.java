@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Sejin Im
+ * Copyright 2023 Sejin Im
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ import io.github.imsejin.dl.lezhin.exception.WebBrowserNotRunningException;
 @ThreadSafe
 public final class WebBrowser {
 
-    public static final long DEFAULT_TIMEOUT_SECONDS = 15;
+    public static final long DEFAULT_TIMEOUT_SECONDS = 15L;
 
     public static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(DEFAULT_TIMEOUT_SECONDS);
 
@@ -70,7 +70,9 @@ public final class WebBrowser {
 
     private static boolean initialized;
 
-    // Preparation -------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------
+    // Preparation
+    // -------------------------------------------------------------------------------------------------
 
     /**
      * @since 2.6.2
@@ -80,7 +82,9 @@ public final class WebBrowser {
                 .map(ChromeOption::getArgument).forEach(arguments::remove);
     }
 
-    // Initialization ----------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------
+    // Initialization
+    // -------------------------------------------------------------------------------------------------
 
     @ExcludeFromGeneratedJacocoReport
     private WebBrowser() {
@@ -119,7 +123,7 @@ public final class WebBrowser {
 
         // Invokes any instance method of driver to initialize this field by classloader.
         // `WebBrowser.initialized` will be updated after the invocation.
-        SingletonLazyHolder.DRIVER.hashCode();
+        getDriver().hashCode();
     }
 
     // -------------------------------------------------------------------------------------------------
@@ -167,16 +171,18 @@ public final class WebBrowser {
         }
 
         String url = u.resolve(uri).normalize().toString();
-        SingletonLazyHolder.DRIVER.get(url);
+        getDriver().get(url);
     }
 
     public static String getCurrentUrl() {
         CHECK_INITIALIZATION.run();
 
-        return SingletonLazyHolder.DRIVER.getCurrentUrl();
+        return getDriver().getCurrentUrl();
     }
 
-    // Waiting -----------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------
+    // Waiting
+    // -------------------------------------------------------------------------------------------------
 
     /**
      * Waits for the presence of element.
@@ -206,7 +212,9 @@ public final class WebBrowser {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
-    // Javascript --------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------
+    // Javascript
+    // -------------------------------------------------------------------------------------------------
 
     @Nullable
     @SuppressWarnings("unchecked")
@@ -220,7 +228,7 @@ public final class WebBrowser {
 
         CHECK_INITIALIZATION.run();
 
-        Object evaluated = SingletonLazyHolder.DRIVER.executeScript("return " + javascript);
+        Object evaluated = getDriver().executeScript("return " + javascript);
 
         for (Class<?> type : SUPPORTED_EVALUATED_TYPES) {
             if (type.isInstance(evaluated) && type == expected) {
