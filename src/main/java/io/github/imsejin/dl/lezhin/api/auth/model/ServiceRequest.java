@@ -18,9 +18,9 @@ package io.github.imsejin.dl.lezhin.api.auth.model;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @since 3.0.0
@@ -31,10 +31,10 @@ import org.jetbrains.annotations.NotNull;
 @EqualsAndHashCode
 public class ServiceRequest {
 
-    @NotNull
+    @NonNull
     private Long contentId;
 
-    @NotNull
+    @NonNull
     private Long episodeId;
 
     private boolean purchased;
