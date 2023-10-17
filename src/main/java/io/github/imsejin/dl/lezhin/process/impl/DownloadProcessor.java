@@ -167,6 +167,7 @@ public class DownloadProcessor implements Processor {
             }
         }
 
+        // Return value will be ignored by ProcessContext.
         return null;
     }
 

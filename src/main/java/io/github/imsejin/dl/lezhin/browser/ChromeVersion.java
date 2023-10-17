@@ -21,6 +21,7 @@ import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import lombok.EqualsAndHashCode;
@@ -30,12 +31,21 @@ import lombok.ToString;
 import io.github.imsejin.common.util.StringUtils;
 
 /**
+ * Chrome version
+ * <p>
+ * It means for chrome browser and chromedriver.
+ *
+ * <pre>
+ *     114.0.5735.90
+ *     {major}.0.{minor}.{bugfix}
+ * </pre>
+ *
  * @since 4.0.0
  */
 @Getter
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public final class ChromeVersion {
+public final class ChromeVersion implements Comparable<ChromeVersion> {
 
     private static final Pattern VERSION_PATTERN = Pattern.compile("\\d+\\.0(\\.\\d+){2}");
 
@@ -59,6 +69,12 @@ public final class ChromeVersion {
         throw new IllegalArgumentException("Invalid ChromeVersion.value: " + versionString);
     }
 
+    /**
+     * Returns if each major version is the same or not.
+     *
+     * @param other other version
+     * @return whether major version is the same
+     */
     public boolean isCompatibleWith(@Nullable ChromeVersion other) {
         if (other == null) {
             return false;
@@ -68,6 +84,11 @@ public final class ChromeVersion {
         String otherMajorVersion = new StringTokenizer(other.value, ".").nextToken();
 
         return Objects.equals(thisMajorVersion, otherMajorVersion);
+    }
+
+    @Override
+    public int compareTo(@NotNull ChromeVersion other) {
+        return this.value.compareTo(other.value);
     }
 
 }

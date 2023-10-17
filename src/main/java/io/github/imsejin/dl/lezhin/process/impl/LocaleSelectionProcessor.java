@@ -53,6 +53,7 @@ public class LocaleSelectionProcessor implements Processor {
         Loggers.getLogger().debug("Change locale setting: {}", localePath);
         WebBrowser.request(localePath);
 
+        // Return value will be ignored by ProcessContext.
         return null;
     }
 

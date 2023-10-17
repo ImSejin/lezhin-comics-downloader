@@ -19,6 +19,7 @@ package io.github.imsejin.dl.lezhin.api.chromedriver.model;
 import java.net.URL;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -29,7 +30,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import io.github.imsejin.common.util.CollectionUtils;
 import io.github.imsejin.dl.lezhin.browser.ChromeVersion;
+
+import static java.util.Comparator.*;
 
 /**
  * @since 4.0.0
@@ -42,6 +46,19 @@ public class ChromeDriverDownload {
     private Instant timestamp;
 
     private List<Version> versions;
+
+    public Optional<Version> findLatestVersion() {
+        if (CollectionUtils.isNullOrEmpty(this.versions)) {
+            return Optional.empty();
+        }
+
+        return this.versions.stream()
+                .max(comparing(Version::getValue))
+                .filter(it -> it.getDownloads() != null)
+                .filter(it -> CollectionUtils.exists(it.getDownloads().getChromedrivers()));
+    }
+
+    // -------------------------------------------------------------------------------------------------
 
     @Getter
     @ToString
