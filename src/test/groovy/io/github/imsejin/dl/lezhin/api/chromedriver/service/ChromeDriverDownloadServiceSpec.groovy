@@ -19,6 +19,14 @@ package io.github.imsejin.dl.lezhin.api.chromedriver.service
 import spock.lang.Specification
 import spock.lang.Subject
 
+import java.nio.charset.StandardCharsets
+import java.time.Instant
+
+import io.github.imsejin.dl.lezhin.api.BaseService
+import io.github.imsejin.dl.lezhin.api.chromedriver.model.ChromeDriverDownload
+
+import static java.util.stream.Collectors.*
+
 @Subject(ChromeDriverDownloadService)
 class ChromeDriverDownloadServiceSpec extends Specification {
 
@@ -36,18 +44,25 @@ class ChromeDriverDownloadServiceSpec extends Specification {
 
     def "Finds chromedriver downloads"() {
         given:
-        def service = new ChromeDriverDownloadService()
+        def service = Mock(ChromeDriverDownloadService)
+        service.findChromeDriverDownload() >> {
+            def inputStream = Thread.currentThread().contextClassLoader
+                    .getResourceAsStream("json/known-good-versions-with-downloads.json")
+            def jsonText = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
+                    .lines().collect(joining())
+            BaseService.gson.fromJson(jsonText, ChromeDriverDownload)
+        }
 
         when:
         def download = service.findChromeDriverDownload()
 
         then:
         download != null
-        download.timestamp != null
-        download.versions.size() > 0
-        download.versions*.value.every { it.matches('^\\d+(\\.\\d+){3}$') }
+        download.timestamp == Instant.parse("2023-10-17T04:08:56.591Z")
+        download.versions.size() == 309
+        download.versions*.value.every { it != null }
         download.versions*.revision.every { it.matches('^\\d+$') }
-        download.versions*.downloads.findAll { it.chromedriver }.every { it.chrome.size() == it.chromedriver.size() }
+        download.versions*.downloads.findAll { it.chromedrivers }.every { it.chromes.size() == it.chromedrivers.size() }
     }
 
 }

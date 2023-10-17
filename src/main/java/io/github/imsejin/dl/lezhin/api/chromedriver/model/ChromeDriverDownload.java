@@ -16,6 +16,8 @@
 
 package io.github.imsejin.dl.lezhin.api.chromedriver.model;
 
+import java.net.URL;
+import java.time.Instant;
 import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
@@ -27,6 +29,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import io.github.imsejin.dl.lezhin.browser.ChromeVersion;
+
 /**
  * @since 4.0.0
  */
@@ -35,8 +39,7 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ChromeDriverDownload {
 
-    private String timestamp;
-    // private Instant timestamp;
+    private Instant timestamp;
 
     private List<Version> versions;
 
@@ -45,7 +48,7 @@ public class ChromeDriverDownload {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Version {
         @SerializedName("version")
-        private String value;
+        private ChromeVersion value;
 
         private String revision;
 
@@ -56,17 +59,21 @@ public class ChromeDriverDownload {
     @ToString
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Downloads {
-        private List<Program> chrome;
+        @SerializedName("chrome")
+        private List<Program> chromes;
+
         @Nullable
-        private List<Program> chromedriver;
+        @SerializedName("chromedriver")
+        private List<Program> chromedrivers;
     }
 
     @Getter
     @ToString
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Program {
-        private String platform;
-        private String url;
+        private Platform platform;
+
+        private URL url;
     }
 
 }
