@@ -37,4 +37,29 @@ class ChromeVersionSpec extends Specification {
         "Google Chrome 116.0.5845.110"                                                                 | "116.0.5845.110"
     }
 
+    def "Checks if compatible version with other"() {
+        given:
+        def version = ChromeVersion.from(base)
+        def otherVersion = ChromeVersion.from(other)
+
+        when:
+        def actual = version.isCompatibleWith(otherVersion) && otherVersion.isCompatibleWith(version)
+
+        then:
+        actual == expected
+
+        where:
+        base            | other            || expected
+        "70.0.3538.97"  | "70.0.2409.16"   || true
+        "70.0.3538.97"  | "70.0.3538.97"   || true
+        "70.0.3538.97"  | "70.0.4831.105"  || true
+        "70.0.3538.97"  | "69.0.3538.97"   || false
+        "70.0.3538.97"  | "71.0.3538.97"   || false
+        "110.0.5481.77" | "110.0.2759.143" || true
+        "110.0.5481.77" | "110.0.5481.77"  || true
+        "110.0.5481.77" | "110.0.8740.58"  || true
+        "110.0.5481.77" | "106.0.5249.61"  || false
+        "110.0.5481.77" | "114.0.5735.90"  || false
+    }
+
 }

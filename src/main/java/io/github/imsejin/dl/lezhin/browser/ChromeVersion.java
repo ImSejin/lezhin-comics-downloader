@@ -16,9 +16,12 @@
 
 package io.github.imsejin.dl.lezhin.browser;
 
+import java.util.Objects;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.jetbrains.annotations.Nullable;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -36,19 +39,14 @@ public final class ChromeVersion {
 
     private static final Pattern VERSION_PATTERN = Pattern.compile("\\d+\\.0(\\.\\d+){2}");
 
-    private final int majorVersion;
-
     @EqualsAndHashCode.Include
     private final String value;
 
-    public ChromeVersion(String value) {
+    private ChromeVersion(String value) {
         if (StringUtils.isNullOrBlank(value) || !VERSION_PATTERN.matcher(value).matches()) {
             throw new IllegalArgumentException("Invalid ChromeVersion.value: " + value);
         }
 
-        StringTokenizer tokenizer = new StringTokenizer(value, ".");
-
-        this.majorVersion = Integer.parseInt(tokenizer.nextToken());
         this.value = value;
     }
 
@@ -59,6 +57,17 @@ public final class ChromeVersion {
         }
 
         throw new IllegalArgumentException("Invalid ChromeVersion.value: " + versionString);
+    }
+
+    public boolean isCompatibleWith(@Nullable ChromeVersion other) {
+        if (other == null) {
+            return false;
+        }
+
+        String thisMajorVersion = new StringTokenizer(this.value, ".").nextToken();
+        String otherMajorVersion = new StringTokenizer(other.value, ".").nextToken();
+
+        return Objects.equals(thisMajorVersion, otherMajorVersion);
     }
 
 }
