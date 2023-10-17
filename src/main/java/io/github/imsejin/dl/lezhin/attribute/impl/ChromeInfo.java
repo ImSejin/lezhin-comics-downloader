@@ -20,30 +20,67 @@ import java.nio.file.Path;
 
 import org.jetbrains.annotations.Nullable;
 
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 import io.github.imsejin.dl.lezhin.attribute.Attribute;
 import io.github.imsejin.dl.lezhin.browser.ChromeVersion;
+import io.github.imsejin.dl.lezhin.process.impl.ChromeDriverDownloadProcessor;
 
 /**
+ * Container for information of resolved chrome
+ *
  * @since 4.0.0
+ * @see ChromeDriverDownloadProcessor
  */
 @Getter
 @ToString
 @EqualsAndHashCode
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ChromeInfo implements Attribute {
 
+    /**
+     * Chrome browser version.
+     * <p>
+     * It is not required to download chromedriver, but useful to find the fit version of that.
+     */
     @Nullable
     private final ChromeVersion browserVersion;
 
+    /**
+     * Chromedriver file path.
+     * <p>
+     * It is not required to download new chromedriver, but required to resolve the version of that.
+     */
+    @Nullable
+    private final Path driverPath;
+
+    /**
+     * Chromedriver version.
+     * <p>
+     * It is required to download new chromedriver.
+     */
     @Nullable
     private final ChromeVersion driverVersion;
 
-    @Nullable
-    private final Path driverPath;
+    public static ChromeInfo ofBrowser(@Nullable ChromeVersion browserVersion) {
+        return new ChromeInfo(browserVersion, null, null);
+    }
+
+    public static ChromeInfo ofDriverPath(@Nullable ChromeVersion browserVersion, @NonNull Path driverPath) {
+        return new ChromeInfo(browserVersion, driverPath, null);
+    }
+
+    public static ChromeInfo ofDriver(
+            @Nullable ChromeVersion browserVersion,
+            @NonNull Path driverPath,
+            @NonNull ChromeVersion driverVersion
+    ) {
+        return new ChromeInfo(browserVersion, driverPath, driverVersion);
+    }
 
 }

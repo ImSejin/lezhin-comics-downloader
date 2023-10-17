@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import org.jetbrains.annotations.Nullable;
 import org.openqa.selenium.chrome.ChromeDriverService;
 
 import io.github.imsejin.common.constant.OS;
@@ -66,12 +67,15 @@ public class ChromeInfoResolutionProcessor implements Processor {
 
         Path driverPath = resolver.resolveChromeDriverPath(context.getDirectoryPath());
         if (!Files.isRegularFile(driverPath)) {
-            return new ChromeInfo(browserVersion, null, null);
+            return ChromeInfo.ofBrowser(browserVersion);
         }
 
         ChromeVersion driverVersion = resolver.resolveChromeDriverVersion(driverPath);
+        if (driverVersion == null) {
+            return ChromeInfo.ofDriverPath(browserVersion, driverPath);
+        }
 
-        return new ChromeInfo(browserVersion, driverVersion, driverPath);
+        return ChromeInfo.ofDriver(browserVersion, driverPath, driverVersion);
     }
 
     // -------------------------------------------------------------------------------------------------
@@ -79,8 +83,10 @@ public class ChromeInfoResolutionProcessor implements Processor {
     private interface ChromeInfoResolver {
         boolean support(OS os);
 
+        @Nullable
         ChromeVersion resolveChromeBrowserVersion();
 
+        @Nullable
         ChromeVersion resolveChromeDriverVersion(Path driverPath);
 
         default Path resolveChromeDriverPath(DirectoryPath directoryPath) {
@@ -131,8 +137,8 @@ public class ChromeInfoResolutionProcessor implements Processor {
 
         @Override
         public Path resolveChromeDriverPath(DirectoryPath directoryPath) {
-            String baseName = ChromeDriverService.CHROME_DRIVER_NAME + ".exe";
-            return directoryPath.getValue().resolve(baseName);
+            String fileName = ChromeDriverService.CHROME_DRIVER_NAME + ".exe";
+            return directoryPath.getValue().resolve(fileName);
         }
     }
 
