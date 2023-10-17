@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Sejin Im
+ * Copyright 2023 Sejin Im
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,21 @@
 
 package io.github.imsejin.dl.lezhin.api.auth.model;
 
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.util.Base64;
+import java.util.regex.Pattern;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import io.github.imsejin.common.util.StringUtils;
-import io.github.imsejin.dl.lezhin.attribute.Attribute;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.regex.Pattern;
+import io.github.imsejin.common.util.StringUtils;
+import io.github.imsejin.dl.lezhin.attribute.Attribute;
 
 /**
  * @since 3.0.0
@@ -50,7 +53,7 @@ public class Authority implements Attribute {
 
     private final Long episodeId;
 
-    private final Long expiredAt;
+    private final Instant expiredAt;
 
     public Authority(String policy, String signature, String keyPairId) {
         this.policy = policy;
@@ -64,12 +67,11 @@ public class Authority implements Attribute {
 
         this.contentId = extractContentId(jsonObject);
         this.episodeId = extractEpisodeId(jsonObject);
-        this.expiredAt = extractExpiredAt(jsonObject);
+        this.expiredAt = Instant.ofEpochSecond(extractExpiredAt(jsonObject));
     }
 
     public boolean isExpired() {
-        long currentTimeSeconds = System.currentTimeMillis() / 1000;
-        return this.expiredAt < currentTimeSeconds;
+        return this.expiredAt.isBefore(Instant.now());
     }
 
     // -------------------------------------------------------------------------------------------------

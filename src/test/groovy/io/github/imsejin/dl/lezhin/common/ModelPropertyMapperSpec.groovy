@@ -1,13 +1,15 @@
 package io.github.imsejin.dl.lezhin.common
 
+import java.time.Instant
+
 import io.github.imsejin.dl.lezhin.api.auth.service.AuthorityService.AuthData
 import io.github.imsejin.dl.lezhin.attribute.impl.Content
 import io.github.imsejin.dl.lezhin.attribute.impl.Content.Episode
 import spock.lang.Specification
 import spock.lang.Subject
 
-@Subject(PropertyBinder)
-class PropertyBinderSpec extends Specification {
+@Subject(ModelPropertyMapper)
+class ModelPropertyMapperSpec extends Specification {
 
     def "Converts into ServiceRequest"() {
         given:
@@ -15,7 +17,7 @@ class PropertyBinderSpec extends Specification {
         def episode = new Episode(id: 5598233223495680)
 
         when:
-        def serviceRequest = PropertyBinder.INSTANCE.toServiceRequest(content, episode, false)
+        def serviceRequest = ModelPropertyMapper.INSTANCE.toServiceRequest(content, episode, false)
 
         then:
         serviceRequest
@@ -35,7 +37,7 @@ class PropertyBinderSpec extends Specification {
         )
 
         when:
-        def authority = PropertyBinder.INSTANCE.toAuthority(authData)
+        def authority = ModelPropertyMapper.INSTANCE.toAuthority(authData)
 
         then:
         authority
@@ -44,7 +46,7 @@ class PropertyBinderSpec extends Specification {
         authority.keyPairId == authData.keyPairId
         authority.contentId == 277
         authority.episodeId == 6066237809885184
-        authority.expiredAt == 1670945106
+        authority.expiredAt == Instant.ofEpochSecond(1670945106)
         authority.expired
     }
 
@@ -60,7 +62,7 @@ class PropertyBinderSpec extends Specification {
         ]
 
         when:
-        def httpHosts = PropertyBinder.INSTANCE.toHttpHosts(config)
+        def httpHosts = ModelPropertyMapper.INSTANCE.toHttpHosts(config)
 
         then:
         httpHosts

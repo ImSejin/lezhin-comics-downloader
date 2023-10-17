@@ -2,6 +2,7 @@ package io.github.imsejin.dl.lezhin.attribute.impl;
 
 import io.github.imsejin.common.assertion.Asserts;
 import io.github.imsejin.dl.lezhin.attribute.Attribute;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;

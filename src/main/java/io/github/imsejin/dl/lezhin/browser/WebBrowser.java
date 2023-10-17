@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Sejin Im
+ * Copyright 2023 Sejin Im
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,19 @@
 
 package io.github.imsejin.dl.lezhin.browser;
 
-import io.github.imsejin.common.annotation.ExcludeFromGeneratedJacocoReport;
-import io.github.imsejin.common.assertion.Asserts;
-import io.github.imsejin.common.constant.OS;
-import io.github.imsejin.common.util.ClassUtils;
-import io.github.imsejin.dl.lezhin.exception.ChromeDriverNotFoundException;
-import io.github.imsejin.dl.lezhin.exception.WebBrowserNotRunningException;
-import io.github.imsejin.dl.lezhin.util.PathUtils;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.time.Duration;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Stream;
+
+import javax.annotation.concurrent.ThreadSafe;
+
 import org.jetbrains.annotations.Nullable;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
@@ -34,18 +40,10 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import javax.annotation.concurrent.ThreadSafe;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.Duration;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Stream;
+import io.github.imsejin.common.annotation.ExcludeFromGeneratedJacocoReport;
+import io.github.imsejin.common.assertion.Asserts;
+import io.github.imsejin.common.util.ClassUtils;
+import io.github.imsejin.dl.lezhin.exception.WebBrowserNotRunningException;
 
 /**
  * @since 2.0.0
@@ -53,7 +51,7 @@ import java.util.stream.Stream;
 @ThreadSafe
 public final class WebBrowser {
 
-    public static final long DEFAULT_TIMEOUT_SECONDS = 15;
+    public static final long DEFAULT_TIMEOUT_SECONDS = 15L;
 
     public static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(DEFAULT_TIMEOUT_SECONDS);
 
@@ -72,7 +70,9 @@ public final class WebBrowser {
 
     private static boolean initialized;
 
-    // Preparation -------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------
+    // Preparation
+    // -------------------------------------------------------------------------------------------------
 
     /**
      * @since 2.6.2
@@ -82,7 +82,9 @@ public final class WebBrowser {
                 .map(ChromeOption::getArgument).forEach(arguments::remove);
     }
 
-    // Initialization ----------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------
+    // Initialization
+    // -------------------------------------------------------------------------------------------------
 
     @ExcludeFromGeneratedJacocoReport
     private WebBrowser() {
@@ -109,22 +111,9 @@ public final class WebBrowser {
      * @since 3.0.0
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static void run() {
+    public static void run(Path chromeDriverPath) {
         if (isRunning()) {
             return;
-        }
-
-        // Assigns chrome driver pathname.
-        String fileName = ChromeDriverService.CHROME_DRIVER_NAME;
-        if (OS.WINDOWS.isCurrentOS()) {
-            fileName += ".exe"; // for Microsoft Windows
-        }
-
-        Path currentPath = PathUtils.getCurrentPath();
-        Path chromeDriverPath = currentPath.resolve(fileName);
-
-        if (!Files.isRegularFile(chromeDriverPath)) {
-            throw new ChromeDriverNotFoundException("There is no chromedriver: %s", chromeDriverPath);
         }
 
         // Sets up pathname of web driver.
@@ -134,7 +123,7 @@ public final class WebBrowser {
 
         // Invokes any instance method of driver to initialize this field by classloader.
         // `WebBrowser.initialized` will be updated after the invocation.
-        SingletonLazyHolder.DRIVER.hashCode();
+        getDriver().hashCode();
     }
 
     // -------------------------------------------------------------------------------------------------
@@ -182,16 +171,18 @@ public final class WebBrowser {
         }
 
         String url = u.resolve(uri).normalize().toString();
-        SingletonLazyHolder.DRIVER.get(url);
+        getDriver().get(url);
     }
 
     public static String getCurrentUrl() {
         CHECK_INITIALIZATION.run();
 
-        return SingletonLazyHolder.DRIVER.getCurrentUrl();
+        return getDriver().getCurrentUrl();
     }
 
-    // Waiting -----------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------
+    // Waiting
+    // -------------------------------------------------------------------------------------------------
 
     /**
      * Waits for the presence of element.
@@ -221,7 +212,9 @@ public final class WebBrowser {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
-    // Javascript --------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------
+    // Javascript
+    // -------------------------------------------------------------------------------------------------
 
     @Nullable
     @SuppressWarnings("unchecked")
@@ -235,7 +228,7 @@ public final class WebBrowser {
 
         CHECK_INITIALIZATION.run();
 
-        Object evaluated = SingletonLazyHolder.DRIVER.executeScript("return " + javascript);
+        Object evaluated = getDriver().executeScript("return " + javascript);
 
         for (Class<?> type : SUPPORTED_EVALUATED_TYPES) {
             if (type.isInstance(evaluated) && type == expected) {

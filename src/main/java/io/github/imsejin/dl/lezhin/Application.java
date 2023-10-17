@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Sejin Im
+ * Copyright 2023 Sejin Im
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,11 @@
  */
 
 package io.github.imsejin.dl.lezhin;
+
+import java.util.List;
+import java.util.Set;
+
+import org.reflections.Reflections;
 
 import io.github.imsejin.common.util.ClassUtils;
 import io.github.imsejin.dl.lezhin.argument.Argument;
@@ -33,20 +38,20 @@ import io.github.imsejin.dl.lezhin.process.Processor;
 import io.github.imsejin.dl.lezhin.process.framework.ProcessorCreator;
 import io.github.imsejin.dl.lezhin.process.framework.ProcessorOrderResolver;
 import io.github.imsejin.dl.lezhin.util.PathUtils;
-import org.reflections.Reflections;
 
-import java.util.List;
-import java.util.Set;
-
-import static java.util.stream.Collectors.toUnmodifiableSet;
+import static java.util.stream.Collectors.*;
 
 public final class Application {
 
     public static void main(String[] args) {
         try {
             ArgumentsParser argumentsParser = new ArgumentsParser(
-                    new Language(), new ContentName(), new EpisodeRange(),
-                    new ImageFormat(), new SingleThreading(), new DebugMode());
+                    new Language(),
+                    new ContentName(),
+                    new EpisodeRange(),
+                    new ImageFormat(),
+                    new SingleThreading(),
+                    new DebugMode());
             List<Argument> arguments = argumentsParser.parse(args);
 
             ProcessContext context = ProcessContext.create(arguments.toArray());

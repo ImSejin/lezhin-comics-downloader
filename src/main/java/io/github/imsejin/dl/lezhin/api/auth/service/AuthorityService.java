@@ -21,7 +21,8 @@ import io.github.imsejin.dl.lezhin.api.BaseService;
 import io.github.imsejin.dl.lezhin.api.auth.model.Authority;
 import io.github.imsejin.dl.lezhin.api.auth.model.ServiceRequest;
 import io.github.imsejin.dl.lezhin.common.Loggers;
-import io.github.imsejin.dl.lezhin.common.PropertyBinder;
+import io.github.imsejin.dl.lezhin.common.ModelPropertyMapper;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -79,7 +80,7 @@ public class AuthorityService extends BaseService {
         }
 
         AuthResponse authResponse = Objects.requireNonNull(response.body());
-        return PropertyBinder.INSTANCE.toAuthority(authResponse.getAuthData());
+        return ModelPropertyMapper.INSTANCE.toAuthority(authResponse.getAuthData());
     }
 
     // -------------------------------------------------------------------------------------------------

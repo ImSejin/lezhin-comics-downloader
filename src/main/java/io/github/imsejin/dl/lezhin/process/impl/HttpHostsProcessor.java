@@ -21,7 +21,7 @@ import io.github.imsejin.dl.lezhin.annotation.ProcessSpecification;
 import io.github.imsejin.dl.lezhin.attribute.impl.HttpHosts;
 import io.github.imsejin.dl.lezhin.browser.WebBrowser;
 import io.github.imsejin.dl.lezhin.common.Loggers;
-import io.github.imsejin.dl.lezhin.common.PropertyBinder;
+import io.github.imsejin.dl.lezhin.common.ModelPropertyMapper;
 import io.github.imsejin.dl.lezhin.exception.URLConfigurationNotFoundException;
 import io.github.imsejin.dl.lezhin.process.ProcessContext;
 import io.github.imsejin.dl.lezhin.process.Processor;
@@ -82,7 +82,7 @@ public class HttpHostsProcessor implements Processor {
             throw new URLConfigurationNotFoundException("Invalid configuration of URL: %s", config);
         }
 
-        HttpHosts httpHosts = PropertyBinder.INSTANCE.toHttpHosts(config);
+        HttpHosts httpHosts = ModelPropertyMapper.INSTANCE.toHttpHosts(config);
         Loggers.getLogger().debug("Found the configuration of URL: {}", httpHosts);
 
         return httpHosts;

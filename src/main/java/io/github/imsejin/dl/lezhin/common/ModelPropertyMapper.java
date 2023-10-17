@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Sejin Im
+ * Copyright 2023 Sejin Im
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,23 @@
 
 package io.github.imsejin.dl.lezhin.common;
 
+import java.util.Map;
+
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
+
 import io.github.imsejin.dl.lezhin.api.auth.model.Authority;
 import io.github.imsejin.dl.lezhin.api.auth.model.ServiceRequest;
 import io.github.imsejin.dl.lezhin.api.auth.service.AuthorityService.AuthData;
 import io.github.imsejin.dl.lezhin.attribute.impl.Content;
 import io.github.imsejin.dl.lezhin.attribute.impl.Content.Episode;
 import io.github.imsejin.dl.lezhin.attribute.impl.HttpHosts;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
-
-import java.util.Map;
 
 @Mapper
-public interface PropertyBinder {
+public interface ModelPropertyMapper {
 
-    PropertyBinder INSTANCE = Mappers.getMapper(PropertyBinder.class);
+    ModelPropertyMapper INSTANCE = Mappers.getMapper(ModelPropertyMapper.class);
 
     Authority toAuthority(AuthData source);
 
@@ -48,5 +49,9 @@ public interface PropertyBinder {
     @Mapping(target = "pay", source = "config.payUrl")
     @Mapping(target = "panther", source = "config.pantherUrl")
     HttpHosts toHttpHosts(Map<String, String> config);
+
+    @Mapping(target = "version", source = "props.version")
+    @Mapping(target = "chromedriver.url.downloadList", source = "props.chromedriver/url/download-list")
+    ApplicationProperties toApplicationProperties(Map<String, String> props);
 
 }
