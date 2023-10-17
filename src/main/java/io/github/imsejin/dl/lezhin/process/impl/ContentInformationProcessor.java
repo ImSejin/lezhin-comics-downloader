@@ -16,6 +16,10 @@
 
 package io.github.imsejin.dl.lezhin.process.impl;
 
+import java.util.Locale;
+
+import org.openqa.selenium.By;
+
 import io.github.imsejin.common.assertion.Asserts;
 import io.github.imsejin.dl.lezhin.annotation.ProcessSpecification;
 import io.github.imsejin.dl.lezhin.api.BaseService;
@@ -27,9 +31,6 @@ import io.github.imsejin.dl.lezhin.exception.LezhinComicsDownloaderException;
 import io.github.imsejin.dl.lezhin.http.url.URIs;
 import io.github.imsejin.dl.lezhin.process.ProcessContext;
 import io.github.imsejin.dl.lezhin.process.Processor;
-import org.openqa.selenium.By;
-
-import java.util.Locale;
 
 /**
  * Processor for figuring out information of the content
@@ -59,7 +60,8 @@ public class ContentInformationProcessor implements Processor {
             jsonString = getJsonInMyLibrary(context);
         } else {
             // Waits for DOM to complete the rendering.
-            Loggers.getLogger().debug("Wait up to {} sec for episode list to be rendered", WebBrowser.DEFAULT_TIMEOUT_SECONDS);
+            Loggers.getLogger()
+                    .debug("Wait up to {} sec for episode list to be rendered", WebBrowser.DEFAULT_TIMEOUT_SECONDS);
             WebBrowser.waitForVisibilityOfElement(By.xpath(
                     "//main[@id='main' and @class='lzCntnr lzCntnr--episode']"));
             jsonString = WebBrowser.evaluate("JSON.stringify(window.__LZ_PRODUCT__.product)", String.class);
@@ -88,7 +90,8 @@ public class ContentInformationProcessor implements Processor {
         WebBrowser.request(libraryContentPath);
 
         // Waits for DOM to complete the rendering.
-        Loggers.getLogger().debug("Wait up to {} sec for episode list to be rendered", WebBrowser.DEFAULT_TIMEOUT_SECONDS);
+        Loggers.getLogger()
+                .debug("Wait up to {} sec for episode list to be rendered", WebBrowser.DEFAULT_TIMEOUT_SECONDS);
         WebBrowser.waitForVisibilityOfElement(By.xpath(
                 "//ul[@id='library-episode-list' and @class='epsList']"));
 
