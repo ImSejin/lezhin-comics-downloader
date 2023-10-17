@@ -21,9 +21,11 @@ import spock.lang.Subject
 
 import java.nio.charset.StandardCharsets
 import java.time.Instant
+import java.util.concurrent.ThreadLocalRandom
 
 import io.github.imsejin.dl.lezhin.api.BaseService
 import io.github.imsejin.dl.lezhin.api.chromedriver.model.ChromeDriverDownload
+import io.github.imsejin.dl.lezhin.browser.ChromeVersion
 
 import static java.util.stream.Collectors.*
 
@@ -32,14 +34,26 @@ class ChromeDriverDownloadServiceSpec extends Specification {
 
     def "Finds full chrome version by major version"() {
         given:
-        def service = new ChromeDriverDownloadService()
+        def majorVersion = 114
+        def randomizedVersion = { Object... major ->
+            def random = ThreadLocalRandom.current()
+            def minor = random.nextInt(10000)
+            def bugfix = random.nextInt(1000)
+            ChromeVersion.from("${major[0]}.0.$minor.$bugfix")
+        }
+
+        and:
+        def service = Mock(ChromeDriverDownloadService)
+        service.findChromeVersion(majorVersion) >> { randomizedVersion(majorVersion) }
 
         when:
-        def chromeVersion = service.findChromeVersion(114)
+        def chromeVersion = service.findChromeVersion(majorVersion)
 
         then:
+        def otherVersion = randomizedVersion(majorVersion)
         chromeVersion != null
-        chromeVersion.majorVersion == 114
+        chromeVersion.isCompatibleWith(otherVersion)
+        otherVersion.isCompatibleWith(chromeVersion)
     }
 
     def "Finds chromedriver downloads"() {

@@ -80,7 +80,7 @@ public class ChromeDriverDownloadService extends BaseService {
             throw new IllegalArgumentException("Failed to get version of chrome");
         }
 
-        return new ChromeVersion(chromeVersion);
+        return ChromeVersion.from(chromeVersion);
     }
 
     public ChromeDriverDownload findChromeDriverDownload() {
