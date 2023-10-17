@@ -17,8 +17,8 @@
 package io.github.imsejin.dl.lezhin.process.impl;
 
 import io.github.imsejin.common.assertion.Asserts;
-import io.github.imsejin.common.util.JsonUtils;
 import io.github.imsejin.dl.lezhin.annotation.ProcessSpecification;
+import io.github.imsejin.dl.lezhin.api.BaseService;
 import io.github.imsejin.dl.lezhin.argument.impl.Language;
 import io.github.imsejin.dl.lezhin.attribute.impl.Content;
 import io.github.imsejin.dl.lezhin.browser.WebBrowser;
@@ -65,7 +65,7 @@ public class ContentInformationProcessor implements Processor {
             jsonString = WebBrowser.evaluate("JSON.stringify(window.__LZ_PRODUCT__.product)", String.class);
         }
 
-        Content content = JsonUtils.toObject(jsonString, Content.class);
+        Content content = BaseService.getGson().fromJson(jsonString, Content.class);
         Asserts.that(content)
                 .isNotNull()
                 .describedAs("Content.properties.expired is expected to be '{0}'", expired)

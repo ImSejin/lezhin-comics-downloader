@@ -17,6 +17,7 @@
 package io.github.imsejin.dl.lezhin.api;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -28,7 +29,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import okhttp3.OkHttpClient;
 
+import io.github.imsejin.dl.lezhin.api.chromedriver.model.Platform;
+import io.github.imsejin.dl.lezhin.browser.ChromeVersion;
 import io.github.imsejin.dl.lezhin.http.interceptor.FabricatedHeadersInterceptor;
+import io.github.imsejin.dl.lezhin.http.typehandler.ChromeVersionTypeAdaptor;
+import io.github.imsejin.dl.lezhin.http.typehandler.InstantTypeAdaptor;
+import io.github.imsejin.dl.lezhin.http.typehandler.PlatformTypeAdaptor;
 
 /**
  * @since 3.0.0
@@ -38,12 +44,15 @@ public abstract class BaseService {
 
     private static final FabricatedHeadersInterceptor interceptor = new FabricatedHeadersInterceptor();
 
-    @Getter(AccessLevel.PROTECTED)
+    @Getter
     private static final Gson gson = new GsonBuilder()
             .disableJdkUnsafe()
             // com.google.gson.stream.MalformedJsonException:
             // Use JsonReader.setLenient(true) to accept malformed JSON at line 1 column 1 path $
             .setLenient()
+            .registerTypeHierarchyAdapter(Instant.class, new InstantTypeAdaptor())
+            .registerTypeHierarchyAdapter(Platform.class, new PlatformTypeAdaptor())
+            .registerTypeHierarchyAdapter(ChromeVersion.class, new ChromeVersionTypeAdaptor())
             .create();
 
     @Getter(AccessLevel.PROTECTED)
