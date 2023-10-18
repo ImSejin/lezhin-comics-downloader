@@ -35,6 +35,8 @@ import io.github.imsejin.dl.lezhin.process.Processor;
 import io.github.imsejin.dl.lezhin.util.CommandUtils;
 
 /**
+ * Processor for resolution of chrome information
+ *
  * @since 4.0.0
  */
 @ProcessSpecification(dependsOn = ConfigurationFileProcessor.class)
@@ -57,21 +59,26 @@ public class ChromeInfoResolutionProcessor implements Processor {
                 .findFirst().orElseThrow();
 
         Loggers.getLogger().debug("Resolve version of chrome browser");
-
         ChromeVersion browserVersion = resolver.resolveChromeBrowserVersion();
 
         // Regards chrome browser as installed.
         if (browserVersion == null) {
-            Loggers.getLogger().debug("Failed to resolve version of chrome browser: ignore this step");
+            Loggers.getLogger().debug("Failed to resolve version of chrome browser");
         }
 
+        Loggers.getLogger().debug("Resolve path of chromedriver");
         Path driverPath = resolver.resolveChromeDriverPath(context.getDirectoryPath());
+
         if (!Files.isRegularFile(driverPath)) {
-            return ChromeInfo.ofBrowser(browserVersion);
+            Loggers.getLogger().debug("Failed to resolve path of chromedriver");
+            return ChromeInfo.ofDriverPath(browserVersion, driverPath);
         }
 
+        Loggers.getLogger().debug("Resolve version of chromedriver");
         ChromeVersion driverVersion = resolver.resolveChromeDriverVersion(driverPath);
+
         if (driverVersion == null) {
+            Loggers.getLogger().debug("Failed to resolve version of chromedriver");
             return ChromeInfo.ofDriverPath(browserVersion, driverPath);
         }
 
