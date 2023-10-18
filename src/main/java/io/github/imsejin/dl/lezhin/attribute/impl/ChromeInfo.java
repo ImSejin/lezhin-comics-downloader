@@ -20,11 +20,9 @@ import java.nio.file.Path;
 
 import org.jetbrains.annotations.Nullable;
 
-import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 import io.github.imsejin.dl.lezhin.attribute.Attribute;
@@ -40,7 +38,6 @@ import io.github.imsejin.dl.lezhin.process.impl.ChromeDriverDownloadProcessor;
 @Getter
 @ToString
 @EqualsAndHashCode
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ChromeInfo implements Attribute {
 
     /**
@@ -67,8 +64,26 @@ public final class ChromeInfo implements Attribute {
     @Nullable
     private final ChromeVersion driverVersion;
 
-    public static ChromeInfo ofBrowser(@Nullable ChromeVersion browserVersion) {
-        return new ChromeInfo(browserVersion, null, null);
+    private final Status status;
+
+    private ChromeInfo(
+            @Nullable ChromeVersion browserVersion,
+            @Nullable Path driverPath,
+            @Nullable ChromeVersion driverVersion
+    ) {
+        this.browserVersion = browserVersion;
+        this.driverPath = driverPath;
+        this.driverVersion = driverVersion;
+
+        if (browserVersion != null && driverVersion != null) {
+            this.status = Status.ENTIRE;
+        } else if (driverVersion != null) {
+            this.status = Status.DRIVER_ONLY;
+        } else if (browserVersion != null) {
+            this.status = Status.BROWSER_ONLY;
+        } else {
+            this.status = Status.NONE;
+        }
     }
 
     public static ChromeInfo ofDriverPath(@Nullable ChromeVersion browserVersion, @NonNull Path driverPath) {
@@ -81,6 +96,18 @@ public final class ChromeInfo implements Attribute {
             @NonNull ChromeVersion driverVersion
     ) {
         return new ChromeInfo(browserVersion, driverPath, driverVersion);
+    }
+
+    // -------------------------------------------------------------------------------------------------
+
+    public enum Status {
+        NONE,
+
+        DRIVER_ONLY,
+
+        BROWSER_ONLY,
+
+        ENTIRE,
     }
 
 }
