@@ -26,7 +26,6 @@ import org.jetbrains.annotations.Nullable;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 
 import io.github.imsejin.common.util.StringUtils;
 
@@ -43,7 +42,6 @@ import io.github.imsejin.common.util.StringUtils;
  * @since 4.0.0
  */
 @Getter
-@ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public final class ChromeVersion implements Comparable<ChromeVersion> {
 
@@ -84,6 +82,11 @@ public final class ChromeVersion implements Comparable<ChromeVersion> {
         String otherMajorVersion = new StringTokenizer(other.value, ".").nextToken();
 
         return Objects.equals(thisMajorVersion, otherMajorVersion);
+    }
+
+    @Override
+    public String toString() {
+        return this.value;
     }
 
     @Override
