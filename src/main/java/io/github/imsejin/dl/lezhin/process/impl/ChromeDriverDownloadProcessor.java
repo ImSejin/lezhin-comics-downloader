@@ -64,11 +64,6 @@ public class ChromeDriverDownloadProcessor implements Processor {
 
         ChromeDriverDownloadService service = new ChromeDriverDownloadService();
         ChromeDriverDownload download = service.findChromeDriverDownload();
-
-        // NONE : 최신 버전 다운
-        // DRIVER_ONLY : 최신 버전보다 낮으면 최신 버전 다운
-        // BROWSER_ONLY : 브라우저 버전 다운.
-        // ENTIRE : 서로 호환되는지 확인. 비호환이면 브라우저 버전 다운
         Optional<ChromeDriverDownload.Version> maybeLatestVersion = download.findLatestVersion();
 
         switch (status) {
