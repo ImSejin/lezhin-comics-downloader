@@ -42,7 +42,7 @@ class CommandUtilsSpec extends Specification {
         def expected = "foobar"
 
         when:
-        def result = CommandUtils.runCommand("bash", "-c", "\"echo $expected\"")
+        def result = CommandUtils.runCommand("bash", "-c", "echo '$expected'")
 
         then:
         result == expected
@@ -54,7 +54,7 @@ class CommandUtilsSpec extends Specification {
         def expected = "foobar"
 
         when:
-        def result = CommandUtils.runCommand("bash", "-c", "\"echo $expected\"")
+        def result = CommandUtils.runCommand("bash", "-c", "echo '$expected'")
 
         then:
         result == expected
