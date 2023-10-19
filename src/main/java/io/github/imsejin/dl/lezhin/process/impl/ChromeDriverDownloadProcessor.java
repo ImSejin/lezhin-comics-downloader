@@ -16,11 +16,15 @@
 
 package io.github.imsejin.dl.lezhin.process.impl;
 
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import org.openqa.selenium.chrome.ChromeDriverService;
 
 import io.github.imsejin.common.io.Resource;
 import io.github.imsejin.common.io.finder.ResourceFinder;
@@ -195,7 +199,8 @@ public class ChromeDriverDownloadProcessor implements Processor {
         //   └ chromedriver.exe
         //   └ LICENSE.chromedriver
         ResourceFinder resourceFinder = new ZipResourceFinder(false,
-                entry -> !entry.isDirectory() && entry.getName().startsWith("chromedriver"));
+                entry -> !entry.isDirectory() && FilenameUtils.getBaseName(FilenameUtils.getName(entry.getName()))
+                        .equals(ChromeDriverService.CHROME_DRIVER_NAME));
         List<Resource> resources = resourceFinder.getResources(filePath);
 
         // There is no chromedriver in the archive file.
@@ -210,12 +215,22 @@ public class ChromeDriverDownloadProcessor implements Processor {
             return false;
         }
 
-        // Moves chromedriver from the archive file. (overwrite)
-        Resource resource = resources.get(0);
-        FileUtils.download(resource.getInputStream(), driverPath);
+        try {
+            // Removes the existing chromedriver.
+            if (Files.isRegularFile(driverPath)) {
+                Files.delete(driverPath);
+            }
 
-        // Removes the archive file.
-        FileUtils.deleteRecursively(filePath);
+            // Moves chromedriver from the archive file.
+            Resource resource = resources.get(0);
+            FileUtils.download(resource.getInputStream(), driverPath);
+            driverPath.toFile().setExecutable(true, false);
+        } catch (IOException ignored) {
+            return false;
+        } finally {
+            // Removes the archive file.
+            FileUtils.deleteRecursively(filePath);
+        }
 
         return true;
     }
