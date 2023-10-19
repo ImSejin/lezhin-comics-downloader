@@ -35,7 +35,7 @@ import io.github.imsejin.dl.lezhin.process.Processor;
 import io.github.imsejin.dl.lezhin.util.CommandUtils;
 
 /**
- * Processor for resolution of chrome information
+ * Processor for resolution of chrome product information
  *
  * @since 4.0.0
  */
@@ -185,7 +185,7 @@ public class ChromeInfoResolutionProcessor implements Processor {
         public ChromeVersion resolveChromeBrowserVersion() {
             try {
                 String versionString = CommandUtils.runCommand(
-                        "/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome",
+                        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
                         "--version");
                 return ChromeVersion.from(versionString);
             } catch (Exception ignored) {
@@ -195,6 +195,12 @@ public class ChromeInfoResolutionProcessor implements Processor {
 
         @Override
         public ChromeVersion resolveChromeDriverVersion(Path driverPath) {
+            try {
+                String result = CommandUtils.runCommand(driverPath.toRealPath().toString(), "-v");
+                return ChromeVersion.from(result);
+            } catch (Exception ignored) {
+            }
+
             return null;
         }
     }

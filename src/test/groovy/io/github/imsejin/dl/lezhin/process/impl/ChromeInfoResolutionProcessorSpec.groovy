@@ -26,16 +26,16 @@ import io.github.imsejin.dl.lezhin.util.PathUtils
 @Subject(ChromeInfoResolutionProcessor)
 class ChromeInfoResolutionProcessorSpec extends Specification {
 
-    def "test"() {
+    def "Resolves information of chrome products"() {
         given:
         def context = ProcessContext.create(new DirectoryPath(PathUtils.currentPath))
-        def processor = new ChromeInfoResolutionProcessor()
 
         when:
+        def processor = new ChromeInfoResolutionProcessor()
         def chromeInfo = processor.process(context)
 
         then:
-        chromeInfo
+        chromeInfo != null
     }
 
 }
