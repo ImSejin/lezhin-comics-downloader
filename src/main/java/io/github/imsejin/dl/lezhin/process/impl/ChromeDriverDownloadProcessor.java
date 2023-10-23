@@ -20,11 +20,15 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 import org.openqa.selenium.chrome.ChromeDriverService;
+
+import lombok.RequiredArgsConstructor;
 
 import io.github.imsejin.common.io.Resource;
 import io.github.imsejin.common.io.finder.ResourceFinder;
@@ -48,8 +52,11 @@ import io.github.imsejin.dl.lezhin.process.Processor;
  *
  * @since 4.0.0
  */
+@RequiredArgsConstructor
 @ProcessSpecification(dependsOn = ChromeInfoResolutionProcessor.class)
 public class ChromeDriverDownloadProcessor implements Processor {
+
+    private final ChromeDriverDownloadService service;
 
     @Override
     public Void process(ProcessContext context) throws LezhinComicsDownloaderException {
@@ -66,8 +73,7 @@ public class ChromeDriverDownloadProcessor implements Processor {
             return null;
         }
 
-        ChromeDriverDownloadService service = new ChromeDriverDownloadService();
-        ChromeDriverDownload download = service.findChromeDriverDownload();
+        ChromeDriverDownload download = this.service.findChromeDriverDownload();
         Optional<ChromeDriverDownload.Version> maybeLatestVersion = download.findLatestVersion();
 
         switch (status) {
@@ -224,7 +230,16 @@ public class ChromeDriverDownloadProcessor implements Processor {
             // Moves chromedriver from the archive file.
             Resource resource = resources.get(0);
             FileUtils.download(resource.getInputStream(), driverPath);
-            driverPath.toFile().setExecutable(true, false);
+            Files.setPosixFilePermissions(driverPath, Set.of(
+                    PosixFilePermission.OWNER_READ,
+                    PosixFilePermission.OWNER_WRITE,
+                    PosixFilePermission.OWNER_EXECUTE,
+                    PosixFilePermission.GROUP_READ,
+                    PosixFilePermission.GROUP_EXECUTE,
+                    PosixFilePermission.OTHERS_READ,
+                    PosixFilePermission.OTHERS_EXECUTE
+            ));
+            // driverPath.toFile().setExecutable(true, false);
         } catch (IOException ignored) {
             return false;
         } finally {

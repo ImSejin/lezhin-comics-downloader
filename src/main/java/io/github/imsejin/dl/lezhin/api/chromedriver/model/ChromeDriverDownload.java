@@ -25,9 +25,8 @@ import org.jetbrains.annotations.Nullable;
 
 import com.google.gson.annotations.SerializedName;
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 import io.github.imsejin.common.util.CollectionUtils;
@@ -40,7 +39,6 @@ import static java.util.Comparator.*;
  */
 @Getter
 @ToString
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ChromeDriverDownload {
 
     private Instant timestamp;
@@ -62,7 +60,6 @@ public class ChromeDriverDownload {
 
     @Getter
     @ToString
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Version {
         @SerializedName("version")
         private ChromeVersion value;
@@ -74,7 +71,6 @@ public class ChromeDriverDownload {
 
     @Getter
     @ToString
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Downloads {
         @SerializedName("chrome")
         private List<Program> chromes;
@@ -86,7 +82,6 @@ public class ChromeDriverDownload {
 
     @Getter
     @ToString
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Program {
         private Platform platform;
 

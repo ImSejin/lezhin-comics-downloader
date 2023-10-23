@@ -22,6 +22,7 @@ import java.util.Set;
 import org.reflections.Reflections;
 
 import io.github.imsejin.common.util.ClassUtils;
+import io.github.imsejin.dl.lezhin.api.chromedriver.service.ChromeDriverDownloadService;
 import io.github.imsejin.dl.lezhin.argument.Argument;
 import io.github.imsejin.dl.lezhin.argument.ArgumentsParser;
 import io.github.imsejin.dl.lezhin.argument.impl.ContentName;
@@ -51,7 +52,8 @@ public final class Application {
                     new EpisodeRange(),
                     new ImageFormat(),
                     new SingleThreading(),
-                    new DebugMode());
+                    new DebugMode()
+            );
             List<Argument> arguments = argumentsParser.parse(args);
 
             ProcessContext context = ProcessContext.create(arguments.toArray());
@@ -86,7 +88,10 @@ public final class Application {
         List<Class<? extends Processor>> orderedTypes = ProcessorOrderResolver.resolve(processorTypes);
 
         // Prepares objects needed to instantiate the processors.
-        List<Object> beans = List.of(PathUtils.getCurrentPath());
+        List<Object> beans = List.of(
+                PathUtils.getCurrentPath(),
+                new ChromeDriverDownloadService()
+        );
 
         // Creates the processors with beans.
         ProcessorCreator processorCreator = new ProcessorCreator(beans.toArray());

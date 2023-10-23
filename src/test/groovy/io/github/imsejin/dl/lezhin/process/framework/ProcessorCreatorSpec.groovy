@@ -21,6 +21,7 @@ import spock.lang.Subject
 
 import java.nio.file.Path
 
+import io.github.imsejin.dl.lezhin.api.chromedriver.service.ChromeDriverDownloadService
 import io.github.imsejin.dl.lezhin.process.impl.AccessTokenProcessor
 import io.github.imsejin.dl.lezhin.process.impl.ChromeDriverDownloadProcessor
 import io.github.imsejin.dl.lezhin.process.impl.ChromeInfoResolutionProcessor
@@ -49,7 +50,7 @@ class ProcessorCreatorSpec extends Specification {
 
     def "Creates processors"() {
         given:
-        def beans = [Path].collect { Mock(it) }
+        def beans = [Path, ChromeDriverDownloadService].collect { Mock(it) }
         def types = [
                 ConfigurationFileProcessor,
                 ChromeInfoResolutionProcessor,
