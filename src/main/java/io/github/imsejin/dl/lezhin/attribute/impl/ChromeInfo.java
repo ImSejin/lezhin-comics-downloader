@@ -53,7 +53,7 @@ public final class ChromeInfo implements Attribute {
      * <p>
      * It is not required to download new chromedriver, but required to resolve the version of that.
      */
-    @Nullable
+    @NonNull
     private final Path driverPath;
 
     /**
@@ -68,7 +68,7 @@ public final class ChromeInfo implements Attribute {
 
     private ChromeInfo(
             @Nullable ChromeVersion browserVersion,
-            @Nullable Path driverPath,
+            @NonNull Path driverPath,
             @Nullable ChromeVersion driverVersion
     ) {
         this.browserVersion = browserVersion;
