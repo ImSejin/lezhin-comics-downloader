@@ -21,10 +21,10 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermission;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 
 import org.openqa.selenium.chrome.ChromeDriverService;
 
@@ -230,7 +230,7 @@ public class ChromeDriverDownloadProcessor implements Processor {
             // Moves chromedriver from the archive file.
             Resource resource = resources.get(0);
             FileUtils.download(resource.getInputStream(), driverPath);
-            Files.setPosixFilePermissions(driverPath, Set.of(
+            Files.setPosixFilePermissions(driverPath, EnumSet.of(
                     PosixFilePermission.OWNER_READ,
                     PosixFilePermission.OWNER_WRITE,
                     PosixFilePermission.OWNER_EXECUTE,
@@ -239,7 +239,6 @@ public class ChromeDriverDownloadProcessor implements Processor {
                     PosixFilePermission.OTHERS_READ,
                     PosixFilePermission.OTHERS_EXECUTE
             ));
-            // driverPath.toFile().setExecutable(true, false);
         } catch (IOException ignored) {
             return false;
         } finally {
