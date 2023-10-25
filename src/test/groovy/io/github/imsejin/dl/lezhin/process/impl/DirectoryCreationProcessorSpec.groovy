@@ -1,24 +1,28 @@
 package io.github.imsejin.dl.lezhin.process.impl
 
+import spock.lang.Specification
+import spock.lang.Subject
+
+import java.nio.file.FileSystem
+import java.nio.file.attribute.PosixFileAttributeView
+
+import com.github.marschall.memoryfilesystem.MemoryFileSystemBuilder
+
 import io.github.imsejin.dl.lezhin.attribute.impl.Content
 import io.github.imsejin.dl.lezhin.attribute.impl.Content.Artist
 import io.github.imsejin.dl.lezhin.attribute.impl.Content.Display
 import io.github.imsejin.dl.lezhin.process.ProcessContext
-import spock.lang.Specification
-import spock.lang.Subject
-import spock.lang.TempDir
-
-import java.nio.file.Path
 
 @Subject(DirectoryCreationProcessor)
 class DirectoryCreationProcessorSpec extends Specification {
 
-    @TempDir
-    private Path basePath
-
+    private FileSystem fileSystem
     private ProcessContext context
 
     void setup() {
+        fileSystem = MemoryFileSystemBuilder.newEmpty()
+                .addFileAttributeView(PosixFileAttributeView)
+                .build()
         context = ProcessContext.create()
         context.add(new Content(
                 display: new Display(title: "Foo Bar", synopsis: "..."),
@@ -32,6 +36,9 @@ class DirectoryCreationProcessorSpec extends Specification {
     // -------------------------------------------------------------------------------------------------
 
     def "Succeeds"() {
+        given:
+        def basePath = fileSystem.getPath("/")
+
         when:
         def processor = new DirectoryCreationProcessor(basePath)
         def directoryPath = processor.process(context)

@@ -36,6 +36,7 @@ class ChromeInfoResolutionProcessorSpec extends Specification {
 
         then:
         chromeInfo != null
+        chromeInfo.driverPath != null
     }
 
 }

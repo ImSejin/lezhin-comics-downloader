@@ -1,40 +1,52 @@
 package io.github.imsejin.dl.lezhin.process.impl
 
+import spock.lang.Specification
+import spock.lang.Subject
+
+import java.nio.file.FileSystem
+import java.nio.file.Files
+import java.nio.file.attribute.PosixFileAttributeView
+
+import com.github.marschall.memoryfilesystem.MemoryFileSystemBuilder
+
 import io.github.imsejin.dl.lezhin.exception.ConfigurationFileNotFoundException
 import io.github.imsejin.dl.lezhin.exception.InvalidConfigurationFileException
 import io.github.imsejin.dl.lezhin.process.ProcessContext
-import spock.lang.Specification
-import spock.lang.Subject
-import spock.lang.TempDir
-
-import java.nio.file.Files
-import java.nio.file.Path
 
 @Subject(ConfigurationFileProcessor)
 class ConfigurationFileProcessorSpec extends Specification {
 
-    @TempDir
-    private Path tempPath
+    private FileSystem fileSystem
 
-    def "Failed to process due to no file"() {
+    void setup() {
+        fileSystem = MemoryFileSystemBuilder.newEmpty()
+                .addFileAttributeView(PosixFileAttributeView)
+                .build()
+    }
+
+    def "Fails due to no file"() {
         given:
-        def processor = new ConfigurationFileProcessor(tempPath)
+        def basePath = fileSystem.getPath("/")
+        def filePath = basePath.resolve("config.ini")
+        def processor = new ConfigurationFileProcessor(basePath)
 
         when:
         processor.process(ProcessContext.create())
 
         then:
         def e = thrown(ConfigurationFileNotFoundException)
-        e.message == "There is no configuration file: ${tempPath.resolve("config.ini")}"
+
+        e.message == "There is no configuration file: $filePath"
     }
 
-    def "Failed to process due to no section[account]"() {
+    def "Fails due to no section[account]"() {
         given:
-        def filePath = tempPath.resolve("config.ini")
+        def basePath = fileSystem.getPath("/")
+        def filePath = basePath.resolve("config.ini")
         Files.createFile(filePath)
 
         when:
-        def processor = new ConfigurationFileProcessor(tempPath)
+        def processor = new ConfigurationFileProcessor(basePath)
         processor.process(ProcessContext.create())
 
         then:
@@ -42,16 +54,17 @@ class ConfigurationFileProcessorSpec extends Specification {
         e.message == "Configuration file has no section[account]: $filePath"
     }
 
-    def "Failed to process due to no name[username]"() {
+    def "Fails due to no name[username]"() {
         given:
-        def filePath = tempPath.resolve("config.ini")
+        def basePath = fileSystem.getPath("/")
+        def filePath = basePath.resolve("config.ini")
         Files.writeString(filePath, """
         [account]
         username=
         """)
 
         when:
-        def processor = new ConfigurationFileProcessor(tempPath)
+        def processor = new ConfigurationFileProcessor(basePath)
         processor.process(ProcessContext.create())
 
         then:
@@ -59,9 +72,10 @@ class ConfigurationFileProcessorSpec extends Specification {
         e.message == "It is invalid value of name[username] in section[account]: "
     }
 
-    def "Failed to process due to no name[password]"() {
+    def "Fails due to no name[password]"() {
         given:
-        def filePath = tempPath.resolve("config.ini")
+        def basePath = fileSystem.getPath("/")
+        def filePath = basePath.resolve("config.ini")
         Files.writeString(filePath, """
         [account]
         username=anonymous
@@ -69,7 +83,7 @@ class ConfigurationFileProcessorSpec extends Specification {
         """)
 
         when:
-        def processor = new ConfigurationFileProcessor(tempPath)
+        def processor = new ConfigurationFileProcessor(basePath)
         processor.process(ProcessContext.create())
 
         then:
@@ -79,7 +93,8 @@ class ConfigurationFileProcessorSpec extends Specification {
 
     def "Processes configuration file"() {
         given:
-        def filePath = tempPath.resolve("config.ini")
+        def basePath = fileSystem.getPath("/")
+        def filePath = basePath.resolve("config.ini")
         Files.writeString(filePath, """
         [account]
         username = anonymous
@@ -87,7 +102,7 @@ class ConfigurationFileProcessorSpec extends Specification {
         """)
 
         when:
-        def processor = new ConfigurationFileProcessor(tempPath)
+        def processor = new ConfigurationFileProcessor(basePath)
         def authentication = processor.process(ProcessContext.create())
 
         then:

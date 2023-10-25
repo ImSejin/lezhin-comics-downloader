@@ -27,10 +27,10 @@ class CommandUtilsSpec extends Specification {
     @Requires({ OperatingSystem.current.isWindows() })
     def "Runs command on windows"() {
         given:
-        def expected = "foobar"
+        def expected = "foo bar"
 
         when:
-        def result = CommandUtils.runCommand("cmd", "/c", "echo $expected")
+        def result = CommandUtils.runCommand("powershell", "-Command", "echo '$expected'")
 
         then:
         result == expected
@@ -39,7 +39,7 @@ class CommandUtilsSpec extends Specification {
     @Requires({ OperatingSystem.current.isLinux() })
     def "Runs command on linux"() {
         given:
-        def expected = "foobar"
+        def expected = "foo bar"
 
         when:
         def result = CommandUtils.runCommand("bash", "-c", "echo '$expected'")
@@ -51,7 +51,7 @@ class CommandUtilsSpec extends Specification {
     @Requires({ OperatingSystem.current.isMacOs() })
     def "Runs command on macos"() {
         given:
-        def expected = "foobar"
+        def expected = "foo bar"
 
         when:
         def result = CommandUtils.runCommand("bash", "-c", "echo '$expected'")

@@ -18,18 +18,14 @@ package io.github.imsejin.dl.lezhin.browser
 
 import spock.lang.Specification
 import spock.lang.Subject
-import spock.lang.TempDir
 
 import java.nio.file.Files
-import java.nio.file.Path
+import java.nio.file.attribute.PosixFileAttributeView
+
+import com.github.marschall.memoryfilesystem.MemoryFileSystemBuilder
 
 @Subject(WebBrowser)
 class WebBrowserSpec extends Specification {
-
-    @TempDir
-    private Path basePath
-
-    // -------------------------------------------------------------------------------------------------
 
     def "Turns on debug mode"() {
         given:
@@ -51,7 +47,10 @@ class WebBrowserSpec extends Specification {
 
     def "Runs"() {
         given:
-        def chromeDriverPath = Files.createFile(basePath.resolve("chromedriver"))
+        def fileSystem = MemoryFileSystemBuilder.newEmpty()
+                .addFileAttributeView(PosixFileAttributeView)
+                .build()
+        def chromeDriverPath = Files.createFile(fileSystem.getPath("/", "chromedriver"))
 
         when:
         WebBrowser.run(chromeDriverPath)

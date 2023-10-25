@@ -19,6 +19,7 @@ package io.github.imsejin.dl.lezhin.process.impl
 import spock.lang.Specification
 import spock.util.environment.OperatingSystem
 
+import java.nio.file.FileSystem
 import java.nio.file.Files
 import java.nio.file.attribute.PosixFileAttributeView
 import java.time.Instant
@@ -44,14 +45,21 @@ import io.github.imsejin.dl.lezhin.process.ProcessContext
  */
 class ChromeDriverDownloadProcessorSpec extends Specification {
 
-    def "Downloads a chromedriver"() {
-        given:
-        def fileSystem = MemoryFileSystemBuilder.newEmpty()
+    private FileSystem fileSystem
+    private ProcessContext context
+
+    void setup() {
+        fileSystem = MemoryFileSystemBuilder.newEmpty()
                 .addFileAttributeView(PosixFileAttributeView)
                 .build()
+        context = ProcessContext.create()
+        context.add(new DirectoryPath(fileSystem.getPath("/")))
+    }
+
+    def "Downloads a chromedriver"() {
+        given:
         def driverFileName = OperatingSystem.current.windows ? "chromedriver.exe" : "chromedriver"
-        def context = ProcessContext.create(
-                new DirectoryPath(fileSystem.getPath("/")),
+        context.add(
                 ChromeInfo.ofDriverPath(ChromeVersion.from("114.0.5735.90"), fileSystem.getPath("/", driverFileName))
         )
 
