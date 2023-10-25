@@ -19,9 +19,13 @@ package io.github.imsejin.dl.lezhin.process.impl;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
-import org.jetbrains.annotations.Nullable;
 import org.openqa.selenium.chrome.ChromeDriverService;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 
 import io.github.imsejin.common.constant.OS;
 import io.github.imsejin.dl.lezhin.annotation.ProcessSpecification;
@@ -59,10 +63,10 @@ public class ChromeInfoResolutionProcessor implements Processor {
                 .findFirst().orElseThrow();
 
         Loggers.getLogger().debug("Resolve version of chrome browser");
-        ChromeVersion browserVersion = resolver.resolveChromeBrowserVersion();
+        Optional<ChromeVersion> maybeBrowserVersion = resolver.resolveChromeBrowserVersion();
 
         // Regards chrome browser as installed.
-        if (browserVersion == null) {
+        if (maybeBrowserVersion.isEmpty()) {
             Loggers.getLogger().debug("Failed to resolve version of chrome browser");
         }
 
@@ -71,75 +75,81 @@ public class ChromeInfoResolutionProcessor implements Processor {
 
         if (!Files.isRegularFile(driverPath)) {
             Loggers.getLogger().debug("Failed to resolve path of chromedriver");
-            return ChromeInfo.ofDriverPath(browserVersion, driverPath);
+            return ChromeInfo.ofDriverPath(maybeBrowserVersion.orElse(null), driverPath);
         }
 
         Loggers.getLogger().debug("Resolve version of chromedriver");
-        ChromeVersion driverVersion = resolver.resolveChromeDriverVersion(driverPath);
+        Optional<ChromeVersion> maybeDriverVersion = resolver.resolveChromeDriverVersion(driverPath);
 
-        if (driverVersion == null) {
+        if (maybeDriverVersion.isEmpty()) {
             Loggers.getLogger().debug("Failed to resolve version of chromedriver");
-            return ChromeInfo.ofDriverPath(browserVersion, driverPath);
+            return ChromeInfo.ofDriverPath(maybeBrowserVersion.orElse(null), driverPath);
         }
 
-        return ChromeInfo.ofDriver(browserVersion, driverPath, driverVersion);
+        return ChromeInfo.ofDriver(maybeBrowserVersion.orElse(null), driverPath, maybeDriverVersion.orElse(null));
     }
 
     // -------------------------------------------------------------------------------------------------
 
-    private interface ChromeInfoResolver {
-        boolean support(OS os);
+    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+    private abstract static class ChromeInfoResolver {
+        private final List<List<String>> chromeBrowserVersionCommands;
+        private final Function<Path, List<String>> chromeDriverVersionCommandFunction;
 
-        @Nullable
-        ChromeVersion resolveChromeBrowserVersion();
+        public abstract boolean support(OS os);
 
-        @Nullable
-        ChromeVersion resolveChromeDriverVersion(Path driverPath);
-
-        default Path resolveChromeDriverPath(DirectoryPath directoryPath) {
+        public Path resolveChromeDriverPath(DirectoryPath directoryPath) {
             return directoryPath.getValue().resolve(ChromeDriverService.CHROME_DRIVER_NAME);
         }
-    }
 
-    // -------------------------------------------------------------------------------------------------
-
-    private static class WindowsChromeInfoResolver implements ChromeInfoResolver {
-        @Override
-        public boolean support(OS os) {
-            return os == OS.WINDOWS;
+        public final Optional<ChromeVersion> resolveChromeBrowserVersion() {
+            return resolveChromeVersion(this.chromeBrowserVersionCommands);
         }
 
-        @Override
-        public ChromeVersion resolveChromeBrowserVersion() {
-            List<List<String>> commands = List.of(
-                    List.of("powershell",
-                            "-command",
-                            "(Get-Item (Get-ItemProperty 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.exe').'(Default)').VersionInfo.ProductVersion"),
-                    List.of("powershell",
-                            "-command",
-                            "(Get-Package -Name 'Google Chrome').Version")
-            );
+        public final Optional<ChromeVersion> resolveChromeDriverVersion(Path driverPath) {
+            List<List<String>> commands = List.of(this.chromeDriverVersionCommandFunction.apply(driverPath));
+            return resolveChromeVersion(commands);
+        }
 
+        private static Optional<ChromeVersion> resolveChromeVersion(List<List<String>> commands) {
             for (List<String> command : commands) {
                 try {
-                    String versionString = CommandUtils.runCommand(command.toArray(new String[0]));
-                    return ChromeVersion.from(versionString);
-                } catch (Exception ignored) {
+                    String versionString = CommandUtils.runCommand(command.toArray(String[]::new));
+                    ChromeVersion version = ChromeVersion.from(versionString);
+                    return Optional.of(version);
+                } catch (Exception e) {
+                    Loggers.getLogger()
+                            .debug("Failed to run command; {}({}): {}",
+                                    e.getClass().getName(),
+                                    e.getMessage(),
+                                    command);
                 }
             }
 
-            return null;
+            return Optional.empty();
+        }
+    }
+
+    // -------------------------------------------------------------------------------------------------
+
+    private static class WindowsChromeInfoResolver extends ChromeInfoResolver {
+        private WindowsChromeInfoResolver() {
+            super(
+                    List.of(
+                            List.of("powershell",
+                                    "-Command",
+                                    "(Get-Item (Get-ItemProperty 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.exe').'(Default)').VersionInfo.ProductVersion"),
+                            List.of("powershell",
+                                    "-Command",
+                                    "(Get-Package -Name 'Google Chrome').Version")
+                    ),
+                    driverPath -> List.of("powershell", "-Command", "'" + driverPath + "'", "-v")
+            );
         }
 
         @Override
-        public ChromeVersion resolveChromeDriverVersion(Path driverPath) {
-            try {
-                String result = CommandUtils.runCommand("cmd", "/c", "\"" + driverPath.toRealPath() + "\"", "-v");
-                return ChromeVersion.from(result);
-            } catch (Exception ignored) {
-            }
-
-            return null;
+        public boolean support(OS os) {
+            return os == OS.WINDOWS;
         }
 
         @Override
@@ -151,57 +161,33 @@ public class ChromeInfoResolutionProcessor implements Processor {
 
     // -------------------------------------------------------------------------------------------------
 
-    private static class LinuxChromeInfoResolver implements ChromeInfoResolver {
+    private static class LinuxChromeInfoResolver extends ChromeInfoResolver {
+        private LinuxChromeInfoResolver() {
+            super(
+                    List.of(List.of("google-chrome", "-v")),
+                    driverPath -> List.of(driverPath.toString(), "-v")
+            );
+        }
+
         @Override
         public boolean support(OS os) {
             return os == OS.LINUX || os == OS.AIX || os == OS.SOLARIS || os == OS.OTHER;
-        }
-
-        @Override
-        public ChromeVersion resolveChromeBrowserVersion() {
-            try {
-                String versionString = CommandUtils.runCommand("google-chrome", "-v");
-                return ChromeVersion.from(versionString);
-            } catch (Exception ignored) {
-                return null;
-            }
-        }
-
-        @Override
-        public ChromeVersion resolveChromeDriverVersion(Path driverPath) {
-            return null;
         }
     }
 
     // -------------------------------------------------------------------------------------------------
 
-    private static class MacosChromeInfoResolver implements ChromeInfoResolver {
+    private static class MacosChromeInfoResolver extends ChromeInfoResolver {
+        private MacosChromeInfoResolver() {
+            super(
+                    List.of(List.of("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", "--version")),
+                    driverPath -> List.of(driverPath.toString(), "-v")
+            );
+        }
+
         @Override
         public boolean support(OS os) {
             return os == OS.MAC;
-        }
-
-        @Override
-        public ChromeVersion resolveChromeBrowserVersion() {
-            try {
-                String versionString = CommandUtils.runCommand(
-                        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-                        "--version");
-                return ChromeVersion.from(versionString);
-            } catch (Exception ignored) {
-                return null;
-            }
-        }
-
-        @Override
-        public ChromeVersion resolveChromeDriverVersion(Path driverPath) {
-            try {
-                String result = CommandUtils.runCommand(driverPath.toRealPath().toString(), "-v");
-                return ChromeVersion.from(result);
-            } catch (Exception ignored) {
-            }
-
-            return null;
         }
     }
 
