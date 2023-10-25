@@ -21,7 +21,6 @@ import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import lombok.EqualsAndHashCode;
@@ -58,13 +57,13 @@ public final class ChromeVersion implements Comparable<ChromeVersion> {
         this.value = value;
     }
 
-    public static ChromeVersion from(String versionString) {
-        Matcher matcher = VERSION_PATTERN.matcher(versionString);
+    public static ChromeVersion from(String value) {
+        Matcher matcher = VERSION_PATTERN.matcher(value);
         if (matcher.find()) {
             return new ChromeVersion(matcher.group());
         }
 
-        throw new IllegalArgumentException("Invalid ChromeVersion.value: " + versionString);
+        throw new IllegalArgumentException("Invalid ChromeVersion.value: " + value);
     }
 
     /**
@@ -90,7 +89,7 @@ public final class ChromeVersion implements Comparable<ChromeVersion> {
     }
 
     @Override
-    public int compareTo(@NotNull ChromeVersion other) {
+    public int compareTo(ChromeVersion other) {
         return this.value.compareTo(other.value);
     }
 

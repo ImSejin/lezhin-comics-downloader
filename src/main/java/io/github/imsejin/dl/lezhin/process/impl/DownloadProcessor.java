@@ -210,6 +210,8 @@ public class DownloadProcessor implements Processor {
         }
     }
 
+    // -------------------------------------------------------------------------------------------------
+
     private static final class VisitingPage implements ImageCountResolver {
         @Override
         public int getImageCountOfEpisode(ProcessContext context, Episode episode) {
@@ -333,18 +335,17 @@ public class DownloadProcessor implements Processor {
      * @return progress bar
      */
     private static ProgressBar createProgressBar(String taskName, int imageCount) {
-        ProgressBarBuilder builder = new ProgressBarBuilder();
-        builder.setTaskName(taskName);
-        builder.setInitialMax(imageCount);
-        builder.setUpdateIntervalMillis(250);
-        builder.setConsumer(new ConsoleProgressBarConsumer(System.out));
-        builder.setStyle(ProgressBarStyle.ASCII);
-        builder.setUnit(" imgs", 1);
-        builder.showSpeed(new DecimalFormat("| #.0"));
-        builder.setSpeedUnit(ChronoUnit.SECONDS);
-        builder.startsFrom(0L, Duration.ZERO);
-
-        return builder.build();
+        return new ProgressBarBuilder()
+                .setTaskName(taskName)
+                .setInitialMax(imageCount)
+                .setUpdateIntervalMillis(250)
+                .setConsumer(new ConsoleProgressBarConsumer(System.out))
+                .setStyle(ProgressBarStyle.ASCII)
+                .setUnit(" imgs", 1)
+                .showSpeed(new DecimalFormat("| #.0"))
+                .setSpeedUnit(ChronoUnit.SECONDS)
+                .startsFrom(0L, Duration.ZERO)
+                .build();
     }
 
 }
