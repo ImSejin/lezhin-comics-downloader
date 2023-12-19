@@ -38,17 +38,17 @@ class ChromeInfoSpec extends Specification {
         chromeInfo.browserVersion == browserVersion
         chromeInfo.driverPath == driverPath
         chromeInfo.driverVersion == null
-        chromeInfo.status == expectedStatus
+        chromeInfo.status == status
 
         where:
-        browserVersion                      | driverPathString                 || expectedStatus
+        browserVersion                      | driverPathString                 || status
         ChromeVersion.from("114.0.5735.90") | "/usr/local/bin/chromedriver"    || ChromeInfo.Status.BROWSER_ONLY
-        null                                | "/opt/homebrew/lib/chromedriver" || ChromeInfo.Status.NONE
+        null                                | "/opt/homebrew/bin/chromedriver" || ChromeInfo.Status.NONE
     }
 
     def "Instantiates with driver version"() {
         given:
-        def driverPath = Path.of("/opt/homebrew/lib/chromedriver")
+        def driverPath = Path.of("/opt/homebrew/bin/chromedriver")
 
         when:
         def chromeInfo = ChromeInfo.ofDriver(browserVersion, driverPath, driverVersion)
@@ -58,10 +58,10 @@ class ChromeInfoSpec extends Specification {
         chromeInfo.browserVersion == browserVersion
         chromeInfo.driverPath == driverPath
         chromeInfo.driverVersion == driverVersion
-        chromeInfo.status == expectedStatus
+        chromeInfo.status == status
 
         where:
-        browserVersion                      | driverVersion                        || expectedStatus
+        browserVersion                      | driverVersion                        || status
         ChromeVersion.from("114.0.5735.90") | ChromeVersion.from("114.0.5790.170") || ChromeInfo.Status.ENTIRE
         null                                | ChromeVersion.from("116.0.5845.97")  || ChromeInfo.Status.DRIVER_ONLY
     }
