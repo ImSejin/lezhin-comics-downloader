@@ -41,7 +41,7 @@ class ProcessorOrderResolverSpec extends Specification {
 
     def "Resolves the order of process types"() {
         given:
-        def processorTypes = new Reflections(Application.class).getSubTypesOf(Processor.class)
+        def processorTypes = new Reflections(Application.class).getSubTypesOf(Processor)
                 .findAll { !ClassUtils.isAbstractClass(it) && it.enclosingClass == null }
 
         when:
@@ -49,7 +49,6 @@ class ProcessorOrderResolverSpec extends Specification {
 
         then:
         processorTypes == orderedTypes as Set
-
         orderedTypes == [
                 ConfigurationFileProcessor,
                 ChromeInfoResolutionProcessor,
