@@ -30,7 +30,6 @@ import lombok.RequiredArgsConstructor;
 import io.github.imsejin.common.constant.OS;
 import io.github.imsejin.dl.lezhin.annotation.ProcessSpecification;
 import io.github.imsejin.dl.lezhin.attribute.impl.ChromeInfo;
-import io.github.imsejin.dl.lezhin.attribute.impl.DirectoryPath;
 import io.github.imsejin.dl.lezhin.browser.ChromeVersion;
 import io.github.imsejin.dl.lezhin.common.Loggers;
 import io.github.imsejin.dl.lezhin.exception.LezhinComicsDownloaderException;
@@ -46,9 +45,12 @@ import io.github.imsejin.dl.lezhin.util.CommandUtils;
 @ProcessSpecification(dependsOn = ConfigurationFileProcessor.class)
 public class ChromeInfoResolutionProcessor implements Processor {
 
+    private final Path basePath;
+
     private final List<ChromeInfoResolver> resolvers;
 
-    public ChromeInfoResolutionProcessor() {
+    public ChromeInfoResolutionProcessor(Path basePath) {
+        this.basePath = basePath;
         this.resolvers = List.of(
                 new WindowsChromeInfoResolver(),
                 new LinuxChromeInfoResolver(),
@@ -63,7 +65,7 @@ public class ChromeInfoResolutionProcessor implements Processor {
                 .findFirst().orElseThrow();
 
         Loggers.getLogger().debug("Resolve path of chromedriver");
-        Path driverPath = resolver.resolveChromeDriverPath(context.getDirectoryPath());
+        Path driverPath = resolver.resolveChromeDriverPath(this.basePath);
         ChromeInfo.Builder builder = ChromeInfo.builder(driverPath);
 
         Loggers.getLogger().debug("Resolve version of chrome browser");
@@ -94,8 +96,8 @@ public class ChromeInfoResolutionProcessor implements Processor {
 
         public abstract boolean support(OS os);
 
-        public Path resolveChromeDriverPath(DirectoryPath directoryPath) {
-            return directoryPath.getValue().resolve(ChromeDriverService.CHROME_DRIVER_NAME);
+        public Path resolveChromeDriverPath(Path basePath) {
+            return basePath.resolve(ChromeDriverService.CHROME_DRIVER_NAME);
         }
 
         public final Optional<ChromeVersion> resolveChromeBrowserVersion() {
@@ -151,9 +153,9 @@ public class ChromeInfoResolutionProcessor implements Processor {
         }
 
         @Override
-        public Path resolveChromeDriverPath(DirectoryPath directoryPath) {
+        public Path resolveChromeDriverPath(Path basePath) {
             String fileName = ChromeDriverService.CHROME_DRIVER_NAME + ".exe";
-            return directoryPath.getValue().resolve(fileName);
+            return basePath.resolve(fileName);
         }
     }
 
