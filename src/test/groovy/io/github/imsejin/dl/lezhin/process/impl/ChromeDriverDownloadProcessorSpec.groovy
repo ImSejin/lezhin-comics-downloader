@@ -17,6 +17,7 @@
 package io.github.imsejin.dl.lezhin.process.impl
 
 import spock.lang.Specification
+import spock.lang.Subject
 import spock.util.environment.OperatingSystem
 
 import java.nio.file.FileSystem
@@ -34,15 +35,7 @@ import io.github.imsejin.dl.lezhin.attribute.impl.DirectoryPath
 import io.github.imsejin.dl.lezhin.browser.ChromeVersion
 import io.github.imsejin.dl.lezhin.process.ProcessContext
 
-/**
- * <pre>
- * io.github.imsejin.dl.lezhin.process.impl
- * ChromeDriverDownloadProcessorSpec
- * </pre>
- *
- * @author : imsejin
- * @date : 2023-10-20
- */
+@Subject(ChromeDriverDownloadProcessor)
 class ChromeDriverDownloadProcessorSpec extends Specification {
 
     private FileSystem fileSystem
