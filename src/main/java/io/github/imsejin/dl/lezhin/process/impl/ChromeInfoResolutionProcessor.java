@@ -62,31 +62,27 @@ public class ChromeInfoResolutionProcessor implements Processor {
                 .filter(it -> it.support(OS.getCurrentOS()))
                 .findFirst().orElseThrow();
 
-        Loggers.getLogger().debug("Resolve version of chrome browser");
-        Optional<ChromeVersion> maybeBrowserVersion = resolver.resolveChromeBrowserVersion();
-
-        // Regards chrome browser as installed.
-        if (maybeBrowserVersion.isEmpty()) {
-            Loggers.getLogger().debug("Failed to resolve version of chrome browser");
-        }
-
         Loggers.getLogger().debug("Resolve path of chromedriver");
         Path driverPath = resolver.resolveChromeDriverPath(context.getDirectoryPath());
+        ChromeInfo.Builder builder = ChromeInfo.builder(driverPath);
+
+        Loggers.getLogger().debug("Resolve version of chrome browser");
+        Optional<ChromeVersion> maybeBrowserVersion = resolver.resolveChromeBrowserVersion();
+        maybeBrowserVersion.ifPresentOrElse(builder::browserVersion,
+                // Regards chrome browser as installed.
+                () -> Loggers.getLogger().debug("Failed to resolve version of chrome browser"));
 
         if (!Files.isRegularFile(driverPath)) {
             Loggers.getLogger().debug("Failed to resolve path of chromedriver");
-            return ChromeInfo.ofDriverPath(maybeBrowserVersion.orElse(null), driverPath);
+            return builder.build();
         }
 
         Loggers.getLogger().debug("Resolve version of chromedriver");
         Optional<ChromeVersion> maybeDriverVersion = resolver.resolveChromeDriverVersion(driverPath);
+        maybeDriverVersion.ifPresentOrElse(builder::driverVersion,
+                () -> Loggers.getLogger().debug("Failed to resolve version of chromedriver"));
 
-        if (maybeDriverVersion.isEmpty()) {
-            Loggers.getLogger().debug("Failed to resolve version of chromedriver");
-            return ChromeInfo.ofDriverPath(maybeBrowserVersion.orElse(null), driverPath);
-        }
-
-        return ChromeInfo.ofDriver(maybeBrowserVersion.orElse(null), driverPath, maybeDriverVersion.orElse(null));
+        return builder.build();
     }
 
     // -------------------------------------------------------------------------------------------------

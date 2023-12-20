@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 import io.github.imsejin.dl.lezhin.attribute.Attribute;
@@ -49,14 +50,6 @@ public final class ChromeInfo implements Attribute {
     private final ChromeVersion browserVersion;
 
     /**
-     * Chromedriver file path.
-     * <p>
-     * It is not required to download new chromedriver, but required to resolve the version of that.
-     */
-    @NonNull
-    private final Path driverPath;
-
-    /**
      * Chromedriver version.
      * <p>
      * It is required to download new chromedriver.
@@ -64,50 +57,88 @@ public final class ChromeInfo implements Attribute {
     @Nullable
     private final ChromeVersion driverVersion;
 
+    /**
+     * Chromedriver file path.
+     * <p>
+     * It is not required to download new chromedriver, but required to resolve the version of that.
+     */
+    @NonNull
+    private final Path driverPath;
+
     private final Status status;
 
     private ChromeInfo(
             @Nullable ChromeVersion browserVersion,
-            @NonNull Path driverPath,
-            @Nullable ChromeVersion driverVersion
+            @Nullable ChromeVersion driverVersion,
+            @NonNull Path driverPath
     ) {
         this.browserVersion = browserVersion;
-        this.driverPath = driverPath;
         this.driverVersion = driverVersion;
+        this.driverPath = driverPath;
 
-        if (browserVersion != null && driverVersion != null) {
-            this.status = Status.ENTIRE;
-        } else if (driverVersion != null) {
-            this.status = Status.DRIVER_ONLY;
-        } else if (browserVersion != null) {
-            this.status = Status.BROWSER_ONLY;
-        } else {
-            this.status = Status.NONE;
+        int bits = 0;
+
+        if (browserVersion != null) {
+            bits |= Status.BROWSER_ONLY.getBits();
         }
+
+        if (driverVersion != null) {
+            bits |= Status.DRIVER_ONLY.getBits();
+        }
+
+        this.status = Status.from(bits);
     }
 
-    public static ChromeInfo ofDriverPath(@Nullable ChromeVersion browserVersion, @NonNull Path driverPath) {
-        return new ChromeInfo(browserVersion, driverPath, null);
-    }
-
-    public static ChromeInfo ofDriver(
-            @Nullable ChromeVersion browserVersion,
-            @NonNull Path driverPath,
-            @NonNull ChromeVersion driverVersion
-    ) {
-        return new ChromeInfo(browserVersion, driverPath, driverVersion);
+    public static Builder builder(@NonNull Path driverPath) {
+        return new Builder(driverPath);
     }
 
     // -------------------------------------------------------------------------------------------------
 
+    @RequiredArgsConstructor
+    public static class Builder {
+        @Nullable
+        private ChromeVersion browserVersion;
+        @Nullable
+        private ChromeVersion driverVersion;
+        @NonNull
+        private final Path driverPath;
+
+        public Builder browserVersion(@Nullable ChromeVersion browserVersion) {
+            this.browserVersion = browserVersion;
+            return this;
+        }
+
+        public Builder driverVersion(@Nullable ChromeVersion driverVersion) {
+            this.driverVersion = driverVersion;
+            return this;
+        }
+
+        public ChromeInfo build() {
+            return new ChromeInfo(this.browserVersion, this.driverVersion, this.driverPath);
+        }
+    }
+
+    @Getter
+    @RequiredArgsConstructor
     public enum Status {
-        NONE,
+        NONE(0),
+        DRIVER_ONLY(1),
+        BROWSER_ONLY(2),
+        ENTIRE(DRIVER_ONLY.bits | BROWSER_ONLY.bits),
+        ;
 
-        DRIVER_ONLY,
+        private final int bits;
 
-        BROWSER_ONLY,
+        public static Status from(int bits) {
+            for (Status status : values()) {
+                if (status.bits == bits) {
+                    return status;
+                }
+            }
 
-        ENTIRE,
+            throw new IllegalArgumentException("Invalid ChromeInfo.Statue.bits: " + bits);
+        }
     }
 
 }

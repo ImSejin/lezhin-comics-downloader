@@ -60,7 +60,9 @@ class ChromeDriverDownloadProcessorSpec extends Specification {
         given:
         def driverFileName = OperatingSystem.current.windows ? "chromedriver.exe" : "chromedriver"
         context.add(
-                ChromeInfo.ofDriverPath(ChromeVersion.from("114.0.5735.90"), fileSystem.getPath("/", driverFileName))
+                ChromeInfo.builder(fileSystem.getPath("/", driverFileName))
+                        .browserVersion(ChromeVersion.from("114.0.5735.90"))
+                        .build()
         )
 
         and:

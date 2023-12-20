@@ -31,13 +31,15 @@ class ChromeInfoSpec extends Specification {
         def driverPath = Path.of(driverPathString)
 
         when:
-        def chromeInfo = ChromeInfo.ofDriverPath(browserVersion, driverPath)
+        def chromeInfo = ChromeInfo.builder(driverPath)
+                .browserVersion(browserVersion)
+                .build()
 
         then:
         chromeInfo != null
         chromeInfo.browserVersion == browserVersion
-        chromeInfo.driverPath == driverPath
         chromeInfo.driverVersion == null
+        chromeInfo.driverPath == driverPath
         chromeInfo.status == status
 
         where:
@@ -51,13 +53,16 @@ class ChromeInfoSpec extends Specification {
         def driverPath = Path.of("/opt/homebrew/bin/chromedriver")
 
         when:
-        def chromeInfo = ChromeInfo.ofDriver(browserVersion, driverPath, driverVersion)
+        def chromeInfo = ChromeInfo.builder(driverPath)
+                .browserVersion(browserVersion)
+                .driverVersion(driverVersion)
+                .build()
 
         then:
         chromeInfo != null
         chromeInfo.browserVersion == browserVersion
-        chromeInfo.driverPath == driverPath
         chromeInfo.driverVersion == driverVersion
+        chromeInfo.driverPath == driverPath
         chromeInfo.status == status
 
         where:
@@ -67,17 +72,8 @@ class ChromeInfoSpec extends Specification {
     }
 
     def "Failed to instantiate with no driver path"() {
-        given:
-        def chromeVersion = ChromeVersion.from("114.0.5735.90")
-
         when:
-        ChromeInfo.ofDriverPath(chromeVersion, null)
-
-        then:
-        thrown(NullPointerException)
-
-        when:
-        ChromeInfo.ofDriver(chromeVersion, null, chromeVersion)
+        ChromeInfo.builder(null)
 
         then:
         thrown(NullPointerException)
