@@ -27,28 +27,28 @@ class PlatformSpec extends Specification {
     @Requires({ OperatingSystem.current.isWindows() })
     def "Gets the current platform on windows"() {
         when:
-        def platform = Platform.currentPlatform
+        def platform = Platform.currentPlatform.orElseThrow()
 
         then:
-        platform.orElseThrow() == Platform.WIN32 || platform.orElseThrow() == Platform.WIN64
+        platform == Platform.WIN32 || platform == Platform.WIN64
     }
 
     @Requires({ OperatingSystem.current.isLinux() })
     def "Gets the current platform on linux"() {
         when:
-        def platform = Platform.currentPlatform
+        def platform = Platform.currentPlatform.orElseThrow()
 
         then:
-        platform.orElseThrow() == Platform.LINUX64
+        platform == Platform.LINUX64
     }
 
     @Requires({ OperatingSystem.current.isMacOs() })
     def "Gets the current platform on macos"() {
         when:
-        def platform = Platform.currentPlatform
+        def platform = Platform.currentPlatform.orElseThrow()
 
         then:
-        platform.orElseThrow() == Platform.MAC_ARM64 || platform.orElseThrow() == Platform.MAC_X64
+        platform == Platform.MAC_ARM64 || platform == Platform.MAC_X64
     }
 
 }

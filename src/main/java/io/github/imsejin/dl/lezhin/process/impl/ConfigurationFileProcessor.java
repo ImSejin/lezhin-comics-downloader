@@ -27,10 +27,13 @@ import io.github.imsejin.dl.lezhin.process.Processor;
 @ProcessSpecification
 public class ConfigurationFileProcessor implements Processor {
 
+    @VisibleForTesting
+    static final String CONFIGURATION_FILE_NAME = "config.ini";
+
     private final Path filePath;
 
     public ConfigurationFileProcessor(Path basePath) {
-        this.filePath = basePath.resolve("config.ini");
+        this.filePath = basePath.resolve(CONFIGURATION_FILE_NAME);
     }
 
     /**

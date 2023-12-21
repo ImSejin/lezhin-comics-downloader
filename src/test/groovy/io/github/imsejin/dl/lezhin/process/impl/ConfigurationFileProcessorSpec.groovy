@@ -27,7 +27,7 @@ class ConfigurationFileProcessorSpec extends Specification {
     def "Fails due to no file"() {
         given:
         def basePath = fileSystem.getPath("/")
-        def filePath = basePath.resolve("config.ini")
+        def filePath = basePath.resolve(ConfigurationFileProcessor.CONFIGURATION_FILE_NAME)
         def processor = new ConfigurationFileProcessor(basePath)
 
         when:
@@ -42,7 +42,7 @@ class ConfigurationFileProcessorSpec extends Specification {
     def "Fails due to no section[account]"() {
         given:
         def basePath = fileSystem.getPath("/")
-        def filePath = basePath.resolve("config.ini")
+        def filePath = basePath.resolve(ConfigurationFileProcessor.CONFIGURATION_FILE_NAME)
         Files.createFile(filePath)
 
         when:
@@ -57,7 +57,7 @@ class ConfigurationFileProcessorSpec extends Specification {
     def "Fails due to no name[username]"() {
         given:
         def basePath = fileSystem.getPath("/")
-        def filePath = basePath.resolve("config.ini")
+        def filePath = basePath.resolve(ConfigurationFileProcessor.CONFIGURATION_FILE_NAME)
         Files.writeString(filePath, """
         [account]
         username=
@@ -75,7 +75,7 @@ class ConfigurationFileProcessorSpec extends Specification {
     def "Fails due to no name[password]"() {
         given:
         def basePath = fileSystem.getPath("/")
-        def filePath = basePath.resolve("config.ini")
+        def filePath = basePath.resolve(ConfigurationFileProcessor.CONFIGURATION_FILE_NAME)
         Files.writeString(filePath, """
         [account]
         username=anonymous
@@ -94,7 +94,7 @@ class ConfigurationFileProcessorSpec extends Specification {
     def "Processes configuration file"() {
         given:
         def basePath = fileSystem.getPath("/")
-        def filePath = basePath.resolve("config.ini")
+        def filePath = basePath.resolve(ConfigurationFileProcessor.CONFIGURATION_FILE_NAME)
         Files.writeString(filePath, """
         [account]
         username = anonymous
