@@ -133,7 +133,7 @@ public class ChromeInfoResolutionProcessor implements Processor {
     private static class WindowsChromeInfoResolver extends ChromeInfoResolver {
         private WindowsChromeInfoResolver() {
             super(
-                    // Uses Windows Powershell to find browser version by unknown path.
+                    // Uses Windows Powershell with no path.
                     List.of(
                             List.of("powershell",
                                     "-Command",
@@ -142,7 +142,7 @@ public class ChromeInfoResolutionProcessor implements Processor {
                                     "-Command",
                                     "(Get-Package -Name 'Google Chrome').Version")
                     ),
-                    // Uses Windows cmd to find driver version by known path.
+                    // Uses Windows cmd with the path.
                     driverPath -> List.of(driverPath.toString(), "-v")
             );
         }
