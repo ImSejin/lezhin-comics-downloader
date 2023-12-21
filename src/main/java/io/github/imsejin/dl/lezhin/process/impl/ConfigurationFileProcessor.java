@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.ini4j.Config;
 import org.ini4j.Ini;
+import org.jetbrains.annotations.VisibleForTesting;
 
 import io.github.imsejin.common.util.StringUtils;
 import io.github.imsejin.dl.lezhin.annotation.ProcessSpecification;
@@ -80,7 +81,7 @@ public class ConfigurationFileProcessor implements Processor {
         Ini ini = new Ini();
         ini.setConfig(conf);
 
-        try (Reader reader = Files.newBufferedReader(filePath)) {
+        try (Reader reader = Files.newBufferedReader(filePath, StandardCharsets.UTF_8)) {
             ini.load(reader);
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
