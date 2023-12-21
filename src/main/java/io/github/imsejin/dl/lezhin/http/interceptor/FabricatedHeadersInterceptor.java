@@ -16,18 +16,19 @@
 
 package io.github.imsejin.dl.lezhin.http.interceptor;
 
-import okhttp3.Interceptor;
-import okhttp3.Request;
-import okhttp3.Response;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicReference;
+
+import okhttp3.Interceptor;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class FabricatedHeadersInterceptor implements Interceptor {
 
@@ -90,26 +91,16 @@ public class FabricatedHeadersInterceptor implements Interceptor {
 
         String chromeVersion = String.format("%d.0.%d.%d", majorVersion, minorVersion, bugfixVersion);
 
-        String os;
-        switch (random.nextInt(5)) {
-            case 0:
-                os = "Windows NT 10.0; Win64; x64";
-                break;
-            case 1:
-                os = "Macintosh; Intel Mac OS X 10_15_7";
-                break;
-            case 2:
-                os = "X11; Ubuntu; Linux x86_64";
-                break;
-            case 3:
-                os = "Macintosh; Intel Mac OS X 10_14_6";
-                break;
-            case 4:
-                os = "X11; Linux x86_64";
-                break;
-            default:
-                throw new AssertionError("Never thrown");
-        }
+        List<String> osStrings = List.of(
+                "Windows NT 10.0; Win64; x64",
+                "Macintosh; Intel Mac OS X 10_15_7",
+                "X11; Ubuntu; Linux x86_64",
+                "Macintosh; Intel Mac OS X 10_14_6",
+                "X11; Linux x86_64"
+        );
+
+        int i = random.nextInt(osStrings.size());
+        String os = osStrings.get(i);
 
         return String.format("Mozilla/5.0 (%s) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/%s Safari/537.36", os, chromeVersion);
     }
