@@ -28,6 +28,7 @@ import java.util.Optional;
 
 import org.openqa.selenium.chrome.ChromeDriverService;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
 import io.github.imsejin.common.io.Resource;
@@ -52,11 +53,21 @@ import io.github.imsejin.dl.lezhin.process.Processor;
  *
  * @since 4.0.0
  */
-@RequiredArgsConstructor
 @ProcessSpecification(dependsOn = ChromeInfoResolutionProcessor.class)
 public class ChromeDriverDownloadProcessor implements Processor {
 
     private final ChromeDriverDownloadService service;
+
+    private final List<ChromeDriverDownloader> downloaders;
+
+    public ChromeDriverDownloadProcessor(ChromeDriverDownloadService service) {
+        this.service = service;
+        this.downloaders = List.of(
+                new NoChromeInfoDownloader(),
+                new KnownDriverVersionDownloader(),
+                new KnownBrowserVersionDownloader()
+        );
+    }
 
     @Override
     public Void process(ProcessContext context) throws LezhinComicsDownloaderException {
@@ -73,180 +84,222 @@ public class ChromeDriverDownloadProcessor implements Processor {
             return null;
         }
 
-        ChromeDriverDownload download = this.service.findChromeDriverDownload();
-        Optional<ChromeDriverDownload.Version> maybeLatestVersion = download.findLatestVersion();
+        ChromeDriverDownloader downloader = this.downloaders.stream()
+                .filter(it -> it.support(status))
+                .findFirst().orElseThrow();
 
-        switch (status) {
-            case NONE:
-                if (maybeLatestVersion.isPresent()) {
-                    ChromeDriverDownload.Version latestVersion = maybeLatestVersion.get();
-                    Path dest = context.getDirectoryPath().getValue();
-                    Path driverPath = chromeInfo.getDriverPath();
-
-                    // Downloads the latest version.
-                    boolean downloaded = downloadDriver(latestVersion, dest, driverPath);
-                    if (!downloaded) {
-                        break;
-                    }
-
-                    Loggers.getLogger()
-                            .info("Download the latest version({}) of chromedriver: {}",
-                                    latestVersion.getValue(),
-                                    driverPath);
-                } else {
-                    Loggers.getLogger()
-                            .debug("Failed to find the latest version of chromedriver; ignore this step");
-                }
-
-                break;
-
-            case DRIVER_ONLY:
-                if (maybeLatestVersion.isPresent()) {
-                    ChromeDriverDownload.Version latestVersion = maybeLatestVersion.get();
-                    Path dest = context.getDirectoryPath().getValue();
-                    Path driverPath = chromeInfo.getDriverPath();
-
-                    // If the resolved version is compatible with the latest one, ignore this step.
-                    if (latestVersion.getValue().isCompatibleWith(driverVersion)) {
-                        Loggers.getLogger()
-                                .debug("Resolved chromedriver({}) is the latest; ignore this step", driverVersion);
-                        break;
-                    }
-
-                    // Downloads the latest version, if the resolved version is not compatible with that.
-                    boolean downloaded = downloadDriver(latestVersion, dest, driverPath);
-                    if (!downloaded) {
-                        break;
-                    }
-
-                    Loggers.getLogger()
-                            .info("Download the latest version({}) of chromedriver: {}",
-                                    latestVersion.getValue(),
-                                    driverPath);
-                } else {
-                    Loggers.getLogger()
-                            .debug("Failed to find the latest version of chromedriver; ignore this step");
-                }
-
-                break;
-
-            case BROWSER_ONLY:
-            case ENTIRE:
-                Optional<ChromeDriverDownload.Version> maybeVersion = download.getVersions()
-                        .stream()
-                        .filter(it -> it.getValue().isCompatibleWith(browserVersion))
-                        .findFirst();
-                if (maybeVersion.isPresent()) {
-                    ChromeDriverDownload.Version version = maybeVersion.get();
-                    Path dest = context.getDirectoryPath().getValue();
-                    Path driverPath = chromeInfo.getDriverPath();
-
-                    // Downloads the version fit for browser.
-                    boolean downloaded = downloadDriver(version, dest, driverPath);
-                    if (!downloaded) {
-                        break;
-                    }
-
-                    Loggers.getLogger()
-                            .info("Download the version({}) of chromedriver fit for browser: {}",
-                                    version.getValue().getValue(),
-                                    driverPath);
-                } else {
-                    Loggers.getLogger()
-                            .debug("Failed to find the version of chromedriver; ignore this step");
-                }
-
-                break;
-        }
+        downloader.download(context);
 
         return null;
     }
 
     // -------------------------------------------------------------------------------------------------
 
-    private static boolean downloadDriver(ChromeDriverDownload.Version version, Path dest, Path driverPath) {
-        Optional<Platform> maybeCurrent = Platform.getCurrentPlatform();
+    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+    private static abstract class ChromeDriverDownloader {
+        public abstract boolean support(ChromeInfo.Status status);
 
-        // Not supported platform.
-        if (maybeCurrent.isEmpty()) {
-            return false;
-        }
+        public abstract void download(ProcessContext context);
 
-        Platform current = maybeCurrent.get();
-        List<ChromeDriverDownload.Program> drivers = version.getDownloads().getChromedrivers();
+        protected final boolean downloadDriver(ChromeDriverDownload.Version version, Path dest, Path driverPath) {
+            Optional<Platform> maybeCurrent = Platform.getCurrentPlatform();
 
-        // There is no download link of chromedriver on the version.
-        if (CollectionUtils.isNullOrEmpty(drivers)) {
-            return false;
-        }
-
-        ChromeDriverDownload.Program chromedriver = null;
-        for (ChromeDriverDownload.Program driver : drivers) {
-            if (driver.getPlatform() == current) {
-                chromedriver = driver;
-                break;
+            // Not supported platform.
+            if (maybeCurrent.isEmpty()) {
+                return false;
             }
+
+            Platform current = maybeCurrent.get();
+            List<ChromeDriverDownload.Program> drivers = version.getDownloads().getChromedrivers();
+
+            // There is no download link of chromedriver on the version.
+            if (CollectionUtils.isNullOrEmpty(drivers)) {
+                return false;
+            }
+
+            ChromeDriverDownload.Program chromedriver = null;
+            for (ChromeDriverDownload.Program driver : drivers) {
+                if (driver.getPlatform() == current) {
+                    chromedriver = driver;
+                    break;
+                }
+            }
+
+            // There is no download link compatible with the current platform.
+            if (chromedriver == null) {
+                return false;
+            }
+
+            URL url = chromedriver.getUrl();
+            String fileName = FilenameUtils.getName(url.toString());
+            Path filePath = dest.resolve(fileName);
+
+            Loggers.getLogger().debug("Download a archive file of chromedriver: {}", url);
+            FileUtils.download(url, filePath);
+
+            // chromedriver-win64.zip
+            // └ chromedriver-win64/
+            //   └ chromedriver.exe
+            //   └ LICENSE.chromedriver
+            ResourceFinder resourceFinder = new ZipResourceFinder(false,
+                    entry -> !entry.isDirectory() && FilenameUtils.getBaseName(FilenameUtils.getName(entry.getName()))
+                            .equals(ChromeDriverService.CHROME_DRIVER_NAME));
+            List<Resource> resources = resourceFinder.getResources(filePath);
+
+            // There is no chromedriver in the archive file.
+            if (CollectionUtils.isNullOrEmpty(resources)) {
+                Loggers.getLogger()
+                        .debug("There is no chromedriver in the archive file; ignore this step: {}", fileName);
+                return false;
+            }
+
+            if (resources.size() > 1) {
+                Loggers.getLogger()
+                        .debug("There are two or more chromedrivers in the archive file; ignore this step: {}",
+                                resources);
+                return false;
+            }
+
+            try {
+                // Removes the existing chromedriver.
+                if (Files.isRegularFile(driverPath)) {
+                    Files.delete(driverPath);
+                }
+
+                // Moves chromedriver from the archive file.
+                Resource resource = resources.get(0);
+                FileUtils.download(resource.getInputStream(), driverPath);
+                Files.setPosixFilePermissions(driverPath, EnumSet.of(
+                        PosixFilePermission.OWNER_READ,
+                        PosixFilePermission.OWNER_WRITE,
+                        PosixFilePermission.OWNER_EXECUTE,
+                        PosixFilePermission.GROUP_READ,
+                        PosixFilePermission.GROUP_EXECUTE,
+                        PosixFilePermission.OTHERS_READ,
+                        PosixFilePermission.OTHERS_EXECUTE
+                ));
+            } catch (IOException ignored) {
+                return false;
+            } finally {
+                // Removes the archive file.
+                FileUtils.deleteRecursively(filePath);
+            }
+
+            return true;
+        }
+    }
+
+    // -------------------------------------------------------------------------------------------------
+
+    private class NoChromeInfoDownloader extends ChromeDriverDownloader {
+        @Override
+        public boolean support(ChromeInfo.Status status) {
+            return status == ChromeInfo.Status.NONE;
         }
 
-        // There is no download link compatible with the current platform.
-        if (chromedriver == null) {
-            return false;
-        }
+        @Override
+        public void download(ProcessContext context) {
+            ChromeDriverDownload download = service.findChromeDriverDownload();
+            Optional<ChromeDriverDownload.Version> maybeLatestVersion = download.findLatestVersion();
 
-        URL url = chromedriver.getUrl();
-        String fileName = FilenameUtils.getName(url.toString());
-        Path filePath = dest.resolve(fileName);
+            if (maybeLatestVersion.isEmpty()) {
+                Loggers.getLogger().debug("Failed to find the latest version of chromedriver; ignore this step");
+                return;
+            }
 
-        Loggers.getLogger().debug("Download a archive file of chromedriver: {}", url);
-        FileUtils.download(url, filePath);
+            Path dest = context.getDirectoryPath().getValue();
+            Path driverPath = context.getChromeInfo().getDriverPath();
+            ChromeDriverDownload.Version latestVersion = maybeLatestVersion.get();
 
-        // chromedriver-win64.zip
-        // └ chromedriver-win64/
-        //   └ chromedriver.exe
-        //   └ LICENSE.chromedriver
-        ResourceFinder resourceFinder = new ZipResourceFinder(false,
-                entry -> !entry.isDirectory() && FilenameUtils.getBaseName(FilenameUtils.getName(entry.getName()))
-                        .equals(ChromeDriverService.CHROME_DRIVER_NAME));
-        List<Resource> resources = resourceFinder.getResources(filePath);
+            // Downloads the latest version.
+            boolean downloaded = downloadDriver(latestVersion, dest, driverPath);
+            if (!downloaded) {
+                return;
+            }
 
-        // There is no chromedriver in the archive file.
-        if (CollectionUtils.isNullOrEmpty(resources)) {
-            Loggers.getLogger().debug("There is no chromedriver in the archive file; ignore this step: {}", fileName);
-            return false;
-        }
-
-        if (resources.size() > 1) {
             Loggers.getLogger()
-                    .debug("There are two or more chromedrivers in the archive file; ignore this step: {}", resources);
-            return false;
+                    .info("Download the latest version({}) of chromedriver: {}", latestVersion.getValue(), driverPath);
+        }
+    }
+
+    // -------------------------------------------------------------------------------------------------
+
+    private class KnownDriverVersionDownloader extends ChromeDriverDownloader {
+        @Override
+        public boolean support(ChromeInfo.Status status) {
+            return status == ChromeInfo.Status.DRIVER_ONLY;
         }
 
-        try {
-            // Removes the existing chromedriver.
-            if (Files.isRegularFile(driverPath)) {
-                Files.delete(driverPath);
+        @Override
+        public void download(ProcessContext context) {
+            ChromeDriverDownload download = service.findChromeDriverDownload();
+            Optional<ChromeDriverDownload.Version> maybeLatestVersion = download.findLatestVersion();
+
+            if (maybeLatestVersion.isEmpty()) {
+                Loggers.getLogger().debug("Failed to find the latest version of chromedriver; ignore this step");
+                return;
             }
 
-            // Moves chromedriver from the archive file.
-            Resource resource = resources.get(0);
-            FileUtils.download(resource.getInputStream(), driverPath);
-            Files.setPosixFilePermissions(driverPath, EnumSet.of(
-                    PosixFilePermission.OWNER_READ,
-                    PosixFilePermission.OWNER_WRITE,
-                    PosixFilePermission.OWNER_EXECUTE,
-                    PosixFilePermission.GROUP_READ,
-                    PosixFilePermission.GROUP_EXECUTE,
-                    PosixFilePermission.OTHERS_READ,
-                    PosixFilePermission.OTHERS_EXECUTE
-            ));
-        } catch (IOException ignored) {
-            return false;
-        } finally {
-            // Removes the archive file.
-            FileUtils.deleteRecursively(filePath);
+            Path dest = context.getDirectoryPath().getValue();
+            Path driverPath = context.getChromeInfo().getDriverPath();
+            ChromeVersion driverVersion = context.getChromeInfo().getDriverVersion();
+            ChromeDriverDownload.Version latestVersion = maybeLatestVersion.get();
+
+            // If the resolved version is compatible with the latest one, ignore this step.
+            if (latestVersion.getValue().isCompatibleWith(driverVersion)) {
+                Loggers.getLogger().debug("Resolved chromedriver({}) is the latest; ignore this step", driverVersion);
+                return;
+            }
+
+            // Downloads the latest version, if the resolved version is not compatible with that.
+            boolean downloaded = downloadDriver(latestVersion, dest, driverPath);
+            if (!downloaded) {
+                return;
+            }
+
+            Loggers.getLogger()
+                    .info("Download the latest version({}) of chromedriver: {}", latestVersion.getValue(), driverPath);
+        }
+    }
+
+    // -------------------------------------------------------------------------------------------------
+
+    private class KnownBrowserVersionDownloader extends ChromeDriverDownloader {
+        @Override
+        public boolean support(ChromeInfo.Status status) {
+            return status == ChromeInfo.Status.BROWSER_ONLY || status == ChromeInfo.Status.ENTIRE;
         }
 
-        return true;
+        @Override
+        public void download(ProcessContext context) {
+            ChromeVersion browserVersion = context.getChromeInfo().getBrowserVersion();
+
+            ChromeDriverDownload download = service.findChromeDriverDownload();
+            Optional<ChromeDriverDownload.Version> maybeVersion = download.getVersions()
+                    .stream()
+                    .filter(it -> it.getValue().isCompatibleWith(browserVersion))
+                    .findFirst();
+
+            if (maybeVersion.isEmpty()) {
+                Loggers.getLogger().debug("Failed to find the version of chromedriver; ignore this step");
+                return;
+            }
+
+            ChromeDriverDownload.Version version = maybeVersion.get();
+            Path dest = context.getDirectoryPath().getValue();
+            Path driverPath = context.getChromeInfo().getDriverPath();
+
+            // Downloads the version fit for browser.
+            boolean downloaded = downloadDriver(version, dest, driverPath);
+            if (!downloaded) {
+                return;
+            }
+
+            Loggers.getLogger()
+                    .info("Download the version({}) of chromedriver fit for browser: {}",
+                            version.getValue().getValue(),
+                            driverPath);
+        }
     }
 
 }
