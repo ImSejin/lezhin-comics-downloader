@@ -51,7 +51,7 @@
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <jetbrains-annotations.version>24.1.0</jetbrains-annotations.version>
         <logback-classic.version>1.4.12</logback-classic.version>
-        <slf4j-api.version>2.0.9</slf4j-api.version>
+        <slf4j-api.version>2.0.13</slf4j-api.version>
 
         <!-- Test dependency versions -->
         <junit5.version>5.10.3</junit5.version>
