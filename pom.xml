@@ -47,7 +47,7 @@
         <reftrofit.version>2.9.0</reftrofit.version>
         <selenium.version>4.11.0</selenium.version>
         <reflections.version>0.10.2</reflections.version>
-        <lombok.version>1.18.30</lombok.version>
+        <lombok.version>1.18.34</lombok.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <jetbrains-annotations.version>24.1.0</jetbrains-annotations.version>
         <logback-classic.version>1.4.12</logback-classic.version>
