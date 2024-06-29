@@ -43,7 +43,7 @@
         <!-- Dependency versions -->
         <common-utils.version>0.14.0</common-utils.version>
         <commons-cli.version>1.6.0</commons-cli.version>
-        <progressbar.version>0.10.0</progressbar.version>
+        <progressbar.version>0.10.1</progressbar.version>
         <reftrofit.version>2.9.0</reftrofit.version>
         <selenium.version>4.11.0</selenium.version>
         <reflections.version>0.10.2</reflections.version>
