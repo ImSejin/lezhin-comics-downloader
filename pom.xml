@@ -55,7 +55,7 @@
 
         <!-- Test dependency versions -->
         <junit5.version>5.10.3</junit5.version>
-        <assertj.version>3.24.2</assertj.version>
+        <assertj.version>3.26.3</assertj.version>
         <spock.version>2.3-groovy-4.0</spock.version>
         <mockito.version>5.2.0</mockito.version>
     </properties>
